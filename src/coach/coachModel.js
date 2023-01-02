@@ -1,23 +1,26 @@
 const Sequelize = require('sequelize');
-const bcrypt = require('bcryptjs');
 const db = require('../../database');
 
-const parentModel = db.define('parent', {
+const coachModel = db.define('coach', {
     id: {
         type: Sequelize.Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-    nomParent: {
+    nomCoach: {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    prenomParent: {
+    prenomCoach: {
         type: Sequelize.STRING,
         allowNull: false,
     },
     numeroTelephone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    email: {
         type: Sequelize.STRING,
         allowNull: false,
     },
@@ -40,22 +43,10 @@ const parentModel = db.define('parent', {
             },
           },
     },
-    status:{
-        type: Sequelize.ENUM,
-        values: ['actif', 'inactif'],
+    categories:{
+        type: Sequelize.STRING,
         allowNull: false,
     }
+}, {timestamps: false,});
 
-},{timestamps: false,
-   });
-
-   parentModel.prototype.correctPassword = async function (
-    candidatePassword,
-    userPassword
-  ) {
-    return await bcrypt.compare(candidatePassword, userPassword);
-  };
-  
-
-  
-  module.exports = parentModel;
+module.exports = coachModel;
