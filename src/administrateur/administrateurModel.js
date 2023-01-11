@@ -42,7 +42,7 @@ const administrateurModel = db.define('administrateur', {
         role:{
             type: Sequelize.ENUM,
             values: ['level2','level3', 'superadmin'],
-            allowNull: false,
+            allowNull: true,
         }
     }, 
     {timestamps: false,});

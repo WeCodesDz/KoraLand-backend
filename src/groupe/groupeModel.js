@@ -25,6 +25,6 @@ const groupeModel = db.define('groupe', {
         type: Sequelize.STRING,
         allowNull: false,
     }
-}, {timestamps: false,});
+}, {timestamps: true,});
 
 module.exports = groupeModel;

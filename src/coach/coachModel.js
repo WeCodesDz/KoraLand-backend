@@ -47,6 +47,6 @@ const coachModel = db.define('coach', {
         type: Sequelize.STRING,
         allowNull: false,
     }
-}, {timestamps: false,});
+}, {timestamps: true,});
 
 module.exports = coachModel;

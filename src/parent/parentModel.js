@@ -46,7 +46,7 @@ const parentModel = db.define('parent', {
         allowNull: false,
     }
 
-},{timestamps: false,
+},{timestamps: true,
    });
 
    parentModel.prototype.correctPassword = async function (

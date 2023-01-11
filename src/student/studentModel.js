@@ -89,7 +89,7 @@ const studentModel = db.define("student", {
         allowNull: false,
     },
 },{
-    timestamps: false
+    timestamps: true
 });
 
 module.exports = studentModel;
