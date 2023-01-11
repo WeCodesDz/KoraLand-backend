@@ -29,7 +29,7 @@ Coach.belongsTo(Groupe, { onDelete: 'cascade' });
 (async () => {
     await db.authenticate();
     console.log('database connected');
-    // db.sync({ force: true });
+     //db.sync({ force: true });
   
   })();
   const app = require('./app');

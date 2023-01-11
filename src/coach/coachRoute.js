@@ -5,10 +5,12 @@ const router = express.Router();
 
 router.route('/')
         .post(coachController.createCoach)
-        .get(coachController.getAllCoach);
+        .get(coachController.getAllcoachs);
 
 
 router.route('/:id')
         .get(coachController.getCoachById)
         .patch(coachController.updateCoach)
         .delete(coachController.deleteCoach);
+
+        module.exports = router;

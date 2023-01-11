@@ -8,7 +8,7 @@ router.route('/')
     .post(groupeController.createGroupe);
 
 router.route('/:id')
-    .get(groupeController.getGroupe)
+    .get(groupeController.getGroupeById)
     .patch(groupeController.updateGroupe)
     .delete(groupeController.deleteGroupe);   
 

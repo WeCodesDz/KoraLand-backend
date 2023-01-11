@@ -48,12 +48,12 @@ const studentModel = db.define("student", {
     },
     mantant2Tranche:{
         type: Sequelize.DOUBLE,
-        allowNull: false,
+        allowNull: true,
     },
     status2Tranche:{
         type: Sequelize.ENUM,
         values: ['oui', 'non', 'avance','abandonne'],
-        allowNull: false,
+        allowNull: true,
     },
     numeroTelephone:{
         type: Sequelize.STRING,
@@ -61,7 +61,7 @@ const studentModel = db.define("student", {
     },
     anneeExamen:{
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     commune:{
         type: Sequelize.STRING,
