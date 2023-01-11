@@ -11,6 +11,19 @@ dotenv.config({ path: './config.env' });
 const db = require('./database');
 const port = process.env.PORT;
 
+const Coach = require('./src/coach/coachModel');
+const Admin = require('./src/administrateur/administrateurModel');
+const Groupe = require('./src/groupe/groupeModel');
+const Student = require('./src/student/studentModel');
+
+Groupe.hasMany(Student, { onDelete: 'cascade' });
+Student.belongsTo(Groupe, { onDelete: 'cascade' });
+
+Groupe.hasOne(Coach, { onDelete: 'cascade' });
+Coach.belongsTo(Groupe, { onDelete: 'cascade' });
+
+
+
 
 
 (async () => {

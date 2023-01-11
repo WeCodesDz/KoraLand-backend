@@ -10,8 +10,12 @@ const bodyParser = require('body-parser');
 const AppError = require('./src/utils/appError');
 const globalErrorHandler = require('./src/utils/errorController');
 // HERE WE INSERE ROUTES 
-//const studentRouter = require('./src/student/studentRoute');
-
+const studentRouter = require('./src/student/studentRoute');
+const groupeRouter = require('./src/groupe/groupeRoute');
+const evaluationRouter = require('./src/evaluation/evaluationRoute');
+const coachRouter = require('./src/coach/coachRoute');
+const parentRouter = require('./src/parent/parentRoute');
+const administrateurRouter = require('./src/administrateur/administrateurRoute');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -45,7 +49,13 @@ app.use(express.json({ limit: '10kb' }));
 app.use(xss());
 
 // routes
-// app.use('/api/v1/student', studentRouter);
+ app.use('/api/v1/student', studentRouter);
+ app.use('/api/v1/admin', administrateurRouter);
+ app.use('/api/v1/coach', coachRouter);
+ app.use('/api/v1/groupe', groupeRouter);
+ app.use('/api/v1/parent', parentRouter);
+ app.use('/api/v1/evaluation', evaluationRouter);
+ 
 
 // we might use pug as template engine later 
 // app.set('view engine', 'pug');

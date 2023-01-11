@@ -76,6 +76,14 @@ const studentModel = db.define("student", {
         type: Sequelize.STRING,
         allowNull: false,
     },
+    taille:{
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    poids:{
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
     remarque:{
         type: Sequelize.TEXT,
         allowNull: false,
