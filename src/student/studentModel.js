@@ -21,7 +21,7 @@ const studentModel = db.define("student", {
         allowNull: false,
     },
     dateNaissance: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull: false,
     },
     saisonActuel: {
