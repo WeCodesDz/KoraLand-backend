@@ -43,10 +43,32 @@ const coachModel = db.define('coach', {
             },
           },
     },
+    passwordChangedAt: {
+        type: Sequelize.DATE,
+      },
+    passwordResetToken: {
+        type: Sequelize.STRING,
+        set(value) {
+          this.setDataValue('passwordResetToken', value);
+        },
+      },
+    passwordResetExpires: {
+        type: Sequelize.DATE,
+        set(value) {
+          this.setDataValue('passwordResetExpires', value);
+        },
+      },
     categories:{
         type: Sequelize.STRING,
         allowNull: false,
     }
-}, {timestamps: true,});
+}, {timestamps: true,
+});
 
+coachModel.prototype.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 module.exports = coachModel;

@@ -39,6 +39,21 @@ const administrateurModel = db.define('administrateur', {
                 },
               },
         },
+        passwordChangedAt: {
+          type: Sequelize.DATE,
+        },
+        passwordResetToken: {
+          type: Sequelize.STRING,
+          set(value) {
+            this.setDataValue('passwordResetToken', value);
+          },
+        },
+        passwordResetExpires: {
+          type: Sequelize.DATE,
+          set(value) {
+            this.setDataValue('passwordResetExpires', value);
+          },
+        },
         role:{
             type: Sequelize.ENUM,
             values: ['level2','level3', 'superadmin'],
@@ -47,6 +62,11 @@ const administrateurModel = db.define('administrateur', {
     }, 
     {timestamps: false,});
 
-
+administrateurModel.prototype.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 module.exports = administrateurModel;
 

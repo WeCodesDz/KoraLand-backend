@@ -40,6 +40,21 @@ const parentModel = db.define('parent', {
             },
           },
     },
+    passwordChangedAt: {
+      type: Sequelize.DATE,
+    },
+    passwordResetToken: {
+      type: Sequelize.STRING,
+      set(value) {
+        this.setDataValue('passwordResetToken', value);
+      },
+    },
+    passwordResetExpires: {
+      type: Sequelize.DATE,
+      set(value) {
+        this.setDataValue('passwordResetExpires', value);
+      },
+    },
     status:{
         type: Sequelize.ENUM,
         values: ['actif', 'inactif'],
