@@ -4,7 +4,9 @@ const Admin = require('./administrateurModel');
 
 exports.getAllAdmin = catchAsync(async (req, res, next) => {
   const admins = await Admin.findAll({
-    attributes:['nomAdmin',
+    attributes:[
+      'id',
+      'nomAdmin',
         'prenomAdmin',
         'email',
         'username',
@@ -46,20 +48,24 @@ exports.createAdmin = catchAsync(async (req, res, next) => {
         email,
         username,
         password,
+        passwordConfirm,
         role,
+        adminLevel
     } = req.body;
     
-    if(!nomAdmin || !prenomAdmin || !email || !username || !password || !role) {
+    if(!nomAdmin || !prenomAdmin || !email || !username || !password || !passwordConfirm || !role || !adminLevel) {
         return new AppError('Please provide all fields', 400);
     }
     
     const admin = await Admin.create({
-        nomAdmin,
-        prenomAdmin,
-        email,
-        username,
-        password,
-        role
+        nomAdmin:nomAdmin.trim(),
+        prenomAdmin:prenomAdmin.trim(),
+        email:email.trim(),
+        username:username.trim(),
+        password:password.trim(),
+        passwordConfirm:passwordConfirm.trim(),
+        role:role.trim(),
+        adminLevel:adminLevel.trim()
     });
     res.status(201).json({
         status: 'success',
@@ -70,20 +76,27 @@ exports.createAdmin = catchAsync(async (req, res, next) => {
 });
 
 exports.updateAdmin = catchAsync(async (req, res, next)=>{
+  const {
+    nomAdmin,
+    prenomAdmin,
+    role,
+    username,
+    email,
+    adminLevel
+
+  } = req.body;
   const admin = await Admin.findByPk(req.params.id);
     if (!admin) {
         return new AppError('No admin found with that ID', 404);
     }
-    
-  if(req.body.passwordCurrent){
-    if (
-    !(await admin.correctPassword(
-      req.body.passwordCurrent.trim(),
-      user.password))) {
-    return next(new AppError('Your current password is wrong.', 401));
-                        }
-    }
-    await Admin.update(req.body);
+    if(nomAdmin) admin.nomAdmin = nomAdmin;
+    if(prenomAdmin) admin.prenomAdmin = prenomAdmin;
+    if(role) admin.role = role;
+    if(username) admin.username = username;
+    if(email) admin.email = email;
+    if(adminLevel) admin.adminLevel = adminLevel;
+
+    await admin.save();
 
     res.status(201).json({
         status: 'success',
@@ -98,7 +111,7 @@ exports.deleteAdmin = catchAsync(async (req, res, next) => {
     if (!admin) {
         return new AppError('No admin found with that ID', 404);
     }
-    await Admin.destroy();
+    await admin.destroy();
     res.status(200).json({
         status: 'success',
         data: admin,

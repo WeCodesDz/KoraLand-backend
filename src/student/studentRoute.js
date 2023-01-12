@@ -1,9 +1,12 @@
 const express = require('express');
 const studentController = require('./studentController');
+const authController = require('../auth/authController');
 const router = express.Router();
 
 router.route('/')
-    .get(studentController.getAllstudents)
+    .get(
+        authController.protect,
+        studentController.getAllstudents)
     .post(studentController.createStudent);
 
 router.route('/:id')

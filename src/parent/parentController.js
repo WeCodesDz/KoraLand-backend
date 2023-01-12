@@ -12,9 +12,10 @@ exports.createParent = catchAsync(async (req, res, next) => {
         numeroTelephone,
         username,
         password,
+        passwordConfirm
     } = req.body;
     
-    if(!nomParent || !prenomParent || !email || !username || !password || !numeroTelephone) {
+    if(!nomParent || !prenomParent || !email || !username || !password || !passwordConfirm || !numeroTelephone) {
         return new AppError('Please provide all fields', 400);
     }
     
@@ -24,7 +25,9 @@ exports.createParent = catchAsync(async (req, res, next) => {
         email,
         numeroTelephone,
         username,
-        password
+        password,
+        passwordConfirm,
+        role: 'parent'
     });
     res.status(201).json({
         status: 'success',

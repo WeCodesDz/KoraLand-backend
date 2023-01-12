@@ -40,10 +40,11 @@ exports.createCoach = catchAsync(async (req, res, next) => {
         numeroTelephone,
         username,
         password,
+        passwordConfirm,
         categories,
     } = req.body;
     
-    if(!nomCoach || !prenomCoach || !email || !username || !password || !numeroTelephone || !categories) {
+    if(!nomCoach || !prenomCoach || !email || !username || !password || !passwordConfirm || !numeroTelephone || !categories) {
         return new AppError('Please provide all fields', 400);
     }
     
@@ -54,7 +55,9 @@ exports.createCoach = catchAsync(async (req, res, next) => {
         numeroTelephone,
         username,
         password,
-        categories
+        passwordConfirm,
+        categories,
+        role:'coach'
     });
     res.status(201).json({
         status: 'success',

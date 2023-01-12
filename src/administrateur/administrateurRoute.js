@@ -1,9 +1,13 @@
 const express = require('express');
 const administrateurController = require('./administrateurController');
+const authController = require('../auth/authController')
 
 const router = express.Router();
 
-// here we add the protect function 
+router
+    .route('/login')
+    .post(authController.login)
+
 router.route('/')
     .get(administrateurController.getAllAdmin)
     .post(administrateurController.createAdmin);

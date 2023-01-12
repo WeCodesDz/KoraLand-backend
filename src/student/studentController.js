@@ -95,7 +95,10 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
   const offset = (page - 1) * limit;
   //filtering
   const where = filter(req.query);
-  if(req.admin.role === 'superAdmin') {
+  console.log(req.admin)
+  console.log(req.admin.role)
+  console.log(req.admin.adminLevel)
+  if(req.admin.adminLevel === 'superadmin') {
      results = await Student.findAndCountAll({
         attributes:[
             'nomEleve',
@@ -109,7 +112,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'mantant2Tranche',
             'status2Tranche',
             'numeroTelephone',
-            'anneExamen',
+            'anneeExamen',
             'commune',
             'operateur',
             'guardianDeBut',
@@ -123,8 +126,8 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         offset
       });
   }
-  if(req.admin.role === 'level2') {
-    const results = await Student.findAndCountAll({
+  if(req.admin.adminLevel === 'level2') {
+     results = await Student.findAndCountAll({
         attributes:[
             'nomEleve',
             'prenomEleve',
@@ -136,7 +139,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'status1Tranche',
             'mantant2Tranche',
             'status2Tranche',
-            'anneExamen',
+            'anneeExamen',
             'commune',
             'operateur',
             'guardianDeBut',
@@ -150,8 +153,8 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         offset
       });
   }
-  if(req.admin.role === 'level3') {
-    const results = await Student.findAndCountAll({
+  if(req.admin.adminLevel === 'level3') {
+     results = await Student.findAndCountAll({
         attributes:[
             'nomEleve',
             'prenomEleve',
@@ -159,7 +162,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            'anneExamen',
+            'anneeExamen',
             'commune',
             'operateur',
             'guardianDeBut',
