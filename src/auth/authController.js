@@ -101,8 +101,8 @@ exports.protect = catchAsync(async (req, res, next) => {
        new AppError('Admin belonging to this token does no longer exist.', 401)
      );
    }
-    res.locals.admin = currentUser;
-    req.admin = currentUser;
+    res.locals.user = currentUser;
+    req.user = currentUser;
  }
  if(decoded.accesToken === 'coach'){
    currentUser = await Coach.findByPk(decoded.id);
@@ -111,8 +111,8 @@ exports.protect = catchAsync(async (req, res, next) => {
        new AppError('Coach belonging to this token does no longer exist.', 401)
      );
    }
-   res.locals.coach = currentUser;
-   req.coach = currentUser;
+   res.locals.user = currentUser;
+   req.user = currentUser;
  }
  if(decoded.accesToken === 'parent'){
    currentUser = await Parent.findByPk(decoded.id);
@@ -121,8 +121,8 @@ exports.protect = catchAsync(async (req, res, next) => {
        new AppError('Parent belonging to this token does no longer exist.', 401)
      );
    }
-   res.locals.parent = currentUser;
-   res.parent = currentUser;
+   res.locals.user = currentUser;
+   res.user = currentUser;
 }
 next(); 
 });

@@ -95,10 +95,8 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
   const offset = (page - 1) * limit;
   //filtering
   const where = filter(req.query);
-  console.log(req.admin)
-  console.log(req.admin.role)
-  console.log(req.admin.adminLevel)
-  if(req.admin.adminLevel === 'superadmin') {
+
+  if(req.user.adminLevel === 'superadmin') {
      results = await Student.findAndCountAll({
         attributes:[
             'nomEleve',
@@ -126,7 +124,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         offset
       });
   }
-  if(req.admin.adminLevel === 'level2') {
+  if(req.user.adminLevel === 'level2') {
      results = await Student.findAndCountAll({
         attributes:[
             'nomEleve',
@@ -153,7 +151,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         offset
       });
   }
-  if(req.admin.adminLevel === 'level3') {
+  if(req.user.adminLevel === 'level3') {
      results = await Student.findAndCountAll({
         attributes:[
             'nomEleve',
@@ -194,7 +192,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
 
 exports.getStudentById = catchAsync(async (req, res, next) => {
   let student;
-  if(req.admin.role === 'superAdmin') {
+  if(req.user.role === 'superadmin') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
             'nomEleve',
@@ -219,7 +217,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
         ],
     });
   }
-  if(req.admin.role === 'level2') {
+  if(req.user.role === 'level2') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
             'nomEleve',
@@ -243,7 +241,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
         ],
     });
   }
-  if(req.admin.role === 'level3') {
+  if(req.user.role === 'level3') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
             'nomEleve',
