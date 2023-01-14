@@ -30,6 +30,7 @@ Evaluation.belongsTo(Student, {onDelete: 'cascade'});
     await db.authenticate();
     console.log('database connected');
     //db.sync({ force: true });
+    //Student.sync({ force: true });
   
   })();
   const app = require('./app');
