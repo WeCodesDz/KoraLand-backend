@@ -25,7 +25,7 @@ const filter = (queryParams) => {
     const where = {};
   
     queryArray.forEach((obj) => {
-      if (['categorieAge'].includes(obj[0])) {
+      if (['commune','anneeExamen','status1Tranche','status2Tranche','status'].includes(obj[0])) {
         where[obj[0]] = obj[1];
       }
     });

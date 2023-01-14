@@ -3,6 +3,35 @@ const catchAsync = require('../utils/catchAsync');
 const Parent = require('./parentModel');
 
 
+const filter = (queryParams) => {
+    const tempQueryParams = { ...queryParams };
+  
+    const keys = Object.keys(queryParams);
+    keys.forEach((key) => {
+      if (key !== key.trim()) {
+        tempQueryParams[key.trim()] = tempQueryParams[key].trim();
+        delete tempQueryParams[key];
+      } else {
+        tempQueryParams[key] = tempQueryParams[key].trim();
+      }
+    });
+  
+    const queryObj = { ...tempQueryParams };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((field) => delete queryObj[field]);
+  
+  
+    const queryArray = Object.entries(queryObj);
+  
+    const where = {};
+  
+    queryArray.forEach((obj) => {
+      if (['status'].includes(obj[0])) {
+        where[obj[0]] = obj[1];
+      }
+    });
+    return where;
+  };
 
 exports.createParent = catchAsync(async (req, res, next) => {
     const {
@@ -40,13 +69,28 @@ exports.createParent = catchAsync(async (req, res, next) => {
 
 exports.getAllParents = catchAsync(async (req, res, next) => {
    //superadmin can watch phone numbers
-    const parents = await Parent.findAll({
-        attributes: ['id', 'nomParent', 'prenomParent', 'email', 'username',  'numeroTelephone']
+   let results;
+   if(req.user.adminLevel === 'superadmin'){
+         results = await Parent.findAndCountAll({
+        attributes: ['id', 'nomParent', 'prenomParent', 'username',  'numeroTelephone', 'status']
     });
+   }
+   if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
+     results = await Parent.findAndCountAll({
+        attributes: ['id', 'nomParent', 'prenomParent', 'username', 'status']
+    });
+}
+
     res.status(200).json({
         status: 'success',
+        rows: results.count,
         data: {
-            parents,
+            totalParents: results.rows,
+            totalPages: Math.ceil(results.count / limit),
+            page,
+            limit,
+            rows: results.rows.length,
+            Parents: results.rows
         },
     });
 });

@@ -54,8 +54,10 @@ const parentModel = db.define('parent', {
       allowNull: true,
       validate: {
         confirmPassword(value) {
-          //console.log(value);
+        console.log("value: "+value);
+
           if (!value) {
+            console.log(value);
             throw new AppError('please confirm your password!', 400);
           }
           if (value !== this.password) {

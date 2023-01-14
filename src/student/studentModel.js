@@ -89,6 +89,12 @@ const studentModel = db.define("student", {
         type: Sequelize.TEXT,
         allowNull: false,
     },
+    status:{
+        type: Sequelize.ENUM,
+        values: ['actif', 'inactif'],
+        defaultValue: 'actif',
+        allowNull: false,
+    },
 },{
     timestamps: true
 });
