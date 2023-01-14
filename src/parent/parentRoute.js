@@ -1,11 +1,14 @@
 const express = require('express');
 const parentController = require('./parentController');
+const authController = require('../auth/authController');
 
 const router = express.Router();
 
 router
     .route('/')
-    .get(parentController.getAllParents)
+    .get(
+          authController.protect,
+          parentController.getAllParents)
     .post(parentController.createParent);
 
 router

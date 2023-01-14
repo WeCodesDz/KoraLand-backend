@@ -182,12 +182,11 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         status: 'success',
         rows: results.count,
         data: {
-            totalStudents: results.rows,
             totalPages: Math.ceil(results.count / limit),
             page,
             limit,
             rows: results.rows.length,
-            students: results.rows
+            totalStudents: results.rows
         },
     });
 

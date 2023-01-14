@@ -79,12 +79,11 @@ exports.getAllGroupes = catchAsync(async (req, res, next) => {
         status: 'success',
         rows: results.length,
     data: {
-      totalGroupes: results.count,
       totalPages: Math.ceil(results.count / limit),
       page,
       limit,
       rows: results.rows.length,
-      groupes: results.rows,
+      totalGroupes: results.rows,
     },
     });
 });

@@ -68,16 +68,28 @@ exports.createParent = catchAsync(async (req, res, next) => {
 
 
 exports.getAllParents = catchAsync(async (req, res, next) => {
-   //superadmin can watch phone numbers
-   let results;
+    let { page ,limit } = req.body;
+    let results;
+    page = page * 1 || 1;
+    limit = limit * 1 || 1;
+    // offset is the number of rows skipped
+    const offset = (page - 1) * limit;
+    //filtering
+    const where = filter(req.query);
    if(req.user.adminLevel === 'superadmin'){
          results = await Parent.findAndCountAll({
-        attributes: ['id', 'nomParent', 'prenomParent', 'username',  'numeroTelephone', 'status']
+        attributes: ['id', 'nomParent', 'prenomParent', 'username',  'numeroTelephone', 'status'],
+        where,
+        limit,
+        offset
     });
    }
    if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
      results = await Parent.findAndCountAll({
-        attributes: ['id', 'nomParent', 'prenomParent', 'username', 'status']
+        attributes: ['id', 'nomParent', 'prenomParent', 'username', 'status'],
+        where,
+        limit,
+        offset
     });
 }
 
@@ -85,12 +97,11 @@ exports.getAllParents = catchAsync(async (req, res, next) => {
         status: 'success',
         rows: results.count,
         data: {
-            totalParents: results.rows,
             totalPages: Math.ceil(results.count / limit),
             page,
             limit,
             rows: results.rows.length,
-            Parents: results.rows
+            totalParents: results.rows,
         },
     });
 });

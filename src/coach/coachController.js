@@ -97,12 +97,11 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
     status: 'succes',
     rows: results.length,
     data: {
-      totalCoachs: results.count,
       totalPages: Math.ceil(results.count / limit),
       page,
       limit,
       rows: results.rows.length,
-      coachs: results.rows,
+      totalCoachs: results.rows,
     },
   });
 });
