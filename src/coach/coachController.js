@@ -77,7 +77,7 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
   //filtering
   const where = filter(req.query);
   //here we should test the admin role before setting the attributs (only super admin can see the phone number)
-  if(req.admin.role === 'superAdmin'){
+  if(req.user.adminLevel === 'superAdmin'){
      results = await Coach.findAndCountAll({
         attributes:['id','nomCoach','prenomCoach','email','numeroTelephone','username','categories'],
         where,
@@ -85,7 +85,7 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
         offset,
       });
   }
-  if(req.admin.role === 'level2' || req.admin.role === 'level3'){
+  if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
      results = await Coach.findAndCountAll({
         attributes:['id','nomCoach','prenomCoach','email','username','categories'],
         where,
@@ -124,8 +124,24 @@ exports.updateCoach = catchAsync(async (req, res, next) => {
     if (!coach) {
         return new AppError('No coach found with that ID', 404);
     }
-    // we should update the coachs groupe and students here after updating the coach
-    coach.update(req.body);
+    
+    const {
+        nomCoach,
+        prenomCoach,
+        email,
+        numeroTelephone,
+        username,
+        categories,
+    } = req.body;
+
+    if(nomCoach) coach.nomCoach = nomCoach;
+    if(prenomCoach) coach.prenomCoach = prenomCoach;
+    if(email) coach.email = email;
+    if(numeroTelephone) coach.numeroTelephone = numeroTelephone;
+    if(username) coach.username = username;
+    if(categories) coach.categories = categories;
+
+    await coach.save();
     res.status(200).json({
         status: 'success',
         data: {

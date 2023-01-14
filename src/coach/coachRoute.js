@@ -6,7 +6,9 @@ const router = express.Router();
 
 router.route('/')
         .post(coachController.createCoach)
-        .get(coachController.getAllcoachs);
+        .get(
+             authController.protect,   
+             coachController.getAllcoachs);
 
 
 router.route('/:id')
