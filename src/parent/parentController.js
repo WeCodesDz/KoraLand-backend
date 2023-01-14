@@ -107,10 +107,17 @@ exports.getAllParents = catchAsync(async (req, res, next) => {
 });
 
 exports.getParentbyId = catchAsync(async (req, res, next) => {
-    //superadmin can watch phone numbers 
-    const parent = await Parent.findByPk(req.params.id,{
-        attributes: ['id', 'nomParent', 'prenomParent', 'email','numeroTelephone']
-    });
+    let parent;
+    if(req.user.adminLevel === 'superAdmin'){
+        parent = await Parent.findByPk(req.params.id,{
+            attributes: ['id', 'nomParent', 'prenomParent', 'email','numeroTelephone']
+        });
+    }
+    if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
+        parent = await Parent.findByPk(req.params.id,{
+            attributes: ['id', 'nomParent', 'prenomParent', 'email']
+        });
+    } 
     res.status(200).json({
         status: 'success',
         data: {
