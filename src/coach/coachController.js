@@ -107,7 +107,18 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
 });
 
 exports.getCoachById = catchAsync(async (req, res, next) => {
-    const coach = await Coach.findByPk(req.params.id);
+  let coach;
+  if(req.user.adminLevel === 'superAdmin'){
+     coach = await Coach.findByPk(req.params.id,{
+        attributes:['id','nomCoach','prenomCoach','email','numeroTelephone','username','categories'],
+     });
+  }
+  if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
+     coach = await Coach.findByPk(req.params.id,{
+        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+     });
+  }
+  
     if (!coach) {
         return new AppError('No coach found with that ID', 404);
     }
