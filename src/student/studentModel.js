@@ -58,6 +58,7 @@ const studentModel = db.define("student", {
     numeroTelephone:{
         type: Sequelize.STRING,
         allowNull: false,
+        unique: { args: true, msg: 'Phone Number already in use!' },
     },
     anneeExamen:{
         type: Sequelize.STRING,

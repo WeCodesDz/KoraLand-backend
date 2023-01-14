@@ -99,6 +99,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
   if(req.user.adminLevel === 'superadmin') {
      results = await Student.findAndCountAll({
         attributes:[
+            'id',
             'nomEleve',
             'prenomEleve',
             'dateNaissance',
@@ -127,6 +128,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
   if(req.user.adminLevel === 'level2') {
      results = await Student.findAndCountAll({
         attributes:[
+            'id',
             'nomEleve',
             'prenomEleve',
             'dateNaissance',
@@ -154,6 +156,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
   if(req.user.adminLevel === 'level3') {
      results = await Student.findAndCountAll({
         attributes:[
+            'id',
             'nomEleve',
             'prenomEleve',
             'dateNaissance',
@@ -195,6 +198,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
   if(req.user.role === 'superadmin') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
+            'id',
             'nomEleve',
             'prenomEleve',
             'dateNaissance',
@@ -220,6 +224,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
   if(req.user.role === 'level2') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
+            'id',
             'nomEleve',
             'prenomEleve',
             'dateNaissance',
@@ -244,6 +249,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
   if(req.user.role === 'level3') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
+            'id',
             'nomEleve',
             'prenomEleve',
             'dateNaissance',
@@ -297,28 +303,29 @@ const student = await Student.findByPk(req.params.id.trim());
 if(!student) {
     return new AppError('No student found with that ID', 404);
 }
-  await student.update({
-    nomEleve,
-    prenomEleve,
-    dateNaissance,
-    saisonActuel,
-    dateInscription,
-    reinscription,
-    mantant1Tranche,
-    status1Tranche,
-    mantant2Tranche,
-    status2Tranche,
-    numeroTelephone,
-    anneExamen,
-    commune,
-    operateur,
-    guardianDeBut,
-    posteEleve,
-    taille,
-    poids,
-    remarque
-  });
 
+   if(nomEleve) student.nomEleve = nomEleve;
+    if(prenomEleve) student.prenomEleve = prenomEleve;
+    if(dateNaissance) student.dateNaissance = dateNaissance;
+    if(saisonActuel) student.saisonActuel = saisonActuel;
+    if(dateInscription) student.dateInscription = dateInscription;
+    if(reinscription) student.reinscription = reinscription;
+    if(mantant1Tranche) student.mantant1Tranche = mantant1Tranche;
+    if(status1Tranche) student.status1Tranche = status1Tranche;
+    if(mantant2Tranche) student.mantant2Tranche = mantant2Tranche;
+    if(status2Tranche) student.status2Tranche = status2Tranche;
+    if(numeroTelephone) student.status2Tranche = status2Tranche;
+    if(anneExamen) student.anneExamen = anneExamen;
+    if(commune) student.commune = commune;
+    if(operateur) student.operateur = operateur;
+    if(guardianDeBut) student.guardianDeBut = guardianDeBut;
+    if(posteEleve) student.posteEleve = posteEleve;
+    if(taille) student.taille = taille;
+    if(poids) student.poids = poids;
+    if(remarque) student.remarque = remarque;
+
+  await student.save();
+  
   res.status(200).json({
     status: 'success',
     data: {

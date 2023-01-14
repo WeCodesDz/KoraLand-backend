@@ -86,6 +86,7 @@ const parentModel = db.define('parent', {
     status:{
         type: Sequelize.ENUM,
         values: ['actif', 'inactif'],
+        defaultValue: 'actif',
         allowNull: false,
     },
     role:{
