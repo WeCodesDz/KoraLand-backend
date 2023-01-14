@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const bcrypt = require('bcryptjs');
+const AppError = require('../utils/appError');
 const db = require('../../database');
 
 const coachModel = db.define('coach', {
