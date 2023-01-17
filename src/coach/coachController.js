@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Coach = require('./coachModel');
+const Groupe = require('../groupe/groupeModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -170,5 +171,60 @@ exports.deleteCoach = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         data: coach,
+    });
+});
+
+exports.getCoachGroupes = catchAsync(async (req, res, next) => {
+    const coach = await Coach.findByPk(req.body.id);
+    if (!coach) {
+        return new AppError('No coach found with that ID', 404);
+    }
+    const groupes = await coach.getGroupes();
+    if (!groupes) {
+        return new AppError('No groupes found with this Coach', 404);
+    }
+    res.status(200).json({
+        status: 'success',
+        data:{
+          ...coach.dataValues,
+          groupes
+        }
+    });
+});
+
+exports.addCoachToGroupe = catchAsync(async (req, res, next) => {
+    const coach = await Coach.findByPk(req.body.coachId);
+    if (!coach) {
+        return new AppError('No coach found with that ID', 404);
+    }
+    const groupe = await Groupe.findByPk(req.body.groupeId);
+    if (!groupe) {
+        return new AppError('No groupe found with that ID', 404);
+    }
+    console.log(groupe);
+    console.log(coach); 
+    await coach.addGroupe(groupe);
+    res.status(200).json({
+        status: 'success',
+        data: {
+          coach,
+          groupe
+        }
+    });
+});
+
+
+exports.deleteCoachGroupe = catchAsync(async (req, res, next) => {
+    const coach = await Coach.findByPk(req.body.coachId);
+    if (!coach) {
+        return new AppError('No coach found with that ID', 404);
+    }
+    const groupe = await Groupe.findByPk(req.body.groupeId);
+    if (!groupe) {
+        return new AppError('No groupe found with that ID', 404);
+    }
+    await coach.removeGroupe(groupe);
+    res.status(200).json({
+        status: 'success',
     });
 });

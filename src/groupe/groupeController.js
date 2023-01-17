@@ -1,6 +1,8 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Groupe = require('./groupeModel');
+const Student = require('../student/studentModel');
+const Coach = require('../coach/coachModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -132,3 +134,57 @@ exports.deleteGroupe = catchAsync(async (req, res, next) => {
     });
   });    
 
+exports.addStudentToGroupe = catchAsync( async(req, res, next)=>{
+  const groupe = await Groupe.findByPk(req.body.groupeId.trim());
+  if(!groupe){
+    return new AppError('No groupe found with that ID', 404);
+  }
+
+  const student = await Student.findByPk(req.body.studentId.trim());
+  if(!student){
+    return new AppError('No student found with that ID', 404);
+  }
+
+  await groupe.addStudent(student);
+  res.status(200).json({
+    status: 'success',
+  });
+
+});
+
+exports.getGroupeStudents = catchAsync( async(req, res, next)=>{
+  const groupe = await Groupe.findByPk(req.body.groupeId.trim());
+  if(!groupe){
+    return new AppError('No groupe found with that Id', 404);
+  }
+
+  const students = await groupe.getStudents();
+  if(!students){
+    return new AppError('No students found in this groupe', 404);
+  }
+  res.status(200).json({
+    status: 'success',
+    body:{
+      ...groupe.dataValues,
+      students
+    }
+  });
+});
+
+
+exports.deleteStudentGroupe = catchAsync( async(req, res, next)=>{
+  const groupe = await Groupe.findByPk(req.body.groupeId.trim());
+  if(!groupe){
+    return new AppError('No groupe found with that Id', 404);
+  }
+
+  const student = await Student.findByPk(req.body.studentId.trim());
+  if(!student){
+    return new AppError('No student found with that Id', 404);
+  }
+
+  await groupe.removeStudent(student);
+  res.status(200).json({
+    status: 'success',
+  });
+});
