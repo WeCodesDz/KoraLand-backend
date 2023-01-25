@@ -59,7 +59,6 @@ exports.createBulkPresence = catchAsync(async (req, res, next) => {
     //     plain:true,
     // }
     // );
-    console.log(plainGroupe);
     const groupeStudents = [...plainGroupe.students];
     if(!groupeStudents){
         throw new AppError('No students found in this groupe', 404);

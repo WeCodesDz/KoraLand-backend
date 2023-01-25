@@ -8,6 +8,7 @@ const evaluation = db.define('evaluation', {
         allowNull: false,
         primaryKey: true,
     },
+    //physique
     vitesse30m1:{
         type: Sequelize.BOOLEAN,
         allowNull:false,
@@ -48,6 +49,7 @@ const evaluation = db.define('evaluation', {
         type: Sequelize.BOOLEAN,
         allowNull:false,
     },
+    // technique
     jonglerie:{
         type: Sequelize.ENUM,
         values:['A','NA','ECA'],
@@ -128,6 +130,7 @@ const evaluation = db.define('evaluation', {
         values:['A','NA','ECA'],
         allowNull:false,
     },
+    // mental
     confienceEnSoi:{
         type: Sequelize.ENUM,
         values:['A','NA','ECA'],
@@ -168,6 +171,7 @@ const evaluation = db.define('evaluation', {
         values:['A','NA','ECA'],
         allowNull:false,
     },
+    //tactique
     comportementOffensif:{
         type: Sequelize.ENUM,
         values:['A','NA','ECA'],
@@ -186,6 +190,16 @@ const evaluation = db.define('evaluation', {
     inteligenceDansLeJeu:{
         type: Sequelize.ENUM,
         values:['A','NA','ECA'],
+        allowNull:false,
+    },
+    dateEvaluation:{
+        type: Sequelize.STRING,
+        allowNull:false,
+    },
+    etatEvaluation:{
+        type: Sequelize.ENUM,
+        values:['accepted','waiting','blocked'],
+        defaultValue:'waiting',
         allowNull:false,
     }
     
