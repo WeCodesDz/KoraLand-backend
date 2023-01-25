@@ -15,6 +15,7 @@ const groupeRouter = require('./src/groupe/groupeRoute');
 const evaluationRouter = require('./src/evaluation/evaluationRoute');
 const coachRouter = require('./src/coach/coachRoute');
 const parentRouter = require('./src/parent/parentRoute');
+const presenceRouter = require('./src/presence/presenceRoute');
 const administrateurRouter = require('./src/administrateur/administrateurRoute');
 
 const app = express();
@@ -55,6 +56,7 @@ app.use(xss());
  app.use('/api/v1/groupe', groupeRouter);
  app.use('/api/v1/parent', parentRouter);
  app.use('/api/v1/evaluation', evaluationRouter);
+ app.use('/api/v1/presence', presenceRouter);
  
 
 // we might use pug as template engine later 

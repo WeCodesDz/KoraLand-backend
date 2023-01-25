@@ -3,6 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const Groupe = require('./groupeModel');
 const Student = require('../student/studentModel');
 const Coach = require('../coach/coachModel');
+const Presence = require('../presence/presenceModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -187,4 +188,23 @@ exports.deleteStudentGroupe = catchAsync( async(req, res, next)=>{
   res.status(200).json({
     status: 'success',
   });
+});
+
+exports.getGroupePresenceByDate = catchAsync(async(req,res,next)=>{
+    const {datePresence} = req.body;
+    const groupe = await Groupe.findOne({
+        where:{
+            id:req.params.id
+        }
+    });
+    const presence = await groupe.getPresences({
+      where:{
+        datePresence
+      }
+    });
+    res.status(200).json({
+      status: 'success',
+      data: presence,
+    });
+    
 });

@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+const Sequelize = require('sequelize');
 
 process.on('uncaughtException', (err) => {
   console.error(err);
@@ -16,15 +17,28 @@ const Admin = require('./src/administrateur/administrateurModel');
 const Groupe = require('./src/groupe/groupeModel');
 const Student = require('./src/student/studentModel');
 const Evaluation = require('./src/evaluation/evaluationModel');
+const Presence = require('./src/presence/presenceModel');
+const Parent = require('./src/parent/parentModel');
 
 Groupe.hasMany(Student, { onDelete: 'cascade' });
 Student.belongsTo(Groupe, { onDelete: 'cascade' });
 
-Groupe.hasOne(Coach, { onDelete: 'cascade' });
-Coach.belongsTo(Groupe, { onDelete: 'cascade' });
+Coach.hasMany(Groupe, { onDelete: 'cascade' });
+Groupe.belongsTo(Coach, { onDelete: 'cascade' });
 
 Student.hasMany(Evaluation, { onDelete: 'cascade'});
 Evaluation.belongsTo(Student, {onDelete: 'cascade'});
+
+ Student.hasMany(Presence, { onDelete: 'cascade'});
+ Presence.belongsTo(Student, { onDelete: 'cascade'});
+
+ Groupe.hasMany(Presence, { onDelete: 'cascade'});
+ Presence.belongsTo(Groupe, { onDelete: 'cascade'});
+
+Parent.hasMany(Student, { onDelete: 'cascade' });
+Student.belongsTo(Parent, { onDelete: 'cascade' });
+
+
 
 (async () => {
     await db.authenticate();
