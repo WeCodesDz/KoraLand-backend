@@ -57,20 +57,20 @@ exports.role = (...roles) => {
   };
 
 exports.login = catchAsync(async (req, res, next) => {
-    const { email, password,accesToken } = req.body;
+    const { email, password,accesToken,username } = req.body;
     let authenticate;
-    if(!email ) {
-        return new AppError('Please provide email ', 400);
-    }
+    // if(!email ) {
+    //     throw new  AppError('Please provide email ', 400);
+    // }
     if(!password ) {
-        return new AppError('Please provide password ', 400);
+        throw new  AppError('Please provide password ', 400);
     }
     if(accesToken === 'admin') 
     authenticate = await Admin.findOne({ where: { email: email.trim() } });
     if(accesToken === 'coach')
     authenticate = await Coach.findOne({ where: { email: email.trim() } });
     if(accesToken === 'parent')
-    authenticate = await Parent.findOne({ where: { email: email.trim() } });
+    authenticate = await Parent.findOne({ where: { username: username.trim() } });
     
     if (!authenticate || !(await authenticate.correctPassword(password.trim(), authenticate.password))) {
         return next(new AppError('Incorrect Email or password', 401));
@@ -122,7 +122,7 @@ exports.protect = catchAsync(async (req, res, next) => {
      );
    }
    res.locals.user = currentUser;
-   res.user = currentUser;
+   req.user = currentUser;
 }
 next(); 
 });

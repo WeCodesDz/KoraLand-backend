@@ -44,7 +44,7 @@ Student.belongsTo(Parent, { onDelete: 'cascade' });
     await db.authenticate();
     console.log('database connected');
     //db.sync({ force: true });
-    //Student.sync({ force: true });
+    //Parent.sync({ force: true });
   
   })();
   const app = require('./app');

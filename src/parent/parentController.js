@@ -1,5 +1,6 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const parentModel = require('./parentModel');
 const Parent = require('./parentModel');
 
 
@@ -45,7 +46,7 @@ exports.createParent = catchAsync(async (req, res, next) => {
     } = req.body;
     
     if(!nomParent || !prenomParent || !email || !username || !password || !passwordConfirm || !numeroTelephone) {
-        return new AppError('Please provide all fields', 400);
+        throw new  AppError('Please provide all fields', 400);
     }
     
     const parent = await Parent.create({
@@ -129,7 +130,7 @@ exports.getParentbyId = catchAsync(async (req, res, next) => {
 exports.updateParent = catchAsync(async (req, res, next) => {
    const parent = await Parent.findByPk(req.params.id);
     if(!parent) {
-        return new AppError('Parent not found', 404);
+        throw new  AppError('Parent not found', 404);
     }
     await parent.update(req.body);
     res.status(200).json({
@@ -143,11 +144,77 @@ exports.updateParent = catchAsync(async (req, res, next) => {
 exports.deleteParent = catchAsync(async (req, res, next) => {
     const parent = await Parent.findByPk(req.params.id);
     if(!parent) {
-        return new AppError('Parent not found', 404);
+        throw new  AppError('Parent not found', 404);
     }
     await parent.destroy();
     res.status(200).json({
         status: 'success',
         data: parent,
+    });
+});
+
+exports.addStudentToParent = catchAsync(async (req, res, next) => {
+    const parent = await Parent.findByPk(req.params.id);
+    if(!parent) {
+        throw new  AppError('no parent found with this id', 404);
+    }
+    await parent.addStudent(req.body.studentId);
+    res.status(200).json({
+        status: 'success',
+        data: parent,
+    });
+});
+
+exports.getParentAllStudent = catchAsync(async (req, res, next)=>{
+    const parent = await Parent.findByPk(req.params.id);
+    if(!parent) {
+        throw new  AppError('no parent found with this id', 404);
+    }
+    const students = await parent.getStudents();
+    res.status(200).json({
+        status: 'success',
+        data: {
+            ...parent.dataValues,
+            students,
+        },
+    });
+});
+
+exports.getMyStudents = catchAsync(async (req, res, next)=>{
+    const parentId = req.user.id;
+    console.log("////////////////////",req.user)
+    const parent = await Parent.findByPk(parentId,{
+        attributes: ['id', 'nomParent', 'prenomParent','numeroTelephone','status']
+    });
+    if(!parent) {
+        throw new AppError('no parent found with this id', 404);
+    }
+    const students = await parent.getStudents({
+        attributes: [
+            'id',
+            'nomEleve',
+            'prenomEleve',
+            'dateNaissance',
+            'saisonActuel',
+            'dateInscription',
+            'reinscription',
+            'anneeExamen',
+            'commune',
+            'operateur',
+            'guardianDeBut',
+            'posteEleve',
+            'taille',
+            'poids',
+            'remarque',
+            'status'
+        ]
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            ...parent.dataValues,
+            students,
+        },
     });
 });

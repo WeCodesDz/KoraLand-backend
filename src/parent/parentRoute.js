@@ -12,6 +12,17 @@ router
     .post(parentController.createParent);
 
 router
+    .route('/myStudents')
+    .get(
+            authController.protect, 
+            parentController.getMyStudents);
+
+router
+    .route('/student/:id')
+    .post(parentController.addStudentToParent)
+    .get(parentController.getParentAllStudent);     
+
+router
     .route('/:id')
     .get(parentController.getParentbyId)
     .patch(parentController.updateParent)
