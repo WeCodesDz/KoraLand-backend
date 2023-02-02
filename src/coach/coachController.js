@@ -47,7 +47,7 @@ exports.createCoach = catchAsync(async (req, res, next) => {
     } = req.body;
     
     if(!nomCoach || !prenomCoach || !email || !username || !password || !passwordConfirm || !numeroTelephone || !categories) {
-        return new AppError('Please provide all fields', 400);
+        throw new  AppError('Please provide all fields', 400);
     }
     
     const coach = await Coach.create({
@@ -122,7 +122,7 @@ exports.getCoachById = catchAsync(async (req, res, next) => {
   }
   
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     res.status(200).json({
         status: 'success',
@@ -135,7 +135,7 @@ exports.getCoachById = catchAsync(async (req, res, next) => {
 exports.updateCoach = catchAsync(async (req, res, next) => {
     const coach = await Coach.findByPk(req.params.id);
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     
     const {
@@ -166,7 +166,7 @@ exports.updateCoach = catchAsync(async (req, res, next) => {
 exports.deleteCoach = catchAsync(async (req, res, next) => {
     const coach = await Coach.findByPk(req.params.id);
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     coach.destroy();
     res.status(200).json({
@@ -178,11 +178,11 @@ exports.deleteCoach = catchAsync(async (req, res, next) => {
 exports.getCoachGroupes = catchAsync(async (req, res, next) => {
     const coach = await Coach.findByPk(req.body.id);
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     const groupes = await coach.getGroupes();
     if (!groupes) {
-        return new AppError('No groupes found with this Coach', 404);
+        throw new  AppError('No groupes found with this Coach', 404);
     }
     res.status(200).json({
         status: 'success',
@@ -196,11 +196,11 @@ exports.getCoachGroupes = catchAsync(async (req, res, next) => {
 exports.addCoachToGroupe = catchAsync(async (req, res, next) => {
     const coach = await Coach.findByPk(req.body.coachId);
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     const groupe = await Groupe.findByPk(req.body.groupeId);
     if (!groupe) {
-        return new AppError('No groupe found with that ID', 404);
+        throw new  AppError('No groupe found with that ID', 404);
     }
     console.log(groupe);
     console.log(coach); 
@@ -218,11 +218,11 @@ exports.addCoachToGroupe = catchAsync(async (req, res, next) => {
 exports.deleteCoachGroupe = catchAsync(async (req, res, next) => {
     const coach = await Coach.findByPk(req.body.coachId);
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     const groupe = await Groupe.findByPk(req.body.groupeId);
     if (!groupe) {
-        return new AppError('No groupe found with that ID', 404);
+        throw new  AppError('No groupe found with that ID', 404);
     }
     await coach.removeGroupe(groupe);
     res.status(200).json({
@@ -236,11 +236,11 @@ exports.getMyGroupes = catchAsync(async (req, res, next) => {
         attributes:['id','nomCoach','prenomCoach','email','username','categories'],
     });
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     const groupes = await coach.getGroupes();
     if (!groupes) {
-        return new AppError('No groupes found with this Coach', 404);
+        throw new  AppError('No groupes found with this Coach', 404);
     }
     res.status(200).json({
         status: 'success',
@@ -257,7 +257,7 @@ exports.getMyGroupeById = catchAsync(async (req, res, next) => {
         attributes:['id','nomCoach','prenomCoach','email','username','categories'],
     });
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     const groupes = await coach.getGroupes({
         where:{
@@ -265,7 +265,7 @@ exports.getMyGroupeById = catchAsync(async (req, res, next) => {
         }
     });
     if (!groupes) {
-        return new AppError('No groupes found with this Coach', 404);
+        throw new  AppError('No groupes found with this Coach', 404);
     }
     res.status(200).json({
         status: 'success',
@@ -282,7 +282,7 @@ exports.getListStudentOfOneGroupe = catchAsync(async (req, res, next) => {
         attributes:['id','nomCoach','prenomCoach','email','username','categories'],
     });
     if (!coach) {
-        return new AppError('No coach found with that ID', 404);
+        throw new  AppError('No coach found with that ID', 404);
     }
     const groupe = await Groupe.findOne({
         where:{

@@ -304,7 +304,7 @@ exports.updateStudent = catchAsync(async (req, res, next) => {
 
 const student = await Student.findByPk(req.params.id.trim());
 if(!student) {
-    return new AppError('No student found with that ID', 404);
+    throw new  AppError('No student found with that ID', 404);
 }
 
    if(nomEleve) student.nomEleve = nomEleve;
@@ -340,7 +340,7 @@ if(!student) {
 exports.deleteStudent = catchAsync(async (req, res, next) => {
   const student = await Student.findByPk(req.params.id.trim());
   if(!student) {
-    return new AppError('No student found with that ID', 404);
+    throw new  AppError('No student found with that ID', 404);
   }
   await student.destroy();
   res.status(200).json({
@@ -480,7 +480,7 @@ exports.blockStudent = catchAsync( async(req,res,next)=>{
 exports.getStudentEvaluation = catchAsync(async (req,res,next)=>{
   const student = await Student.findByPk(req.params.id.trim());
   if(!student) {
-    return new AppError('No student found with that ID', 404);
+    throw new  AppError('No student found with that ID', 404);
   }
   const evaluations = await student.getEvaluations();
   
@@ -497,7 +497,7 @@ exports.getStudentPresenceByDate = catchAsync(async(req,res,next)=>{
    const {datePresence} = req.body;
   const student = await Student.findByPk(req.params.id.trim());
   if(!student) {
-    return new AppError('No student found with that ID', 404);
+    throw new  AppError('No student found with that ID', 404);
   }
   const presences = await student.getPresences({
     where:{
@@ -579,7 +579,7 @@ exports.updateStudentPayment = catchAsync(async(req,res,next)=>{
 exports.getStudentAllPresence = catchAsync(async(req,res,next)=>{
   const student = await Student.findByPk(req.params.id.trim());
   if(!student) {
-    return new AppError('No student found with that ID', 404);
+    throw new  AppError('No student found with that ID', 404);
   }
   const presences = await student.getPresences();
   

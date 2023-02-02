@@ -31,7 +31,7 @@ exports.getAdminById = catchAsync(async (req, res, next) => {
             'role',]
       });
     if (!admin) {
-        return next(new AppError('No admin found with that ID', 404));
+        throw new AppError('No admin found with that ID', 404);
     }
     res.status(200).json({
         status: 'success',
@@ -54,7 +54,7 @@ exports.createAdmin = catchAsync(async (req, res, next) => {
     } = req.body;
     
     if(!nomAdmin || !prenomAdmin || !email || !username || !password || !passwordConfirm || !role || !adminLevel) {
-        return new AppError('Please provide all fields', 400);
+        throw new  AppError('Please provide all fields', 400);
     }
     
     const admin = await Admin.create({
@@ -87,7 +87,7 @@ exports.updateAdmin = catchAsync(async (req, res, next)=>{
   } = req.body;
   const admin = await Admin.findByPk(req.params.id);
     if (!admin) {
-        return new AppError('No admin found with that ID', 404);
+        throw new  AppError('No admin found with that ID', 404);
     }
     if(nomAdmin) admin.nomAdmin = nomAdmin;
     if(prenomAdmin) admin.prenomAdmin = prenomAdmin;
@@ -109,7 +109,7 @@ exports.updateAdmin = catchAsync(async (req, res, next)=>{
 exports.deleteAdmin = catchAsync(async (req, res, next) => {
     const admin = await Admin.findByPk(req.params.id);
     if (!admin) {
-        return new AppError('No admin found with that ID', 404);
+        throw new  AppError('No admin found with that ID', 404);
     }
     await admin.destroy();
     res.status(200).json({

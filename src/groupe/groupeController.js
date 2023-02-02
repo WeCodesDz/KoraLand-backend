@@ -44,7 +44,7 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
     } = req.body;
     
     if(!groupeName || !horaireEntrainement || !sport || !categorieAge) {
-        return new AppError('Please provide all fields', 400);
+        throw new  AppError('Please provide all fields', 400);
     }
     
     const groupe = await Groupe.create({
@@ -95,7 +95,7 @@ exports.getGroupeById = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const groupe = await Groupe.findByPk(id);
     if (!groupe) {
-        return new AppError('No groupe found with that ID', 404);
+        throw new  AppError('No groupe found with that ID', 404);
     }
     res.status(200).json({
         status: 'success',
@@ -110,7 +110,7 @@ exports.updateGroupe = catchAsync(async (req, res, next) => {
     // const { groupeName, horaireEntrainement, sport, categorieAge } = req.body;
     const groupe = await Groupe.findByPk(id);
     if (!groupe) {
-      return new AppError('No groupe found with that ID', 404);
+      throw new  AppError('No groupe found with that ID', 404);
     }
     await groupe.update(req.body);
     //update list des students ET coach
@@ -126,7 +126,7 @@ exports.deleteGroupe = catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const groupe = await Groupe.findByPk(id);
     if (!groupe) {
-      return new AppError('No groupe found with that ID', 404);
+      throw new  AppError('No groupe found with that ID', 404);
     }
     await groupe.destroy();
     res.status(200).json({
@@ -138,12 +138,12 @@ exports.deleteGroupe = catchAsync(async (req, res, next) => {
 exports.addStudentToGroupe = catchAsync( async(req, res, next)=>{
   const groupe = await Groupe.findByPk(req.body.groupeId.trim());
   if(!groupe){
-    return new AppError('No groupe found with that ID', 404);
+    throw new  AppError('No groupe found with that ID', 404);
   }
 
   const student = await Student.findByPk(req.body.studentId.trim());
   if(!student){
-    return new AppError('No student found with that ID', 404);
+    throw new  AppError('No student found with that ID', 404);
   }
 
   await groupe.addStudent(student);
@@ -156,12 +156,12 @@ exports.addStudentToGroupe = catchAsync( async(req, res, next)=>{
 exports.getGroupeStudents = catchAsync( async(req, res, next)=>{
   const groupe = await Groupe.findByPk(req.body.groupeId.trim());
   if(!groupe){
-    return new AppError('No groupe found with that Id', 404);
+    throw new  AppError('No groupe found with that Id', 404);
   }
 
   const students = await groupe.getStudents();
   if(!students){
-    return new AppError('No students found in this groupe', 404);
+    throw new  AppError('No students found in this groupe', 404);
   }
   res.status(200).json({
     status: 'success',
@@ -176,12 +176,12 @@ exports.getGroupeStudents = catchAsync( async(req, res, next)=>{
 exports.deleteStudentGroupe = catchAsync( async(req, res, next)=>{
   const groupe = await Groupe.findByPk(req.body.groupeId.trim());
   if(!groupe){
-    return new AppError('No groupe found with that Id', 404);
+    throw new  AppError('No groupe found with that Id', 404);
   }
 
   const student = await Student.findByPk(req.body.studentId.trim());
   if(!student){
-    return new AppError('No student found with that Id', 404);
+    throw new  AppError('No student found with that Id', 404);
   }
 
   await groupe.removeStudent(student);
