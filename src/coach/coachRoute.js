@@ -15,7 +15,18 @@ router
         .route('/groups')
         .get(coachController.getCoachGroupes)
         .post(coachController.addCoachToGroupe)
-        .delete(coachController.deleteCoachGroupe)
+        .delete(coachController.deleteCoachGroupe);
+
+router
+        .route('/myGroupes/')
+        .get(authController.protect, coachController.getMyGroupes);
+router
+        .route('/myGroupes/:id')
+        .get(authController.protect, coachController.getMyGroupeById);
+router
+        .route('/myGroupeStudent/:id')
+        .get(authController.protect, coachController.getListStudentOfOneGroupe);
+
 
 router.route('/:id')
         .get(coachController.getCoachById)

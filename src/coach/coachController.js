@@ -2,6 +2,7 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Coach = require('./coachModel');
 const Groupe = require('../groupe/groupeModel');
+const Student = require('../student/studentModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -226,5 +227,90 @@ exports.deleteCoachGroupe = catchAsync(async (req, res, next) => {
     await coach.removeGroupe(groupe);
     res.status(200).json({
         status: 'success',
+    });
+});
+
+exports.getMyGroupes = catchAsync(async (req, res, next) => {
+    const coachId = req.user.id;
+    const coach = await Coach.findByPk(coachId,{
+        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+    });
+    if (!coach) {
+        return new AppError('No coach found with that ID', 404);
+    }
+    const groupes = await coach.getGroupes();
+    if (!groupes) {
+        return new AppError('No groupes found with this Coach', 404);
+    }
+    res.status(200).json({
+        status: 'success',
+        data:{
+          ...coach.dataValues,
+          groupes
+        }
+    });
+});
+
+exports.getMyGroupeById = catchAsync(async (req, res, next) => {
+    const coachId = req.user.id;
+    const coach = await Coach.findByPk(coachId,{
+        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+    });
+    if (!coach) {
+        return new AppError('No coach found with that ID', 404);
+    }
+    const groupes = await coach.getGroupes({
+        where:{
+            id:req.params.id
+        }
+    });
+    if (!groupes) {
+        return new AppError('No groupes found with this Coach', 404);
+    }
+    res.status(200).json({
+        status: 'success',
+        data:{
+          ...coach.dataValues,
+          groupes
+        }
+    });
+});
+
+exports.getListStudentOfOneGroupe = catchAsync(async (req, res, next) => {
+    const coachId = req.user.id;
+    const coach = await Coach.findByPk(coachId,{
+        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+    });
+    if (!coach) {
+        return new AppError('No coach found with that ID', 404);
+    }
+    const groupe = await Groupe.findOne({
+        where:{
+            id:req.params.id.trim(),
+            coachId:coachId
+        },
+        include:{
+            model:Student,
+            attributes:[
+            'id',
+            'nomEleve',
+            'prenomEleve',
+            'dateNaissance',
+            'saisonActuel',
+            'anneeExamen',
+            'commune',
+            'guardianDeBut',
+            'posteEleve',
+            'taille',
+            'poids',],
+        },
+    });
+    
+    res.status(200).json({
+        status: 'success',
+        data:{
+          ...coach.dataValues,
+          ...groupe.dataValues,
+        }
     });
 });
