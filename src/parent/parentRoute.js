@@ -21,6 +21,11 @@ router
     .route('/student/:id')
     .post(parentController.addStudentToParent)
     .get(parentController.getParentAllStudent);     
+router
+    .route('/myStudents/:id')
+    .get(
+            authController.protect, 
+            parentController.getParentStudentById); 
 
 router
     .route('/:id')

@@ -1,6 +1,6 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const parentModel = require('./parentModel');
+const Student = require('../student/studentModel');
 const Parent = require('./parentModel');
 
 
@@ -182,7 +182,6 @@ exports.getParentAllStudent = catchAsync(async (req, res, next)=>{
 
 exports.getMyStudents = catchAsync(async (req, res, next)=>{
     const parentId = req.user.id;
-    console.log("////////////////////",req.user)
     const parent = await Parent.findByPk(parentId,{
         attributes: ['id', 'nomParent', 'prenomParent','numeroTelephone','status']
     });
@@ -215,6 +214,50 @@ exports.getMyStudents = catchAsync(async (req, res, next)=>{
         data: {
             ...parent.dataValues,
             students,
+        },
+    });
+});
+
+exports.getParentStudentById = catchAsync(async (req, res, next)=>{
+    const parentId = req.user.id;
+    console.log("STUDENT ID",req.params.id);
+    console.log("PArentID",parentId);
+    const parent = await Parent.findByPk(parentId,{
+        attributes: ['id', 'nomParent', 'prenomParent','numeroTelephone','status']
+    });
+    if(!parent) {
+        throw new AppError('no parent found with this id', 404);
+    }
+
+    const student = await Student.findOne({
+        attributes: [
+            'id',
+            'nomEleve',
+            'prenomEleve',
+            'dateNaissance',
+            'saisonActuel',
+            'dateInscription',
+            'reinscription',
+            'anneeExamen',
+            'commune',
+            'operateur',
+            'guardianDeBut',
+            'posteEleve',
+            'taille',
+            'poids',
+            'remarque',
+            'status'
+        ],
+        where: {
+            id: req.params.id,
+            parentId: parentId
+        }
+    });
+    res.status(200).json({
+        status: 'success',
+        data: {
+            ...parent.dataValues,
+            student,
         },
     });
 });
