@@ -55,7 +55,9 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         posteEleve,
         taille,
         poids,
-        remarque
+        remarque,
+        parentId,
+        groupeId
     } = req.body;
     
     const student = await Student.create({
@@ -79,6 +81,8 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         poids,
         remarque
     })
+    await student.setParent(parentId);
+    await student.setGroupe(groupeId);
 
     res.status(201).json({
         status: 'success',
@@ -518,9 +522,10 @@ exports.lastEvaluation = catchAsync(async (req,res,next)=>{
   if(!student) {
     throw new AppError('No student found with that ID', 404);
   }
-  const lastEvaluation = await Evaluation.findOne({
+  const lastEvaluation = await Evaluation.findAll({
     where: { 'studentId' : student.id },
     order: [ [ 'createdAt', 'DESC' ]],
+    limit: 2
   });
 
   if(!lastEvaluation){

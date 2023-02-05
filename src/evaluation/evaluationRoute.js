@@ -4,8 +4,8 @@ const router = express.Router();
 
 
 router
-    .route('/lastEvaluation/:id')
-    .get(evaluationController.getStudentLastEvaluation);
+    .route('/allEvaluations/')
+    .get(evaluationController.getAllStudentEvaluation);
 
 router  
     .route('/:id')

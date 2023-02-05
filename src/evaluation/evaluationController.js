@@ -3,7 +3,35 @@ const catchAsync = require('../utils/catchAsync');
 const Evaluation = require('./evaluationModel');
 const Student = require('../student/studentModel');
  
+const filter = (queryParams) => {
+  const tempQueryParams = { ...queryParams };
 
+  const keys = Object.keys(queryParams);
+  keys.forEach((key) => {
+    if (key !== key.trim()) {
+      tempQueryParams[key.trim()] = tempQueryParams[key].trim();
+      delete tempQueryParams[key];
+    } else {
+      tempQueryParams[key] = tempQueryParams[key].trim();
+    }
+  });
+
+  const queryObj = { ...tempQueryParams };
+  const excludedFields = ['page', 'sort', 'limit', 'fields','order'];
+  excludedFields.forEach((field) => delete queryObj[field]);
+
+
+  const queryArray = Object.entries(queryObj);
+
+  const where = {};
+
+  queryArray.forEach((obj) => {
+    if (['dateEvaluation','etatEvaluation','studentId'].includes(obj[0])) {
+      where[obj[0]] = obj[1];
+    }
+  });
+  return where;
+};
 
 exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
   const {
@@ -192,3 +220,30 @@ exports.getStudentLastEvaluation = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
+  let { page ,limit ,order } = req.query;
+  page = page * 1 || 1;
+  limit = limit * 1 || 1;
+  // offset is the number of rows skipped
+  const offset = (page - 1) * limit;
+  //filtering
+  const where = filter(req.query);
+
+  const results = await Evaluation.findAndCountAll({
+    where,
+    limit,
+    offset,
+    order
+  });
+  res.status(200).json({
+    status: 'success',
+    rows: results.count,
+    data: {
+        totalEvaluations: Math.ceil(results.count / limit),
+        page,
+        limit,
+        rows: results.rows.length,
+        totalStudents: results.rows
+    },
+});
+});

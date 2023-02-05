@@ -40,10 +40,11 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
         groupeName,
         horaireEntrainement,
         sport,
-        categorieAge
+        categorieAge,
+        coachId
     } = req.body;
     
-    if(!groupeName || !horaireEntrainement || !sport || !categorieAge) {
+    if(!groupeName || !horaireEntrainement || !sport || !categorieAge || !coachId) {
         throw new  AppError('Please provide all fields', 400);
     }
     
@@ -55,7 +56,7 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
     });
 
     //coachAffected here if exist
-
+    await groupe.setCoach(coachId);
     res.status(201).json({
         status: 'success',
         data: {

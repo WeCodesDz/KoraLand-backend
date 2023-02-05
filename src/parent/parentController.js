@@ -220,8 +220,6 @@ exports.getMyStudents = catchAsync(async (req, res, next)=>{
 
 exports.getParentStudentById = catchAsync(async (req, res, next)=>{
     const parentId = req.user.id;
-    console.log("STUDENT ID",req.params.id);
-    console.log("PArentID",parentId);
     const parent = await Parent.findByPk(parentId,{
         attributes: ['id', 'nomParent', 'prenomParent','numeroTelephone','status']
     });
