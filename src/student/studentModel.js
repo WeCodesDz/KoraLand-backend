@@ -32,6 +32,11 @@ const studentModel = db.define("student", {
         type: Sequelize.STRING,
         allowNull: false,
     },
+    sport:{
+        type: Sequelize.ENUM,
+        values: ['football', 'basketball'],
+        allowNull: { args: true, msg: 'You should insert sport for the student!' },
+    },
     reinscription:{
         type: Sequelize.ENUM,
         values: ['oui', 'nouveau'],

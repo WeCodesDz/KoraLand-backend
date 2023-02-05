@@ -27,7 +27,7 @@ const filter = (queryParams) => {
     const where = {};
   
     queryArray.forEach((obj) => {
-      if (['commune','anneeExamen','status1Tranche','status2Tranche','status'].includes(obj[0])) {
+      if (['commune','anneeExamen','status1Tranche','status2Tranche','status','sport'].includes(obj[0])) {
         where[obj[0]] = obj[1];
       }
     });
@@ -57,7 +57,8 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         poids,
         remarque,
         parentId,
-        groupeId
+        groupeId,
+        sport
     } = req.body;
     
     const student = await Student.create({
@@ -79,7 +80,8 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         posteEleve,
         taille,
         poids,
-        remarque
+        remarque,
+        sport
     })
     await student.setParent(parentId);
     await student.setGroupe(groupeId);
