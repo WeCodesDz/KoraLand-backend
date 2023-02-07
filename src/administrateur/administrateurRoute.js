@@ -7,7 +7,9 @@ const router = express.Router();
 router
     .route('/login')
     .post(authController.login)
-
+router.
+    route('/statistics')
+    .get(administrateurController.getAdminStatistcs)
 router.route('/')
     .get(administrateurController.getAllAdmin)
     .post(administrateurController.createAdmin);

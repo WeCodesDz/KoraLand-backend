@@ -1,6 +1,11 @@
+const Sequelize = require('sequelize');
+const { QueryTypes } = require('sequelize');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Admin = require('./administrateurModel');
+const Student = require('../student/studentModel');
+const Presence = require('../presence/presenceModel');
+const sequelize = require('sequelize');
 
 exports.getAllAdmin = catchAsync(async (req, res, next) => {
   const admins = await Admin.findAll({
@@ -149,4 +154,67 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     status: 'success',
     message: 'Password updated successfully',
   });
+});
+
+exports.getAdminStatistcs = catchAsync(async (req, res, next) => {
+
+  const nbTotalStudents = await Student.findAll({
+    attributes: [[Sequelize.fn('COUNT', 'id'), 'total students']],
+    plain: true,
+  });
+
+  const nbTotalFootball = await Student.findAll({
+    attributes: [[Sequelize.fn('COUNT', 'id'), 'total football students']],
+    where:{
+      sport: 'football'
+    },
+    plain: true,
+  });
+
+  const nbTotalBasketball = await Student.findAll({
+    attributes: [[Sequelize.fn('COUNT', 'id'), 'total basketball students']],
+    where:{
+      sport: 'basketball'
+    },
+    plain: true,
+  });
+
+  const nbTotalParCommune = await Student.findAll({
+    attributes: ['commune',[Sequelize.fn('COUNT', 'commune'), 'total students par commune']],
+    group: ['commune'],
+    raw: true,
+  });
+  
+   
+
+   const expectationPresence = await Presence.sequelize.query(
+    " SELECT count(*) as allseance"
+   +" FROM presences"
+  +" where EXTRACT('week' FROM \"datePresence\") = EXTRACT('week' FROM now());", { type: QueryTypes.SELECT });
+
+   const nbPresenceSemaine = await Presence.sequelize.query(
+    " SELECT count(*) as presence"
+   +" FROM presences"
+  +" where EXTRACT('week' FROM \"datePresence\") = EXTRACT('week' FROM now()) and presence = 'present';", { type: QueryTypes.SELECT });
+
+   const nbAbsenceSemaine = await Presence.sequelize.query(
+    " SELECT count(*) as absence"
+   +" FROM presences"
+  +" where EXTRACT('week' FROM \"datePresence\") = EXTRACT('week' FROM now()) and presence = 'absent';", { type: QueryTypes.SELECT });
+
+  const tauxPresence = nbPresenceSemaine[0].presence / expectationPresence[0].allseance;
+  const tauxAbsence = nbAbsenceSemaine[0].absence / expectationPresence[0].allseance;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      nbTotalStudents,
+      nbTotalFootball,
+      nbTotalBasketball,
+      nbTotalParCommune,
+      tauxPresence:tauxPresence,
+      tauxAbsence:tauxAbsence
+    },
+  });
+
 });
