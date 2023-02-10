@@ -2,10 +2,15 @@ const Sequelize = require('sequelize');
 const db = require('../../database');
 
 const presence = db.define('presence', {
-    datePresence:{
-        type: Sequelize.STRING,
+    id: {
+        type: Sequelize.Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         primaryKey: true,
+        },
+    datePresence:{
+        type: Sequelize.DATEONLY,
+        allowNull: false,
     },
     presence:{
         type: Sequelize.ENUM,

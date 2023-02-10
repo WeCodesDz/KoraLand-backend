@@ -176,7 +176,9 @@ exports.deleteCoach = catchAsync(async (req, res, next) => {
 });
 
 exports.getCoachGroupes = catchAsync(async (req, res, next) => {
-    const coach = await Coach.findByPk(req.body.id);
+    const coach = await Coach.findByPk(req.body.id,{
+        attributes:['id','nomCoach','prenomCoach','username'],
+    });
     if (!coach) {
         throw new  AppError('No coach found with that ID', 404);
     }
@@ -202,8 +204,6 @@ exports.addCoachToGroupe = catchAsync(async (req, res, next) => {
     if (!groupe) {
         throw new  AppError('No groupe found with that ID', 404);
     }
-    console.log(groupe);
-    console.log(coach); 
     await coach.addGroupe(groupe);
     res.status(200).json({
         status: 'success',

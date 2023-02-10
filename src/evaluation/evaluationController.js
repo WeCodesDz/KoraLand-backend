@@ -243,7 +243,7 @@ exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
         page,
         limit,
         rows: results.rows.length,
-        totalStudents: results.rows
+        Evaluations: results.rows
     },
 });
 });

@@ -15,6 +15,7 @@ exports.getAllAdmin = catchAsync(async (req, res, next) => {
         'prenomAdmin',
         'email',
         'username',
+        'adminLevel',
         'role',]
   });
   res.status(200).json({
@@ -33,6 +34,7 @@ exports.getAdminById = catchAsync(async (req, res, next) => {
             'email',
             'numeroTelephone',
             'username',
+            'adminLevel',
             'role',]
       });
     if (!admin) {

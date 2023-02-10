@@ -193,7 +193,7 @@ const evaluation = db.define('evaluation', {
         allowNull:false,
     },
     dateEvaluation:{
-        type: Sequelize.STRING,
+        type: Sequelize.DATEONLY,
         allowNull:false,
     },
     etatEvaluation:{

@@ -166,11 +166,32 @@ exports.addStudentToParent = catchAsync(async (req, res, next) => {
 });
 
 exports.getParentAllStudent = catchAsync(async (req, res, next)=>{
-    const parent = await Parent.findByPk(req.params.id);
+    const parent = await Parent.findByPk(req.params.id,{
+        attributes: ['id', 'nomParent', 'prenomParent','numeroTelephone','status']
+    });
     if(!parent) {
         throw new  AppError('no parent found with this id', 404);
     }
-    const students = await parent.getStudents();
+    const students = await parent.getStudents({
+        attributes: [
+            'id',
+            'nomEleve',
+            'prenomEleve',
+            'dateNaissance',
+            'saisonActuel',
+            'dateInscription',
+            'reinscription',
+            'anneeExamen',
+            'commune',
+            'operateur',
+            'guardianDeBut',
+            'posteEleve',
+            'taille',
+            'poids',
+            'remarque',
+            'status'
+        ]
+    });
     res.status(200).json({
         status: 'success',
         data: {
