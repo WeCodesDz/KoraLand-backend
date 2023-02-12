@@ -43,13 +43,13 @@ Parent.hasMany(Student, { onDelete: 'cascade' });
 Student.belongsTo(Parent, { onDelete: 'cascade' });
 
 Parent.hasMany(RefreshParent, {as:'refreshes', onDelete: 'cascade' });
-RefreshParent.belongsTo(Parent, {as:'refreshes', onDelete: 'cascade' });
+RefreshParent.belongsTo(Parent, { onDelete: 'cascade' });
 
 Coach.hasMany(RefreshCoach, {as:'refreshes', onDelete: 'cascade' });
-RefreshCoach.belongsTo(Coach, {as:'refreshes', onDelete: 'cascade' });
+RefreshCoach.belongsTo(Coach, {onDelete: 'cascade' });
 
-Admin.hasMany(RefreshAdmin, {as:'refreshes', onDelete: 'cascade' });
-RefreshAdmin.belongsTo(Admin, {as:'refreshes', onDelete: 'cascade' });
+Admin.hasMany(RefreshAdmin, { as:'refreshes',onDelete: 'cascade' });
+RefreshAdmin.belongsTo(Admin, { onDelete: 'cascade' });
 
 
 (async () => {
