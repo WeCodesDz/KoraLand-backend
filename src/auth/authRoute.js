@@ -4,10 +4,10 @@ const authController = require('./authController');
 
 const router = express.Router();
 
-router.post('/admin/login', authController.loginAdmin);
-router.post('/coach/login', authController.loginCoach);
-router.post('/parent/login', authController.loginParent);
-router.post('/logout', authController.logout);
+router.post('/admin', authController.loginAdmin);
+router.post('/coach', authController.loginCoach);
+router.post('/parent', authController.loginParent);
+router.get('/logout', authController.logout);
 
 
 

@@ -26,7 +26,7 @@ exports.role = (...roles) => {
  
 exports.loginAdmin = catchAsync(async (req, res, next) => {
 
-  const cookies = req.cookies;
+  const {cookies} = req;
 
     const {  password,username } = req.body;
     
@@ -51,36 +51,43 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
                 "role": "admin"
             }
         },
-        process.env.JWT_SECRET,
+        process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '15m' }
     );
 
     const newRefreshToken = jwt.sign(
-      { "username": user.username },
+      { "username": user.username ,"role": "admin"},
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '7d' }
   );
    
-
   if(cookies?.jwt){
-    const refreshToken = cookies.jwt;
-    const foundToken = await user.getRefreshAdmins({where:{jwt:refreshToken}});
+    const refreshToken = {...cookies};
+    const foundToken = await user.getRefreshes({where:{jwt:refreshToken.jwt}});
+    
     if (!foundToken) {
-     await RefreshAdmin.destroy({where:{administrateurId:user.id}});
+      await RefreshAdmin.destroy({where:{administrateurId:user.id}});
     }
-
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-
+    const clearCookieConfig = { httpOnly: true, sameSite: 'None' }
+    
+    if (process.env.NODE_ENV === 'production') clearCookieConfig.secure = true;
+    res.clearCookie('jwt',clearCookieConfig );
+    
   }
   const createdRefreshToken = await RefreshAdmin.create({jwt:newRefreshToken});
-  res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
+  await user.addRefreshes(createdRefreshToken);
+
+  const cookieOptions = { httpOnly: true,  sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 }
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', newRefreshToken, cookieOptions);
 
   res.json({ role:'admin', accessToken });
 
 });  
 
 exports.loginCoach = catchAsync(async (req, res, next) => {
-   const cookies = req.cookies;
+  const {cookies} = req;
 
     const {  password,username } = req.body;
     
@@ -105,35 +112,42 @@ exports.loginCoach = catchAsync(async (req, res, next) => {
                 "role": "coach"
             }
         },
-        process.env.JWT_SECRET,
+        process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '15m' }
     );
 
     const newRefreshToken = jwt.sign(
-      { "username": user.username },
+      { "username": user.username ,"role": "coach"},
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '7d' }
   );
-
-
+   
   if(cookies?.jwt){
-    const refreshToken = cookies.jwt;
-    const foundToken = await user.getRefreshCoachs({where:{jwt:refreshToken}});
+    const refreshToken = {...cookies};
+    const foundToken = await user.getRefreshes({where:{jwt:refreshToken.jwt}});
+    
     if (!foundToken) {
-     await RefreshCoach.destroy({where:{coachId:user.id}});
+      await RefreshCoach.destroy({where:{coachId:user.id}});
     }
-
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-
+    const clearCookieConfig = { httpOnly: true, sameSite: 'None' }
+    
+    if (process.env.NODE_ENV === 'production') clearCookieConfig.secure = true;
+    res.clearCookie('jwt',clearCookieConfig );
+    
   }
   const createdRefreshToken = await RefreshCoach.create({jwt:newRefreshToken});
-  res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
+  await user.addRefreshes(createdRefreshToken);
+
+  const cookieOptions = { httpOnly: true,  sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 }
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', newRefreshToken, cookieOptions);
 
   res.json({ role:'coach', accessToken });
 });  
 
 exports.loginParent = catchAsync(async (req, res, next) => {
-  const cookies = req.cookies;
+  const {cookies} = req;
 
     const {  password,username } = req.body;
     
@@ -158,35 +172,39 @@ exports.loginParent = catchAsync(async (req, res, next) => {
                 "role": "parent"
             }
         },
-        process.env.JWT_SECRET,
+        process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '15m' }
     );
 
     const newRefreshToken = jwt.sign(
-      { "username": user.username },
+      { "username": user.username ,"role": "parent"},
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '7d' }
   );
-
-
+   
   if(cookies?.jwt){
-    const refreshToken = cookies.jwt;
-    const foundToken = await user.get('RefreshParents',{where:{
-                                                              jwt:refreshToken
-                                                            }
-                                                    });               
+    const refreshToken = {...cookies};
+    const foundToken = await user.getRefreshes({where:{jwt:refreshToken.jwt}});
+    
     if (!foundToken) {
-     await RefreshParent.destroy({where:{parentId:user.id}});
+      await RefreshParent.destroy({where:{parentId:user.id}});
     }
-
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-
+    const clearCookieConfig = { httpOnly: true, sameSite: 'None' }
+    
+    if (process.env.NODE_ENV === 'production') clearCookieConfig.secure = true;
+    res.clearCookie('jwt',clearCookieConfig );
+    
   }
   const createdRefreshToken = await RefreshParent.create({jwt:newRefreshToken});
-  res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
+  await user.addRefreshes(createdRefreshToken);
+
+  const cookieOptions = { httpOnly: true,  sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 }
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', newRefreshToken, cookieOptions);
 
   res.json({ role:'parent', accessToken });
-});  
+});   
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
@@ -204,13 +222,14 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const decoded = await promisify(jwt.verify)(token, process.env.ACCESS_TOKEN_SECRET);
   let currentUser;
-  if(decoded.role.includes('admin') ){
+  const {role} = decoded.UserInfo;
+  if(role.includes('admin') ){
     currentUser = await Admin.findOne(decoded.username);
  }
- if(decoded.role.includes('coach') ){
+ if(role.includes('coach') ){
    currentUser = await Coach.findOne(decoded.username);
  }
- if(decoded.role.includes('parent')){
+ if(role.includes('parent')){
    currentUser = await Parent.findOne(decoded.username);
   }
    
@@ -220,7 +239,7 @@ exports.protect = catchAsync(async (req, res, next) => {
      );
    }
    req.user = currentUser;
-   req.role = decoded.role;
+   req.role = role;
    next();
   
 });
@@ -232,9 +251,11 @@ exports.logout =  catchAsync(async (req, res, next) => {
   const refreshToken = cookies.jwt;
 
   // Is refreshToken in db?
-  const decoded = await promisify(jwt.verify)(refreshToken, process.env.ACCESS_TOKEN_SECRET);
+  const decoded = await promisify(jwt.verify)(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  
   let currentRefreshToken;
-  if(decoded.role.includes('admin') ){
+  
+  if(decoded.role?.includes('admin') ){
     currentRefreshToken = await RefreshAdmin.findOne({where:{jwt:refreshToken}});
  }
  if(decoded.role.includes('coach') ){

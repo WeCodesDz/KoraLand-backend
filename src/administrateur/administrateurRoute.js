@@ -10,7 +10,8 @@ router.
     .get(administrateurController.getAdminStatistcs)
 router.route('/')
     .get(administrateurController.getAllAdmin)
-    .post(administrateurController.createAdmin);
+    .post(authController.protect,
+        administrateurController.createAdmin);
 
 router.route('/:id')
     .get(administrateurController.getAdminById)

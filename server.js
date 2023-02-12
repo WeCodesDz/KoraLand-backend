@@ -42,20 +42,20 @@ Evaluation.belongsTo(Student, {onDelete: 'cascade'});
 Parent.hasMany(Student, { onDelete: 'cascade' });
 Student.belongsTo(Parent, { onDelete: 'cascade' });
 
-Parent.hasMany(RefreshParent, { onDelete: 'cascade' });
-RefreshParent.belongsTo(Parent, { onDelete: 'cascade' });
+Parent.hasMany(RefreshParent, {as:'refreshes', onDelete: 'cascade' });
+RefreshParent.belongsTo(Parent, {as:'refreshes', onDelete: 'cascade' });
 
-Coach.hasMany(RefreshCoach, { onDelete: 'cascade' });
-RefreshCoach.belongsTo(Coach, { onDelete: 'cascade' });
+Coach.hasMany(RefreshCoach, {as:'refreshes', onDelete: 'cascade' });
+RefreshCoach.belongsTo(Coach, {as:'refreshes', onDelete: 'cascade' });
 
-Admin.hasMany(RefreshAdmin, { onDelete: 'cascade' });
-RefreshAdmin.belongsTo(Admin, { onDelete: 'cascade' });
+Admin.hasMany(RefreshAdmin, {as:'refreshes', onDelete: 'cascade' });
+RefreshAdmin.belongsTo(Admin, {as:'refreshes', onDelete: 'cascade' });
 
 
 (async () => {
     await db.authenticate();
     console.log('database connected');
-    // db.sync({ force: true });
+     //db.sync({ force: true });
     //Parent.sync({ force: true });
   
   })();
