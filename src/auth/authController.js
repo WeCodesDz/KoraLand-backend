@@ -60,7 +60,7 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '7d' }
   );
-
+   
 
   if(cookies?.jwt){
     const refreshToken = cookies.jwt;
@@ -171,7 +171,10 @@ exports.loginParent = catchAsync(async (req, res, next) => {
 
   if(cookies?.jwt){
     const refreshToken = cookies.jwt;
-    const foundToken = await user.getRefreshParents({where:{jwt:refreshToken}});
+    const foundToken = await user.get('RefreshParents',{where:{
+                                                              jwt:refreshToken
+                                                            }
+                                                    });               
     if (!foundToken) {
      await RefreshParent.destroy({where:{parentId:user.id}});
     }

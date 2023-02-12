@@ -20,6 +20,7 @@ const refreshAdminRouter = require('./src/refreshAdmin/refreshAdminRoute');
 const refreshCoachRouter = require('./src/refreshCoach/refreshCoachRoute');
 const refreshParentRouter = require('./src/refreshParent/refreshParentRoute');
 const administrateurRouter = require('./src/administrateur/administrateurRoute');
+const authRouter = require('./src/auth/authRoute');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -63,6 +64,7 @@ app.use(xss());
  app.use('/api/v1/refresh_admin', refreshAdminRouter);
  app.use('/api/v1/refresh_coach', refreshCoachRouter);
  app.use('/api/v1/refresh_parent', refreshParentRouter);
+ app.use('/api/v1/auth', authRouter);
  
 
 // we might use pug as template engine later 
