@@ -16,6 +16,9 @@ const evaluationRouter = require('./src/evaluation/evaluationRoute');
 const coachRouter = require('./src/coach/coachRoute');
 const parentRouter = require('./src/parent/parentRoute');
 const presenceRouter = require('./src/presence/presenceRoute');
+const refreshAdminRouter = require('./src/refreshAdmin/refreshAdminRoute');
+const refreshCoachRouter = require('./src/refreshCoach/refreshCoachRoute');
+const refreshParentRouter = require('./src/refreshParent/refreshParentRoute');
 const administrateurRouter = require('./src/administrateur/administrateurRoute');
 
 const app = express();
@@ -57,6 +60,9 @@ app.use(xss());
  app.use('/api/v1/parent', parentRouter);
  app.use('/api/v1/evaluation', evaluationRouter);
  app.use('/api/v1/presence', presenceRouter);
+ app.use('/api/v1/refresh_admin', refreshAdminRouter);
+ app.use('/api/v1/refresh_coach', refreshCoachRouter);
+ app.use('/api/v1/refresh_parent', refreshParentRouter);
  
 
 // we might use pug as template engine later 

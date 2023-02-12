@@ -4,9 +4,7 @@ const authController = require('../auth/authController')
 
 const router = express.Router();
 
-router
-    .route('/login')
-    .post(authController.login)
+
 router.
     route('/statistics')
     .get(administrateurController.getAdminStatistcs)

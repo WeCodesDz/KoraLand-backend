@@ -19,6 +19,10 @@ const Student = require('./src/student/studentModel');
 const Evaluation = require('./src/evaluation/evaluationModel');
 const Presence = require('./src/presence/presenceModel');
 const Parent = require('./src/parent/parentModel');
+const RefreshParent = require('./src/refreshParent/refreshParentModel');
+const RefreshCoach = require('./src/refreshCoach/refreshCoachModel');
+const RefreshAdmin = require('./src/refreshAdmin/refreshAdminModel');
+
 
 Groupe.hasMany(Student, { onDelete: 'cascade' });
 Student.belongsTo(Groupe, { onDelete: 'cascade' });
@@ -38,12 +42,20 @@ Evaluation.belongsTo(Student, {onDelete: 'cascade'});
 Parent.hasMany(Student, { onDelete: 'cascade' });
 Student.belongsTo(Parent, { onDelete: 'cascade' });
 
+Parent.hasMany(RefreshParent, { onDelete: 'cascade' });
+RefreshParent.belongsTo(Parent, { onDelete: 'cascade' });
+
+Coach.hasMany(RefreshCoach, { onDelete: 'cascade' });
+RefreshCoach.belongsTo(Coach, { onDelete: 'cascade' });
+
+Admin.hasMany(RefreshAdmin, { onDelete: 'cascade' });
+RefreshAdmin.belongsTo(Admin, { onDelete: 'cascade' });
 
 
 (async () => {
     await db.authenticate();
     console.log('database connected');
-    //db.sync({ force: true });
+    // db.sync({ force: true });
     //Parent.sync({ force: true });
   
   })();
