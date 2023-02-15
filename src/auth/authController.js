@@ -224,13 +224,19 @@ exports.protect = catchAsync(async (req, res, next) => {
   let currentUser;
   const {role} = decoded.UserInfo;
   if(role.includes('admin') ){
-    currentUser = await Admin.findOne(decoded.username);
+    currentUser = await Admin.findOne({
+      where: { username: decoded.UserInfo.username },
+   });
  }
  if(role.includes('coach') ){
-   currentUser = await Coach.findOne(decoded.username);
+   currentUser = await Coach.findOne({
+      where: { username: decoded.UserInfo.username },
+   });
  }
  if(role.includes('parent')){
-   currentUser = await Parent.findOne(decoded.username);
+   currentUser = await Parent.findOne({
+      where: { username: decoded.UserInfo.username },
+   });
   }
    
    if (!currentUser) {

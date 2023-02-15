@@ -69,7 +69,7 @@ exports.createParent = catchAsync(async (req, res, next) => {
 
 
 exports.getAllParents = catchAsync(async (req, res, next) => {
-    let { page ,limit } = req.body;
+    let { page ,limit } = req.query;
     let results;
     page = page * 1 || 1;
     limit = limit * 1 || 1;
@@ -203,12 +203,14 @@ exports.getParentAllStudent = catchAsync(async (req, res, next)=>{
 
 exports.getMyStudents = catchAsync(async (req, res, next)=>{
     const parentId = req.user.id;
+    console.log(parentId,"parent id");
     const parent = await Parent.findByPk(parentId,{
         attributes: ['id', 'nomParent', 'prenomParent','numeroTelephone','status']
     });
     if(!parent) {
         throw new AppError('no parent found with this id', 404);
     }
+    console.log(parent, "parent")
     const students = await parent.getStudents({
         attributes: [
             'id',

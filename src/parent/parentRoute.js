@@ -13,15 +13,11 @@ router
 
 router
     .route('/myStudents')
-    .get(
-            authController.protect, 
-            parentController.getMyStudents);
+    .get(parentController.getMyStudents);
 
-router
+router  
     .route('/myStudents/:id')
-    .get(
-                        authController.protect, 
-                        parentController.getParentStudentById); 
+    .get(parentController.getParentStudentById); 
 
 router.use(authController.role('admin'));    
 router
