@@ -1,8 +1,11 @@
 const express = require('express');
 const studentModel = require('../student/studentModel');
 const groupeController = require('./groupeController');
+const authController = require('../auth/authController');
 
 const router = express.Router();
+
+router.use(authController.protect , authController.role('admin'));   
 
 router.route('/')
     .get(groupeController.getAllGroupes)

@@ -3,13 +3,13 @@ const parentController = require('./parentController');
 const authController = require('../auth/authController');
 
 const router = express.Router();
-
+router.use(authController.protect);   
 router
     .route('/')
     .get(
-          authController.protect,
+        authController.role('admin'),
           parentController.getAllParents)
-    .post(parentController.createParent);
+    .post(authController.role('admin'),parentController.createParent);
 
 router
     .route('/myStudents')
@@ -18,14 +18,16 @@ router
             parentController.getMyStudents);
 
 router
+    .route('/myStudents/:id')
+    .get(
+                        authController.protect, 
+                        parentController.getParentStudentById); 
+
+router.use(authController.role('admin'));    
+router
     .route('/student/:id')
     .post(parentController.addStudentToParent)
     .get(parentController.getParentAllStudent);     
-router
-    .route('/myStudents/:id')
-    .get(
-            authController.protect, 
-            parentController.getParentStudentById); 
 
 router
     .route('/:id')

@@ -3,11 +3,10 @@ const studentController = require('./studentController');
 const authController = require('../auth/authController');
 const router = express.Router();
 
+router.use(authController.protect , authController.role('admin'));   
 router
     .route('/')
     .get(
-        authController.protect,
-        authController.role('admin'),
         studentController.getAllstudents)
     .post(studentController.createStudent);
 

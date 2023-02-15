@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const RefreshCoach = require('./refreshCoachModel');
+const { request } = require('http');
+const Coach = require('../coach/coachModel');
 
 exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
     const cookies = req.cookies;
@@ -20,21 +22,36 @@ exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
     });
     let coach;
     if(coachRefreshToken){
+        coach = await Coach.findOne({
+            where: {
+                id: coachRefreshToken.coachId
+            }
+        });
+    }
+
+    if(!coachRefreshToken){
         const decoded = await promisify(jwt.verify)(coachRefreshToken, process.env.REFRESH_TOKEN_SECRET);
         if(decoded){
-             coach = await coachRefreshToken.getCoach();    
+             coach = await Coach.findOne({
+                where: {
+                    username: decoded.username
+                }
+             });
+
             await RefreshCoach.destroy({
                 where:{
                     coachId: coach.id
                 }
             });
         }
-        res.sendStatus(403);
+        throw new AppError('Fordbidden', 403);
     }
-    const deletedCoachRefreshToken = await coachRefreshToken.destroy();
+    const deletedCoachRefreshToken = coachRefreshToken;
+    await coachRefreshToken.destroy();
+
     const decoded = await promisify(jwt.verify)(deletedCoachRefreshToken, process.env.REFRESH_TOKEN_SECRET);
     if (!decoded || decoded.username !== coach?.username) {
-        return res.sendStatus(403); 
+        throw new AppError('Fordbidden', 403); 
     }
     const accessToken = jwt.sign(
         {
@@ -53,6 +70,7 @@ exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
       { expiresIn: '7d' }
   );
   const createdRefreshToken = await RefreshCoach.create({jwt:newRefreshToken});
+  await coach.addRefreshes(createdRefreshToken); 
   res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
 
   res.json({ role:'coach', accessToken });

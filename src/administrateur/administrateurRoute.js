@@ -4,14 +4,13 @@ const authController = require('../auth/authController')
 
 const router = express.Router();
 
-
+router.use(authController.protect , authController.role('admin'));   
 router.
     route('/statistics')
     .get(administrateurController.getAdminStatistcs)
 router.route('/')
     .get(administrateurController.getAllAdmin)
-    .post(authController.protect,
-        administrateurController.createAdmin);
+    .post(administrateurController.createAdmin);
 
 router.route('/:id')
     .get(administrateurController.getAdminById)
