@@ -15,7 +15,7 @@ const RefreshParent = require('../refreshParent/refreshParentModel');
 exports.role = (...roles) => {
     return (req, res, next) => {
         
-      if (!roles.includes(req.user.role)) {
+      if (!roles.includes(req.role)) {
         return next(
           new AppError("You don't have permission to perform this action", 403)
         );
