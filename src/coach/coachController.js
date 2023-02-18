@@ -73,10 +73,15 @@ exports.createCoach = catchAsync(async (req, res, next) => {
         categories,
         role:'coach'
     });
+    coach.password = undefined;
+    coach.passwordConfirm = undefined;
+    coach.passwordChangedAt = undefined;
+    coach.passwordResetToken = undefined;
+    coach.passwordResetExpires = undefined;
     res.status(201).json({
         status: 'success',
         data: {
-        coach,
+            coach
         },
     });
 });

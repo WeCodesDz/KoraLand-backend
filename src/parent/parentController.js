@@ -70,6 +70,12 @@ exports.createParent = catchAsync(async (req, res, next) => {
         passwordConfirm,
         role: 'parent'
     });
+
+    parent.password = undefined;
+    parent.passwordConfirm = undefined;
+    parent.passwordChangedAt = undefined;
+    parent.passwordResetToken = undefined;
+    parent.passwordResetExpires = undefined;
     res.status(201).json({
         status: 'success',
         data: {
