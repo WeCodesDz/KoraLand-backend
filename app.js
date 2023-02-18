@@ -32,9 +32,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 app.use(express.json());
-const allowedOrigins = [
-  'http://127.0.0.1:5173',
-];
+allowedOrigins = ['http://127.0.0.1:5173','localhost:5173','http://41.109.169.213:5173']
 const corsOptions = {
   origin: (origin, callback) => {
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -43,15 +41,12 @@ const corsOptions = {
           callback(new Error('Not allowed by CORS'));
       }
   },
-  optionsSuccessStatus: 200,
+  credentials: true,
   withCredentials: true,
 }
 
 app.use(
-  cors({
-    origin: 'http://127.0.0.1:5173',
-    credentials: true,
-  })
+  cors(corsOptions)
 );
 // Set security HTTP headers
 app.use(helmet());
