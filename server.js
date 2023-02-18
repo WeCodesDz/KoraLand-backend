@@ -96,8 +96,8 @@ historiqueStudent.belongsTo(historiqueParent, { onDelete: 'cascade' });
   
   ////////////
   
-  const server = app.listen(port, () => console.log(`Listening on ${port}`));
-  //const server = app.listen();
+  //const server = app.listen(port, () => console.log(`Listening on ${port}`));
+  const server = app.listen();
   
   process.on('unhandledRejection', (err) => {
     console.error(err);
