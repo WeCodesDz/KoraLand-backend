@@ -79,7 +79,7 @@ historiqueStudent.belongsTo(historiqueParent, { onDelete: 'cascade' });
 (async () => {
     await db.authenticate();
     console.log('database connected');
-     //db.sync({ force: true });
+     db.sync({ force: true });
     //Parent.sync({ force: true });
     // await Admin.create({
     //     nomAdmin:'admin',
