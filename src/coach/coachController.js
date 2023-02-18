@@ -3,6 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const Coach = require('./coachModel');
 const Groupe = require('../groupe/groupeModel');
 const Student = require('../student/studentModel');
+const HistoriqueCoach = require('../historiqueCoach/historiqueCoachModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -51,6 +52,17 @@ exports.createCoach = catchAsync(async (req, res, next) => {
     }
     
     const coach = await Coach.create({
+        nomCoach,
+        prenomCoach,
+        email,
+        numeroTelephone,
+        username,
+        password,
+        passwordConfirm,
+        categories,
+        role:'coach'
+    });
+    await HistoriqueCoach.create({
         nomCoach,
         prenomCoach,
         email,

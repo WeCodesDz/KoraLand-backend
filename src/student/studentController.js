@@ -3,6 +3,9 @@ const catchAsync = require('../utils/catchAsync');
 const Student = require('./studentModel');
 const Presence = require('../presence/presenceModel');
 const Evaluation = require('../evaluation/evaluationModel');
+const HistoriqueParent = require('../historiqueParent/historiqueParentModel');
+const HistoriqueGroupe = require('../historiqueGroupe/historiqueGroupeModel');
+const HistoriqueStudent = require('../historiqueStudent/historiqueStudentModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -85,6 +88,41 @@ exports.createStudent = catchAsync(async (req, res, next) => {
     })
     await student.setParent(parentId);
     await student.setGroupe(groupeId);
+
+    const parent = await student.getParent();
+    const historiqueParent = await HistoriqueParent.findOne({
+        where: { username: parent.username },
+    })
+    const groupe = await student.getGroupe();
+    const historiqueGroupe = await HistoriqueGroupe.findOne({
+        where: { groupeName: groupe.groupeName },
+    });
+    await HistoriqueStudent.create({
+      id: student.id,
+        nomEleve,
+        prenomEleve,
+        dateNaissance,
+        saisonActuel,
+        dateInscription,
+        reinscription,
+        mantant1Tranche,
+        status1Tranche,
+        mantant2Tranche,
+        status2Tranche,
+        numeroTelephone,
+        anneExamen,
+        commune,
+        operateur,
+        guardianDeBut,
+        posteEleve,
+        taille,
+        poids,
+        remarque,
+        sport,
+        historiqueGroupeId: historiqueGroupe.id,
+        historiqueParentId: historiqueParent.id
+    });
+
 
     res.status(201).json({
         status: 'success',

@@ -2,7 +2,7 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Student = require('../student/studentModel');
 const Parent = require('./parentModel');
-
+const HistoriqueParent = require('../historiqueParent/historiqueParentModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -50,6 +50,17 @@ exports.createParent = catchAsync(async (req, res, next) => {
     }
     
     const parent = await Parent.create({
+        nomParent,
+        prenomParent,
+        email,
+        numeroTelephone,
+        username,
+        password,
+        passwordConfirm,
+        role: 'parent'
+    });
+
+    await HistoriqueParent.create({
         nomParent,
         prenomParent,
         email,
@@ -227,7 +238,6 @@ exports.getMyStudents = catchAsync(async (req, res, next)=>{
             'posteEleve',
             'taille',
             'poids',
-            'remarque',
             'status'
         ]
     });

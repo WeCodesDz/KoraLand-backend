@@ -11,6 +11,7 @@ const groupeModel = db.define('groupe', {
     groupeName: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: { args: true, msg: 'Groupe Name already in use!' },
     },
     horaireEntrainement: {
         type: Sequelize.STRING,
@@ -22,6 +23,10 @@ const groupeModel = db.define('groupe', {
         allowNull: false,
     },
     categorieAge:{
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    saison:{
         type: Sequelize.STRING,
         allowNull: false,
     }

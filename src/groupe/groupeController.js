@@ -4,6 +4,8 @@ const Groupe = require('./groupeModel');
 const Student = require('../student/studentModel');
 const Coach = require('../coach/coachModel');
 const Presence = require('../presence/presenceModel');
+const HistoriqueGroupe = require('../historiqueGroupe/historiqueGroupeModel');
+const HistoriqueCoach = require('../historiqueCoach/historiqueCoachModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -41,6 +43,7 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
         horaireEntrainement,
         sport,
         categorieAge,
+        saison,
         coachId
     } = req.body;
     
@@ -52,11 +55,28 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
         groupeName,
         horaireEntrainement,
         sport,
+        saison,
         categorieAge
     });
 
     //coachAffected here if exist
     await groupe.setCoach(coachId);
+
+    const coach = await Coach.findByPk(coachId);
+    const historiqueCoach = await HistoriqueCoach.findOne({
+      where:{
+        username : coach.username
+      }
+    });
+    await HistoriqueGroupe.create({
+      groupeName,
+      horaireEntrainement,
+      sport,
+      saison,
+      categorieAge,
+      historiqueCoachId:historiqueCoach.id
+    });
+    // await historiqueGroupe.setHistoriqueCoach(historiqueCoach.id);
     res.status(201).json({
         status: 'success',
         data: {

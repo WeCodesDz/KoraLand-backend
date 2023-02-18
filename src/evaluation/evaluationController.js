@@ -2,6 +2,8 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Evaluation = require('./evaluationModel');
 const Student = require('../student/studentModel');
+const historiqueEvaluation  = require('../historiqueEvaluation/historiqueEvaluationModel');
+const HistoriqueStudent  = require('../historiqueStudent/historiqueStudentModel');
  
 const filter = (queryParams) => {
   const tempQueryParams = { ...queryParams };
@@ -246,4 +248,124 @@ exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
         Evaluations: results.rows
     },
 });
+});
+
+exports.handleEvaluation = catchAsync(async (req, res, next) => {
+
+  const evaluation = await Evaluation.findByPk(req.params.id);
+  if(!evaluation){
+    throw new AppError('No evaluation found with this id',404)
+  }
+  const { etatEvaluation } = req.body;
+  if(etatEvaluation) {
+    evaluation.etatEvaluation = etatEvaluation;
+    await evaluation.save();
+  }
+  const student = await Student.findByPk(evaluation.studentId);
+  const historiqueStudent = await HistoriqueStudent.findOne({
+    where:{
+      nomEleve:student.nomEleve,
+      prenomEleve:student.prenomEleve,
+      dateNaissance:student.dateNaissance
+    }
+  });
+  if(etatEvaluation === 'accepted') {
+      const {
+        vitesse30m1,
+        coordination1,
+        souplesse1,
+        endurance1,
+        force1,
+        vitesse30m2,
+        coordination2,
+        souplesse2,
+        endurance2,
+        force2,
+        jonglerie,
+        conduitDeBalleEnSlalom,
+        qualiteDePasse,
+        controleDeBalle,
+        controleOrionte,
+        precisionDeTir,
+        passeCourte,
+        passeLongue,
+        dribble,
+        penalty,
+        conduiteDeBalle,
+        piedFaible,
+        jeuxDeTete,
+        tackle,
+        coupsFrancCourts,
+        coupsFrancLongs,
+        corners,
+        confienceEnSoi,
+        concentration,
+        attitude,
+        aggrisiveSaine,
+        combativite,
+        collectif,
+        motivationPersonnelle,
+        timidite,
+        comportementOffensif,
+        comportementDefensive,
+        duel,
+        inteligenceDansLeJeu,
+        dateEvaluation,
+        etatEvaluation
+      } = evaluation;
+      await historiqueEvaluation.create({
+        vitesse30m1,
+        coordination1,
+        souplesse1,
+        endurance1,
+        force1,
+        vitesse30m2,
+        coordination2,
+        souplesse2,
+        endurance2,
+        force2,
+        jonglerie,
+        conduitDeBalleEnSlalom,
+        qualiteDePasse,
+        controleDeBalle,
+        controleOrionte,
+        precisionDeTir,
+        passeCourte,
+        passeLongue,
+        dribble,
+        penalty,
+        conduiteDeBalle,
+        piedFaible,
+        jeuxDeTete,
+        tackle,
+        coupsFrancCourts,
+        coupsFrancLongs,
+        corners,
+        confienceEnSoi,
+        concentration,
+        attitude,
+        aggrisiveSaine,
+        combativite,
+        collectif,
+        motivationPersonnelle,
+        timidite,
+        comportementOffensif,
+        comportementDefensive,
+        duel,
+        inteligenceDansLeJeu,
+        dateEvaluation,
+        etatEvaluation,
+          historiqueStudentId:historiqueStudent.id,
+      });
+  }
+  if(etatEvaluation === 'blocked') {
+    // HERE WE SHOULD SEND NOTIFICATION TO THE COACH
+    console.log(req.user.username + ' ' + 'a refusé votre demande d\'évaluation')
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      evaluation
+    },
+  });
 });
