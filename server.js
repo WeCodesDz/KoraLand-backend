@@ -28,6 +28,9 @@ const historiqueEvaluation = require('./src/historiqueEvaluation/historiqueEvalu
 const historiquePresence = require('./src/historiquePresence/historiquePresenceModel');
 const historiqueCoach = require('./src/historiqueCoach/historiqueCoachModel');
 const historiqueParent = require('./src/historiqueParent/historiqueParentModel');
+const AdminSubscription = require('./src/subscribtionAdmin/subscribtionAdminModel');
+const CoachSubscription = require('./src/subscribtionCoach/subscribtionCoachModel');
+const ParentSubscription = require('./src/subscribtionParent/subscribtionParentModel');
 
 
 // Models
@@ -76,6 +79,28 @@ historiqueEvaluation.belongsTo(historiqueStudent, {onDelete: 'cascade'});
 
 historiqueParent.hasMany(historiqueStudent, { onDelete: 'cascade' });
 historiqueStudent.belongsTo(historiqueParent, { onDelete: 'cascade' });
+
+// Relations between models and their subscriptions models
+Admin.belongsToMany(AdminSubscription, {
+  through: 'admin_subscriptions',
+});
+AdminSubscription.belongsToMany(Admin, {
+  through: 'admin_subscriptions',
+});
+Coach.belongsToMany(CoachSubscription, {
+  through: 'coach_subscriptions',
+});
+CoachSubscription.belongsToMany(Admin, {
+  through: 'coach_subscriptions',
+});
+Parent.belongsToMany(ParentSubscription, {
+  through: 'parent_subscriptions',
+});
+ParentSubscription.belongsToMany(Parent, {
+  through: 'parent_subscriptions',
+});
+
+
 (async () => {
     await db.authenticate();
     console.log('database connected');
