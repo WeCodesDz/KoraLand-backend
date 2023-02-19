@@ -30,7 +30,7 @@ exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
     }
 
     if(!coachRefreshToken){
-        const decoded = await promisify(jwt.verify)(coachRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const decoded = await promisify(jwt.verify)(coachRefreshToken.get({plain:true}).jwt, process.env.REFRESH_TOKEN_SECRET);
         if(decoded){
              coach = await Coach.findOne({
                 where: {
@@ -49,7 +49,7 @@ exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
     const deletedCoachRefreshToken = coachRefreshToken;
     await coachRefreshToken.destroy();
 
-    const decoded = await promisify(jwt.verify)(deletedCoachRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const decoded = await promisify(jwt.verify)(deletedCoachRefreshToken.get({plain:true}).jwt, process.env.REFRESH_TOKEN_SECRET);
     if (!decoded || decoded.username !== coach?.username) {
         throw new AppError('Fordbidden', 403); 
     }
@@ -69,11 +69,11 @@ exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '7d' }
   );
-  const createdRefreshToken = await RefreshCoach.create({jwt:newRefreshToken});
-  await coach.addRefreshes(createdRefreshToken); 
+  const createdRefreshToken = await RefreshCoach.create({jwt:newRefreshToken, coachId:coach.id});
+//   await coach.addRefreshes(createdRefreshToken); 
   res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
 
-  res.json({ role:'coach', accessToken });
+  res.json({ role:'coach', accessToken , username: coach.username });
 
 
 });
