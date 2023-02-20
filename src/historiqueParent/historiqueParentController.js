@@ -1,6 +1,6 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const HistoriqueStudent = require('./historiqueStudentModel');
+const HistoriqueCoach = require('./historiqueParentModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -24,7 +24,7 @@ const filter = (queryParams) => {
     const where = {};
 
     queryArray.forEach((obj) => {
-      if (['saisonActuel','nomEleve','prenomEleve'].includes(obj[0])) {
+      if (['username','prenomParent','nomParent'].includes(obj[0])) {
         where[obj[0]] = obj[1];
       }
     });
@@ -32,29 +32,16 @@ const filter = (queryParams) => {
     return where;
   };
 
- exports.getAllHistoriqueStudentsBySaison = catchAsync(async (req, res, next) => {
-    let { page, limit } = req.query;
-    page = page * 1 || 1;
-    limit = limit * 1 || 100;
-    // offset is the number of rows skipped
-    const offset = (page - 1) * limit;
-    //filtering
+exports.getAllHistoriqueParent = catchAsync(async (req, res, next) => {
     const where = filter(req.query);
-    const historiqueStudents = await HistoriqueStudent.findAndCountAll({
-        where,
-        limit,
-        offset,
-    });
-    
-    res.status(200).json({
-        status: 'success',
-        rows: historiqueStudents.length,
+const parentHistorique = await HistoriqueCoach.findOne(where);
+if (!parentHistorique) {
+    return next(new AppError('No Historique found with this informations !', 404));
+}
+res.status(200).json({
+    status: 'success',
     data: {
-      totalPages: Math.ceil(historiqueStudents.count / limit),
-      page,
-      limit,
-      rows: historiqueStudents.rows.length,
-      totalHistoriques: historiqueStudents.rows,
-    },
-    });
+        parentHistorique,
+    }
+        });
 });

@@ -1,7 +1,7 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const HistoriqueEvaluation = require('./historiqueEvaluationModel');
-const HistoriqueStudent = require('./historiqueStudentModel');
+const HistoriqueEvaluation = require('../historiqueEvaluation/historiqueEvaluationModel');
+const HistoriqueStudent = require('../historiqueStudent/historiqueStudentModel');
 const HistoriquePresence = require('./historiquePresenceModel');
 
 

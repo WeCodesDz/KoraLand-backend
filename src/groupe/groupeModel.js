@@ -26,7 +26,7 @@ const groupeModel = db.define('groupe', {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    saison:{
+    saisonActuel:{
         type: Sequelize.STRING,
         allowNull: false,
     }

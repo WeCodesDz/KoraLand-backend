@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router();
 const historiquePresneceController = require('./historiquePresenceController');
+const authController = require('../auth/authController');
+const router = express.Router();
 
-router.get('/', historiquePresneceController.getHistoriqueOfPresneceStudentBySaison);
+router.get('/',authController.protect, authController.role('admin') ,historiquePresneceController.getHistoriqueOfPresneceStudentBySaison);
 
 module.exports = router;

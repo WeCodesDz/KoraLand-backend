@@ -27,7 +27,7 @@ const filter = (queryParams) => {
     const where = {};
   
     queryArray.forEach((obj) => {
-      if (['categories'].includes(obj[0])) {
+      if (['username'].includes(obj[0])) {
         where[obj[0]] = obj[1];
       }
     });
@@ -40,14 +40,12 @@ exports.createCoach = catchAsync(async (req, res, next) => {
         nomCoach,
         prenomCoach,
         email,
-        numeroTelephone,
         username,
         password,
         passwordConfirm,
-        categories,
     } = req.body;
     
-    if(!nomCoach || !prenomCoach || !email || !username || !password || !passwordConfirm || !numeroTelephone || !categories) {
+    if(!nomCoach || !prenomCoach || !email || !username || !password || !passwordConfirm ) {
         throw new  AppError('Please provide all fields', 400);
     }
     
@@ -55,22 +53,18 @@ exports.createCoach = catchAsync(async (req, res, next) => {
         nomCoach,
         prenomCoach,
         email,
-        numeroTelephone,
         username,
         password,
         passwordConfirm,
-        categories,
         role:'coach'
     });
     await HistoriqueCoach.create({
         nomCoach,
         prenomCoach,
         email,
-        numeroTelephone,
         username,
         password,
         passwordConfirm,
-        categories,
         role:'coach'
     });
     coach.password = undefined;
@@ -99,7 +93,7 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
   //here we should test the admin role before setting the attributs (only super admin can see the phone number)
   if(req.user.adminLevel === 'superadmin'){
      results = await Coach.findAndCountAll({
-        attributes:['id','nomCoach','prenomCoach','email','numeroTelephone','username','categories'],
+        attributes:['id','nomCoach','prenomCoach','email','username'],
         where,
         limit,
         offset,
@@ -107,7 +101,7 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
   }
   if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
      results = await Coach.findAndCountAll({
-        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+        attributes:['id','nomCoach','prenomCoach','email','username'],
         where,
         limit,
         offset,
@@ -130,12 +124,12 @@ exports.getCoachById = catchAsync(async (req, res, next) => {
   let coach;
   if(req.user.adminLevel === 'superAdmin'){
      coach = await Coach.findByPk(req.params.id,{
-        attributes:['id','nomCoach','prenomCoach','email','numeroTelephone','username','categories'],
+        attributes:['id','nomCoach','prenomCoach','email',,'username'],
      });
   }
   if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
      coach = await Coach.findByPk(req.params.id,{
-        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+        attributes:['id','nomCoach','prenomCoach','email','username'],
      });
   }
   
@@ -160,17 +154,13 @@ exports.updateCoach = catchAsync(async (req, res, next) => {
         nomCoach,
         prenomCoach,
         email,
-        numeroTelephone,
         username,
-        categories,
     } = req.body;
 
     if(nomCoach) coach.nomCoach = nomCoach;
     if(prenomCoach) coach.prenomCoach = prenomCoach;
     if(email) coach.email = email;
-    if(numeroTelephone) coach.numeroTelephone = numeroTelephone;
     if(username) coach.username = username;
-    if(categories) coach.categories = categories;
 
     await coach.save();
     res.status(200).json({
@@ -251,7 +241,7 @@ exports.deleteCoachGroupe = catchAsync(async (req, res, next) => {
 exports.getMyGroupes = catchAsync(async (req, res, next) => {
     const coachId = req.user.id;
     const coach = await Coach.findByPk(coachId,{
-        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+        attributes:['id','nomCoach','prenomCoach','email','username'],
     });
     if (!coach) {
         throw new  AppError('No coach found with that ID', 404);
@@ -272,7 +262,7 @@ exports.getMyGroupes = catchAsync(async (req, res, next) => {
 exports.getMyGroupeById = catchAsync(async (req, res, next) => {
     const coachId = req.user.id;
     const coach = await Coach.findByPk(coachId,{
-        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+        attributes:['id','nomCoach','prenomCoach','email','username'],
     });
     if (!coach) {
         throw new  AppError('No coach found with that ID', 404);
@@ -297,7 +287,7 @@ exports.getMyGroupeById = catchAsync(async (req, res, next) => {
 exports.getListStudentOfOneGroupe = catchAsync(async (req, res, next) => {
     const coachId = req.user.id;
     const coach = await Coach.findByPk(coachId,{
-        attributes:['id','nomCoach','prenomCoach','email','username','categories'],
+        attributes:['id','nomCoach','prenomCoach','email','username'],
     });
     if (!coach) {
         throw new  AppError('No coach found with that ID', 404);

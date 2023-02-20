@@ -1,7 +1,7 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const HistoriqueEvaluation = require('./historiqueEvaluationModel');
-const HistoriqueStudent = require('./historiqueStudentModel');
+const HistoriqueStudent = require('../historiqueStudent/historiqueStudentModel');
 
 exports.getHistoriqueOfEvaluationStudentBySaison = catchAsync(async(req,res,next)=>{
     const { nomEleve,prenomEleve,dateNaissance,saison } = req.body;

@@ -18,11 +18,6 @@ const coachModel = db.define('coach', {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    numeroTelephone: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: { args: true, msg: 'Phnoe Number already in use!' },
-    },
     email: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -93,10 +88,6 @@ const coachModel = db.define('coach', {
           this.setDataValue('passwordResetExpires', value);
         },
       },
-    categories:{
-        type: Sequelize.STRING,
-        allowNull: false,
-    },
     role:{
       type: Sequelize.ENUM,
       values:['coach'],

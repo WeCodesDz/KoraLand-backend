@@ -21,6 +21,10 @@ const historuiqueGroupeModel = db.define('historique_groupe', {
         values: ['football', 'basketball'],
         allowNull: false,
     },
+    saisonActuel:{
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
     categorieAge:{
         type: Sequelize.STRING,
         allowNull: false,
