@@ -20,6 +20,13 @@ const refreshAdminRouter = require('./src/refreshAdmin/refreshAdminRoute');
 const refreshCoachRouter = require('./src/refreshCoach/refreshCoachRoute');
 const refreshParentRouter = require('./src/refreshParent/refreshParentRoute');
 const administrateurRouter = require('./src/administrateur/administrateurRoute');
+const historiqueCoachRouter = require('./src/historiqueCoach/historiqueCoachRoute');
+const historiqueParentRouter = require('./src/historiqueParent/historiqueParentRoute');
+const historiqueStudentRouter = require('./src/historiqueStudent/historiqueStudentRoute');
+const historiqueGroupeRouter = require('./src/historiqueGroupe/historiqueGroupeRoute');
+const historiqueEvaluationRouter = require('./src/historiqueEvaluation/historiqueEvaluationRoute');
+const historiquePresenceRouter = require('./src/historiquePresence/historiquePresenceRoute');
+
 const authRouter = require('./src/auth/authRoute');
 
 const app = express();
@@ -32,22 +39,15 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 app.use(express.json());
-// allowedOrigins = ['http://127.0.0.1:5173','localhost:5173','http://41.109.169.213:5173','https://154.121.24.174:5173','154.121.24.100:5173']
-const corsOptions = {
-//   origin: (origin, callback) => {
-//       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-//           callback(null, true)
-//       } else {
-//           callback(new Error('Not allowed by CORS'));
-//       }
-//   },
- origin: '*',
-  credentials: true,
-  withCredentials: true,
-}
+
+
 
 app.use(
-  cors(corsOptions)
+  cors({
+    origin: ['http:127.0.0.1:5173','http:localhost:5173'],
+    credentials: true,
+    withCredentials: true,
+  })
 );
 // Set security HTTP headers
 app.use(helmet());
@@ -78,6 +78,13 @@ app.use(xss());
  app.use('/api/v1/refresh_coach', refreshCoachRouter);
  app.use('/api/v1/refresh_parent', refreshParentRouter);
  app.use('/api/v1/auth', authRouter);
+ app.use('/api/v1/historique_coach', historiqueCoachRouter);
+ app.use('/api/v1/historique_parent', historiqueParentRouter);
+ app.use('/api/v1/historique_student', historiqueStudentRouter);
+ app.use('/api/v1/historique_groupe', historiqueGroupeRouter);
+ app.use('/api/v1/historique_evaluation', historiqueEvaluationRouter);
+ app.use('/api/v1/historique_presence', historiquePresenceRouter);
+
  
 
 // we might use pug as template engine later 

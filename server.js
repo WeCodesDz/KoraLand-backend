@@ -62,22 +62,22 @@ Admin.hasMany(RefreshAdmin, { as:'refreshes',onDelete: 'cascade' });
 RefreshAdmin.belongsTo(Admin, { onDelete: 'cascade' });
 // Historique Models
 
-historiqueGroupe.hasMany(historiqueStudent, { onDelete: 'cascade' });
+historiqueGroupe.hasMany(historiqueStudent, { as:'student',onDelete: 'cascade' });
 historiqueStudent.belongsTo(historiqueGroupe, { onDelete: 'cascade' });
 
-historiqueCoach.hasMany(historiqueGroupe, { onDelete: 'cascade' });
+historiqueCoach.hasMany(historiqueGroupe, {as:'groupe', onDelete: 'cascade' });
 historiqueGroupe.belongsTo(historiqueCoach, { onDelete: 'cascade' });
 
-historiqueStudent.hasMany(historiqueEvaluation, { onDelete: 'cascade'});
+historiqueStudent.hasMany(historiqueEvaluation, {as:'evaluation', onDelete: 'cascade'});
 historiqueEvaluation.belongsTo(historiqueStudent, {onDelete: 'cascade'});
 
- historiqueStudent.hasMany(historiquePresence, { onDelete: 'cascade'});
+ historiqueStudent.hasMany(historiquePresence, { as:'presence',onDelete: 'cascade'});
  historiquePresence.belongsTo(historiqueStudent, { onDelete: 'cascade'});
 
- historiqueGroupe.hasMany(historiquePresence, { onDelete: 'cascade'});
+ historiqueGroupe.hasMany(historiquePresence, {as:'presence', onDelete: 'cascade'});
  historiquePresence.belongsTo(historiqueGroupe, { onDelete: 'cascade'});
 
-historiqueParent.hasMany(historiqueStudent, { onDelete: 'cascade' });
+historiqueParent.hasMany(historiqueStudent, { as:'student',onDelete: 'cascade' });
 historiqueStudent.belongsTo(historiqueParent, { onDelete: 'cascade' });
 
 // Relations between models and their subscriptions models
@@ -104,8 +104,7 @@ ParentSubscription.belongsToMany(Parent, {
 (async () => {
     await db.authenticate();
     console.log('database connected');
-     //db.sync({ force: true });
-    //Parent.sync({ force: true });
+    // db.sync({ force: true })
     // await Admin.create({
     //     nomAdmin:'admin',
     //     prenomAdmin:'admin',
@@ -121,8 +120,8 @@ ParentSubscription.belongsToMany(Parent, {
   
   ////////////
   
-  //const server = app.listen(port, () => console.log(`Listening on ${port}`));
-  const server = app.listen();
+  const server = app.listen(port, () => console.log(`Listening on ${port}`));
+  //const server = app.listen();
   
   process.on('unhandledRejection', (err) => {
     console.error(err);
