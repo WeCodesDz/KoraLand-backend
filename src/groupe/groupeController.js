@@ -43,7 +43,7 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
         horaireEntrainement,
         sport,
         categorieAge,
-        saison,
+        saisonActuel,
         coachId
     } = req.body;
     
@@ -55,7 +55,7 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
         groupeName,
         horaireEntrainement,
         sport,
-        saison,
+        saisonActuel,
         categorieAge
     });
 
@@ -72,7 +72,7 @@ exports.createGroupe = catchAsync(async (req, res, next) => {
       groupeName,
       horaireEntrainement,
       sport,
-      saison,
+      saisonActuel,
       categorieAge,
       historiqueCoachId:historiqueCoach.id
     });
@@ -94,7 +94,7 @@ exports.getAllGroupes = catchAsync(async (req, res, next) => {
     //filtering
     const where = filter(req.query);
     const results = await Groupe.findAndCountAll({ 
-        attributes: ['id', 'groupeName', 'horaireEntrainement', 'sport', 'categorieAge'],
+        attributes: ['id', 'groupeName','saisonActuel','horaireEntrainement', 'sport', 'categorieAge'],
         where,
         limit,
         offset

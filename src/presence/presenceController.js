@@ -111,12 +111,13 @@ exports.createBulkPresence = catchAsync(async (req, res, next) => {
         },
         include:{
             model:HistoriqueStudent,
+            as:'student',
             attributes:['id'],
         },
     })
     
     const plainHistoriqueGroupe = {...historiqueGroupe.get({plain:true})};
-    const historiqueStudents = [...plainHistoriqueGroupe.historique_students];
+    const historiqueStudents = [...plainHistoriqueGroupe.student    ];
     const uniqueHistoriqueStudents = [...new Set(historiqueStudents.map((vi) => vi.id))];
 
 

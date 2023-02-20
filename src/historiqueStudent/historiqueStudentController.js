@@ -33,28 +33,20 @@ const filter = (queryParams) => {
   };
 
  exports.getAllHistoriqueStudentsBySaison = catchAsync(async (req, res, next) => {
-    let { page, limit } = req.query;
-    page = page * 1 || 1;
-    limit = limit * 1 || 100;
-    // offset is the number of rows skipped
-    const offset = (page - 1) * limit;
-    //filtering
-    const where = filter(req.query);
-    const historiqueStudents = await HistoriqueStudent.findAndCountAll({
-        where,
-        limit,
-        offset,
-    });
     
+    const where = filter(req.query);
+    const historiqueStudents = await HistoriqueStudent.findOne({
+        where
+    });
+      const evaluations = await historiqueStudents.getEvaluation();
+      const presence = await historiqueStudents.getPresence();
     res.status(200).json({
         status: 'success',
         rows: historiqueStudents.length,
     data: {
-      totalPages: Math.ceil(historiqueStudents.count / limit),
-      page,
-      limit,
-      rows: historiqueStudents.rows.length,
-      totalHistoriques: historiqueStudents.rows,
+        historique: historiqueStudents,
+        presence,
+        evaluations
     },
     });
 });
