@@ -229,3 +229,27 @@ exports.getGroupePresenceByDate = catchAsync(async(req,res,next)=>{
     });
     
 });
+
+exports.getGroupeStudentById = catchAsync(async(req,res,next)=>{
+  const groupe = await Groupe.findByPk(req.params.id.trim());
+  if(!groupe){
+    throw new  AppError('No groupe found with that Id', 404);
+  }
+
+  const student = await Student.findOne({
+    attributes:['id','nomEleve','prenomEleve','dateNaissance','saisonActuel','commune','guardianDeBut','posteEleve','taille','poids'],
+    where:{
+      id:req.body.studentId,
+      groupeId:groupe.id
+    }
+  })
+  if(!student){
+    throw new  AppError('No student found in this groupe with this Id', 404);
+  }
+  res.status(200).json({
+    status: 'success',
+    body:{
+      student
+    }
+  });
+})

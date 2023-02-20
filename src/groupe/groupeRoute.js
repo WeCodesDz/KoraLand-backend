@@ -5,27 +5,29 @@ const authController = require('../auth/authController');
 
 const router = express.Router();
 
-router.use(authController.protect , authController.role('admin'));   
+router.use(authController.protect);   
 
 router.route('/')
-    .get(groupeController.getAllGroupes)
-    .post(groupeController.createGroupe);
+    .get(authController.role('admin'),groupeController.getAllGroupes)
+    .post(authController.role('admin'),groupeController.createGroupe);
 
 
     router
         .route('/students/')    
-        .get(groupeController.getGroupeStudents)
-        .post(groupeController.addStudentToGroupe)
-        .delete(groupeController.deleteStudentGroupe);
+        .get(authController.role('admin'),groupeController.getGroupeStudents)
+        .post(authController.role('admin'),groupeController.addStudentToGroupe)
+        .delete(authController.role('admin'),groupeController.deleteStudentGroupe);
 
-       
+router
+      .get('/getstudents/:id',authController.protect , authController.role('coach'),groupeController.getGroupeStudentById);
+
 router.route('/presnece/:id')
-        .get(groupeController.getGroupePresenceByDate)
+        .get(authController.role('admin'),groupeController.getGroupePresenceByDate)
 
 
 router.route('/:id')
-        .get(groupeController.getGroupeById)
-        .patch(groupeController.updateGroupe)
-        .delete(groupeController.deleteGroupe);   
+        .get(authController.role('admin'),groupeController.getGroupeById)
+        .patch(authController.role('admin'),groupeController.updateGroupe)
+        .delete(authController.role('admin'),groupeController.deleteGroupe);   
 
 module.exports = router;
