@@ -23,7 +23,7 @@ router
 
 router.route('/presnece/:id')
         .get(authController.role('admin','coach'),groupeController.getGroupePresenceByDate)
-router.route('/allPresnece/:id')
+router.route('/allPresence/:id')
         .get(authController.role('admin','coach'),groupeController.getAllGroupePresences)
 
 
