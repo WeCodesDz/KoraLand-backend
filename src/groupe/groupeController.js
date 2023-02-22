@@ -1,3 +1,4 @@
+const sequelize = require('sequelize');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Groupe = require('./groupeModel');
@@ -114,14 +115,21 @@ exports.getAllGroupes = catchAsync(async (req, res, next) => {
 
 exports.getGroupeById = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const groupe = await Groupe.findByPk(id);
+    const groupe = await Groupe.findByPk(id,{
+        attributes: ['id', 'groupeName','saisonActuel','horaireEntrainement', 'sport', 'categorieAge','coachId']
+    });
     if (!groupe) {
         throw new  AppError('No groupe found with that ID', 404);
     }
+    const coach = await groupe.getCoach({
+        attributes: ['id', 'username', 'nomCoach', 'prenomCoach', 'email']
+    });
+    groupe.coachId = undefined;
     res.status(200).json({
         status: 'success',
         data:{
-            groupe,
+            ...groupe.dataValues,
+            coach
         }
     });
 });
@@ -221,8 +229,22 @@ exports.getGroupePresenceByDate = catchAsync(async(req,res,next)=>{
     const presence = await groupe.getPresences({
       where:{
         datePresence
-      }
+      },
+      include:[{
+        model:Student,
+        attributes:['id','nomEleve','prenomEleve','posteEleve','taille','poids']
+      },
+      {
+        model:Groupe,
+        attributes:['id','groupeName','horaireEntrainement', 'categorieAge']  
+      }]
     });
+    presence.createdAt = undefined;
+    presence.updatedAt = undefined;
+    presence.groupeId = undefined;
+    presence.studentId = undefined;
+    presence.id = undefined;
+
     res.status(200).json({
       status: 'success',
       data: presence,
@@ -253,3 +275,29 @@ exports.getGroupeStudentById = catchAsync(async(req,res,next)=>{
     }
   });
 })
+
+exports.getAllGroupePresences = catchAsync(async(req,res,next)=>{
+  const groupe = await Groupe.findByPk(req.params.id.trim());
+  if(!groupe){
+    throw new  AppError('No groupe found with that Id', 404);
+  }
+
+  const presences = await groupe.getPresences({
+    attributes: [
+      "datePresence",
+      [sequelize.fn("COUNT", sequelize.col("presence")), "count_presence"],
+    ],
+    group: ['datePresence'],
+    order : [['datePresence', 'ASC']] 
+  });
+  if(!presences){
+    throw new  AppError('No presences found in this groupe', 404);
+  }
+  res.status(200).json({
+    status: 'success',
+    body:{
+      ...groupe.dataValues,
+      presences
+    }
+  });
+});

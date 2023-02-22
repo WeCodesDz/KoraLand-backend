@@ -22,7 +22,9 @@ router
       .get('/getstudents/:id',authController.protect , authController.role('coach'),groupeController.getGroupeStudentById);
 
 router.route('/presnece/:id')
-        .get(authController.role('admin'),groupeController.getGroupePresenceByDate)
+        .get(authController.role('admin','coach'),groupeController.getGroupePresenceByDate)
+router.route('/allPresnece/:id')
+        .get(authController.role('admin','coach'),groupeController.getAllGroupePresences)
 
 
 router.route('/:id')

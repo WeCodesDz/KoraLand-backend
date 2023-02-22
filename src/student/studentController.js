@@ -242,7 +242,9 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
 
 exports.getStudentById = catchAsync(async (req, res, next) => {
   let student;
-  if(req.user.role === 'superadmin') {
+  let parent;
+  let groupe;
+  if(req.user.adminLevel === 'superadmin') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
             'id',
@@ -257,18 +259,26 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'mantant2Tranche',
             'status2Tranche',
             'numeroTelephone',
-            'anneExamen',
+            'anneeExamen',
             'commune',
             'operateur',
             'guardianDeBut',
             'posteEleve',
             'taille',
             'poids',
-            'remarque'
+            'remarque',
+            'groupeId',
+            'parentId'
         ],
     });
+    parent = await student.getParent({
+      attributes:['username','prenomParent','nomParent','numeroTelephone','status']
+    });
+   groupe = await student.getGroupe({
+      attributes:['groupeName','horaireEntrainement','sport','categorieAge','saisonActuel']
+   });
   }
-  if(req.user.role === 'level2') {
+  if(req.user.adminLevel === 'level2') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
             'id',
@@ -282,18 +292,26 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'status1Tranche',
             'mantant2Tranche',
             'status2Tranche',
-            'anneExamen',
+            'anneeExamen',
             'commune',
             'operateur',
             'guardianDeBut',
             'posteEleve',
             'taille',
             'poids',
-            'remarque'
+            'remarque',
+            'groupeId',
+            'parentId'
         ],
     });
+    parent = await student.getParent({
+      attributes:['username','prenomParent','nomParent','status']
+    });
+   groupe = await student.getGroupe({
+      attributes:['groupeName','horaireEntrainement','sport','categorieAge','saisonActuel']
+   });
   }
-  if(req.user.role === 'level3') {
+  if(req.user.adminLevel === 'level3') {
      student = await Student.findByPk(req.params.id.trim(),{
         attributes:[
             'id',
@@ -303,22 +321,34 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            'anneExamen',
+            'anneeExamen',
             'commune',
             'operateur',
             'guardianDeBut',
             'posteEleve',
             'taille',
             'poids',
-            'remarque'
+            'remarque',
+            'groupeId',
+            'parentId'
         ],
     });
+    parent = await student.getParent({
+      attributes:['username','prenomParent','nomParent','numeroTelephone','status']
+    });
+   groupe = await student.getGroupe({
+      attributes:['groupeName','horaireEntrainement','sport','categorieAge','saisonActuel']
+   });
   }
-
+  student.groupeId = undefined;
+  student.parentId = undefined;
   res.status(200).json({
     status: 'success',
     data: {
-      student
+      ...student.dataValues,
+      parent,
+      groupe
+
     },
 });
 });

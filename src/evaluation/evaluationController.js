@@ -4,7 +4,7 @@ const Evaluation = require('./evaluationModel');
 const Student = require('../student/studentModel');
 const historiqueEvaluation  = require('../historiqueEvaluation/historiqueEvaluationModel');
 const HistoriqueStudent  = require('../historiqueStudent/historiqueStudentModel');
- 
+  
 const filter = (queryParams) => {
   const tempQueryParams = { ...queryParams };
 
@@ -235,7 +235,7 @@ exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
     where,
     limit,
     offset,
-    order
+    order : [['dateEvaluation', 'ASC']]
   });
   res.status(200).json({
     status: 'success',

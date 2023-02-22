@@ -267,11 +267,17 @@ exports.getMyGroupeById = catchAsync(async (req, res, next) => {
     if (!coach) {
         throw new  AppError('No coach found with that ID', 404);
     }
+    // const groupes = await Groupe.findOne({
+    //     where:{
+    //         id:req.params.id,
+    //         coachId:coach.id
+    //     }   
+    // });
     const groupes = await coach.getGroupes({
         where:{
             id:req.params.id
         }
-    });
+    })
     if (!groupes) {
         throw new  AppError('No groupes found with this Coach', 404);
     }

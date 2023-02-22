@@ -53,8 +53,8 @@ exports.createPresence = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         data:{
-            groupe,
-            student,
+            ...groupe.dataValues,
+            ...student.dataValues,
             presnece
         }
     });
@@ -132,11 +132,11 @@ exports.createBulkPresence = catchAsync(async (req, res, next) => {
         datePresence,
         presence: students.find((s) => s.id === student.id).presence,
     })));
-
+        
     res.status(200).json({
         status: 'success',
         data:{
-            groupe,
+            ...groupe.dataValues,
             presnece
         }
     });
