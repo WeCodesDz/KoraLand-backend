@@ -136,7 +136,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
   let { page ,limit } = req.query;
   let results;
   page = page * 1 || 1;
-  limit = limit * 1 || 1;
+  limit = limit * 1 || 100;
   // offset is the number of rows skipped
   const offset = (page - 1) * limit;
   //filtering
