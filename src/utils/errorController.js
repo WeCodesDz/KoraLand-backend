@@ -29,7 +29,7 @@ const handleJWTError = () =>
   new AppError('Invalid token. Please log in again!', 401);
 
 const handleJWTExpiredError = () =>
-  new AppError('Your token has expired! Please log in again.', 401);
+  new AppError('Your token has expired! Please log in again.', 403);
 
 const SequelizeValidationError = (err, req, res) => {
   const errors = Object.values(err.errors).map((el) => el.message);
