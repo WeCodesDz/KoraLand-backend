@@ -295,7 +295,7 @@ exports.getAllGroupePresences = catchAsync(async(req,res,next)=>{
   }
   res.status(200).json({
     status: 'success',
-    body:{
+    data:{
       ...groupe.dataValues,
       presences
     }
