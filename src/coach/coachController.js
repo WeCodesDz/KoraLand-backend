@@ -1,3 +1,4 @@
+const sequelize = require('sequelize'); 
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Coach = require('./coachModel');
@@ -250,11 +251,31 @@ exports.getMyGroupes = catchAsync(async (req, res, next) => {
     if (!groupes) {
         throw new  AppError('No groupes found with this Coach', 404);
     }
+    const groupesIds = groupes.map(groupe => groupe.id);
+    const groupesStats = await Groupe.findAll({
+        where:{
+            id:groupesIds
+        },
+        attributes:['id','groupeName','horaireEntrainement','sport','categorieAge','saisonActuel'],
+        include:[{
+            model:Student,
+            attributes:[
+                'nomEleve',
+                'prenomEleve',
+                'commune',
+                'posteEleve',
+            ]
+        }]
+    });
+    groupesStats.forEach(groupe => {
+        groupe.dataValues.count_players = groupe.dataValues.students.length;
+    });
+  
     res.status(200).json({
         status: 'success',
         data:{
           ...coach.dataValues,
-          groupes
+          groupes:groupesStats
         }
     });
 });
@@ -362,6 +383,9 @@ exports.getMyGroupesStudents = catchAsync(async (req, res, next) => {
             'taille',
             'poids',],
         },
+    });
+    groupesStats.forEach(groupe => {
+        groupe.dataValues.count_players = groupe.dataValues.students.length;
     });
     res.status(200).json({
         status: 'success',
