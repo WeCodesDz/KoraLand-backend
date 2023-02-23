@@ -79,7 +79,7 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
 
   const cookieOptions = { httpOnly: true,  sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 }
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  //res.setHeader('Access-Control-Allow-Origin', '*');
   res.cookie('jwt', newRefreshToken, cookieOptions);
   res.json({ role:'admin', accessToken });
 
