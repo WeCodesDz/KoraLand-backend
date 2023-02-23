@@ -328,3 +328,46 @@ exports.getListStudentOfOneGroupe = catchAsync(async (req, res, next) => {
         }
     });
 });
+
+exports.getMyGroupesStudents = catchAsync(async (req, res, next) => {
+    const coachId = req.user.id;
+    const coach = await Coach.findByPk(coachId,{
+        attributes:['id','nomCoach','prenomCoach','email','username'],
+    });
+    if (!coach) {
+        throw new  AppError('No coach found with that ID', 404);
+    }
+    const groupes = await coach.getGroupes();
+    if (!groupes) {
+        throw new  AppError('No groupes found with this Coach', 404);
+    }
+    const groupesIds = groupes.map(groupe => groupe.id);
+    const groupesStats = await Groupe.findAll({
+        where:{
+            id:groupesIds
+        },
+        attributes:['id','groupeName'],
+        include:{
+            model:Student,
+            attributes:[
+            'id',
+            'nomEleve',
+            'prenomEleve',
+            'dateNaissance',
+            'saisonActuel',
+            'anneeExamen',
+            'commune',
+            'guardianDeBut',
+            'posteEleve',
+            'taille',
+            'poids',],
+        },
+    });
+    res.status(200).json({
+        status: 'success',
+        data:{
+          ...coach.dataValues,
+          groupes:groupesStats
+        }
+    });
+});

@@ -12,6 +12,9 @@ router
              coachController.getAllcoachs);
 
 router
+.route('/myGroupesStudents/')
+.get(coachController.getMyGroupesStudents)             
+router
         .route('/groups')
         .get(authController.role('admin'),coachController.getCoachGroupes)
         .post(authController.role('admin'),coachController.addCoachToGroupe)

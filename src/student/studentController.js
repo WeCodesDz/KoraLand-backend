@@ -51,7 +51,7 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         mantant2Tranche,
         status2Tranche,
         numeroTelephone,
-        anneExamen,
+        anneeExamen,
         commune,
         operateur,
         guardianDeBut,
@@ -76,7 +76,7 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         mantant2Tranche,
         status2Tranche,
         numeroTelephone,
-        anneExamen,
+        anneeExamen,
         commune,
         operateur,
         guardianDeBut,
@@ -110,7 +110,7 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         mantant2Tranche,
         status2Tranche,
         numeroTelephone,
-        anneExamen,
+        anneeExamen,
         commune,
         operateur,
         guardianDeBut,
@@ -366,7 +366,7 @@ exports.updateStudent = catchAsync(async (req, res, next) => {
     mantant2Tranche,
     status2Tranche,
     numeroTelephone,
-    anneExamen,
+    anneeExamen,
     commune,
     operateur,
     guardianDeBut,
@@ -392,7 +392,7 @@ if(!student) {
     if(mantant2Tranche) student.mantant2Tranche = mantant2Tranche;
     if(status2Tranche) student.status2Tranche = status2Tranche;
     if(numeroTelephone) student.status2Tranche = status2Tranche;
-    if(anneExamen) student.anneExamen = anneExamen;
+    if(anneeExamen) student.anneeExamen = req.body.anneeExamen;
     if(commune) student.commune = commune;
     if(operateur) student.operateur = operateur;
     if(guardianDeBut) student.guardianDeBut = guardianDeBut;

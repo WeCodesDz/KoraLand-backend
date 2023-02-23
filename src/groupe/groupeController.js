@@ -282,22 +282,46 @@ exports.getAllGroupePresences = catchAsync(async(req,res,next)=>{
     throw new  AppError('No groupe found with that Id', 404);
   }
 
-  const presences = await groupe.getPresences({
+  const nombreSeance = await groupe.getPresences({
     attributes: [
       "datePresence",
-      [sequelize.fn("COUNT", sequelize.col("presence")), "count_presence"],
+      [sequelize.fn("COUNT", sequelize.col("presence")), "count_players"],
     ],
     group: ['datePresence'],
     order : [['datePresence', 'ASC']] 
   });
-  if(!presences){
+  const nombreAbsence = await groupe.getPresences({
+    attributes: [
+      "datePresence",
+      [sequelize.fn("COUNT", sequelize.col("presence")), "count_absence"],
+    ],
+    where:{
+      presence:'absent'
+    },
+    group: ['datePresence'],
+    order : [['datePresence', 'ASC']]
+  });
+  const nombrePresence = await groupe.getPresences({
+    attributes: [
+      "datePresence",
+      [sequelize.fn("COUNT", sequelize.col("presence")), "count_presence"],
+    ],
+    where:{
+      presence:'present'
+    },
+    group: ['datePresence'],
+    order : [['datePresence', 'ASC']]
+  });
+  if(!nombreSeance){
     throw new  AppError('No presences found in this groupe', 404);
   }
   res.status(200).json({
     status: 'success',
     data:{
       ...groupe.dataValues,
-      presences
+      nombreSeance,
+      nombreAbsence,
+      nombrePresence
     }
   });
 });
