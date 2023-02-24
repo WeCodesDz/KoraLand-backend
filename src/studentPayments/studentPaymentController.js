@@ -18,7 +18,7 @@ exports.createPayment = catchAsync(async (req, res, next) => {
     if(!student){
         throw new AppError('No student found with that ID', 404);
     }
-    student.addPayment(payment);
+    await student.addPayment(payment);
     res.status(201).json({
         status: 'success',
         data: {
