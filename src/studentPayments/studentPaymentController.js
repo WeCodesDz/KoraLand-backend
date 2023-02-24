@@ -28,7 +28,7 @@ exports.createPayment = catchAsync(async (req, res, next) => {
 });
 
 exports.getStudentPayments = catchAsync(async (req, res, next) => {
-    const {saisonActuel} = req.body;
+    const {saisonActuel} = req.query;
     if(!saisonActuel){
         throw new AppError('Please provide saison of patments', 400);
     }

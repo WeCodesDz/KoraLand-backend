@@ -399,7 +399,7 @@ exports.deleteStudent = catchAsync(async (req, res, next) => {
 });
 
 exports.getBlockedStudents = catchAsync(async (req,res,next)=>{
-  let { page ,limit } = req.body;
+  let { page ,limit } = req.query;
   let results;
   page = page * 1 || 1;
   limit = limit * 1 || 1;
@@ -535,7 +535,7 @@ exports.getStudentEvaluation = catchAsync(async (req,res,next)=>{
 });
 
 exports.getStudentPresenceByDate = catchAsync(async(req,res,next)=>{
-   const {datePresence} = req.body;
+   const {datePresence} = req.query;
   const student = await Student.findByPk(req.params.id.trim());
   if(!student) {
     throw new  AppError('No student found with that ID', 404);
