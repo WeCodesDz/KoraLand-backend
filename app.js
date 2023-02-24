@@ -26,6 +26,7 @@ const historiqueStudentRouter = require('./src/historiqueStudent/historiqueStude
 const historiqueGroupeRouter = require('./src/historiqueGroupe/historiqueGroupeRoute');
 const historiqueEvaluationRouter = require('./src/historiqueEvaluation/historiqueEvaluationRoute');
 const historiquePresenceRouter = require('./src/historiquePresence/historiquePresenceRoute');
+const paymentRouter = require('./src/studentPayments/studentPaymentRoute');
 
 const authRouter = require('./src/auth/authRoute');
 
@@ -44,7 +45,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ['http://127.0.0.1:5173','http://localhost:5173'],
+    origin: ['http://127.0.0.1:5173','http://localhost:5173','https://koralandacad.link'],
     credentials: true,
     withCredentials: true,
   })
@@ -84,6 +85,7 @@ app.use(xss());
  app.use('/api/v1/historique_groupe', historiqueGroupeRouter);
  app.use('/api/v1/historique_evaluation', historiqueEvaluationRouter);
  app.use('/api/v1/historique_presence', historiquePresenceRouter);
+ app.use('/api/v1/payment', paymentRouter);
 
  
 

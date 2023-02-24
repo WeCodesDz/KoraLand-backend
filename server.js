@@ -31,6 +31,7 @@ const historiqueParent = require('./src/historiqueParent/historiqueParentModel')
 const AdminSubscription = require('./src/subscribtionAdmin/subscribtionAdminModel');
 const CoachSubscription = require('./src/subscribtionCoach/subscribtionCoachModel');
 const ParentSubscription = require('./src/subscribtionParent/subscribtionParentModel');
+const Payment = require('./src/studentPayments/studentPaymentModel');
 
 
 // Models
@@ -45,6 +46,9 @@ Evaluation.belongsTo(Student, {onDelete: 'cascade'});
 
  Student.hasMany(Presence, { onDelete: 'cascade'});
  Presence.belongsTo(Student, { onDelete: 'cascade'});
+
+ Student.hasMany(Payment, { onDelete: 'cascade'});
+ Payment.belongsTo(Student, { onDelete: 'cascade'});
 
  Groupe.hasMany(Presence, { onDelete: 'cascade'});
  Presence.belongsTo(Groupe, { onDelete: 'cascade'});
@@ -105,6 +109,7 @@ ParentSubscription.belongsToMany(Parent, {
     await db.authenticate();
     console.log('database connected');
     // db.sync({ force: true })
+    //Payment.sync({ force: true })
     // await Admin.create({
     //     nomAdmin:'admin',
     //     prenomAdmin:'admin',
