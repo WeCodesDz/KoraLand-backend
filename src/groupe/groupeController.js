@@ -261,7 +261,7 @@ exports.getGroupeStudentById = catchAsync(async(req,res,next)=>{
   const student = await Student.findOne({
     attributes:['id','nomEleve','prenomEleve','dateNaissance','saisonActuel','commune','guardianDeBut','posteEleve','taille','poids'],
     where:{
-      id:req.body.studentId,
+      id:req.query.studentId,
       groupeId:groupe.id
     }
   })

@@ -185,7 +185,7 @@ exports.deleteCoach = catchAsync(async (req, res, next) => {
 });
 
 exports.getCoachGroupes = catchAsync(async (req, res, next) => {
-    const coach = await Coach.findByPk(req.body.id,{
+    const coach = await Coach.findByPk(req.query.id,{
         attributes:['id','nomCoach','prenomCoach','username'],
     });
     if (!coach) {
