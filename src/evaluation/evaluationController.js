@@ -139,7 +139,7 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
 
 exports.getStudentEvaluationByDateEvaluation = catchAsync(async (req, res, next) => {
 
-  const {dateEvaluation} = req.body;
+  const {dateEvaluation} = req.query;
   const student = await Student.findByPk(req.params.id);
   if(!student){
     throw new AppError('No student found with this id',404)
