@@ -68,7 +68,7 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
     if (!foundToken) {
       await RefreshAdmin.destroy({where:{administrateurId:user.id}});
     }
-    const clearCookieConfig = { httpOnly: true, sameSite: 'None',secure: true }
+    const clearCookieConfig = { httpOnly: true, sameSite: 'None' }
     
     if (process.env.NODE_ENV === 'production') clearCookieConfig.secure = true;
     res.clearCookie('jwt',clearCookieConfig );
@@ -77,9 +77,9 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
   const createdRefreshToken = await RefreshAdmin.create({jwt:newRefreshToken});
   await user.addRefreshes(createdRefreshToken);
 
-  const cookieOptions = { httpOnly: true,  sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000, secure: true }
+  const cookieOptions = { httpOnly: true,  sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 }
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  //res.setHeader('Access-Control-Allow-Origin', '*');
   res.cookie('jwt', newRefreshToken, cookieOptions);
   res.json({ role:'admin', accessToken });
 

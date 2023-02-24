@@ -12,23 +12,28 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     }
     const refreshToken = cookies.jwt;
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    const where= refreshToken?{
+        jwt: refreshToken
+    }:{}
 
     const adminRefreshToken = await RefreshAdmin.findOne({
-        where: {
-            jwt: refreshToken
-        },
-        raw:true
+       where:where,
+        
     });
+    
+
+    const adminRefreshTokenRaw = adminRefreshToken?adminRefreshToken.dataValues:undefined;
+    
     let admin;
-    if(adminRefreshToken){
+    if(adminRefreshTokenRaw){
         admin = await Admin.findOne({
             where: {
-                id: adminRefreshToken.administrateurId
+                id: adminRefreshTokenRaw.administrateurId
             }
         });
     }
-    if(!adminRefreshToken){
-        const decoded = await promisify(jwt.verify)(adminRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+    if(!adminRefreshTokenRaw){
+        const decoded = await promisify(jwt.verify)(adminRefreshTokenRaw, process.env.REFRESH_TOKEN_SECRET);
         if(decoded){
              admin = await Admin.findOne({
                     where:{
@@ -43,10 +48,11 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
         }
         throw new AppError('Fordbidden', 403);
     }
-    const deletedAdminRefreshToken = adminRefreshToken;
+    //const deletedAdminRefreshToken = adminRefreshToken;
     await adminRefreshToken.destroy();
 
-    const decoded = await promisify(jwt.verify)(deletedAdminRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const decoded = await promisify(jwt.verify)(adminRefreshTokenRaw.jwt, process.env.REFRESH_TOKEN_SECRET);
+    console.log(decoded);
     if (!decoded || decoded.username !== admin?.username) {
         throw new AppError('Fordbidden', 403); 
     }
@@ -57,7 +63,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
                 "role": "admin"
             }
         },
-        process.env.JWT_SECRET,
+        process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '15m' }
     );
 
@@ -67,7 +73,8 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
       { expiresIn: '7d' }
   );
   const createdRefreshToken = await RefreshAdmin.create({jwt:newRefreshToken});
-  await createdRefreshToken.setAdmin(admin);
+  
+  await admin.addRefreshes(createdRefreshToken)
   res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
 
   res.json({ role:'admin', accessToken });
