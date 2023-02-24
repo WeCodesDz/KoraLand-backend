@@ -183,7 +183,7 @@ exports.addStudentToGroupe = catchAsync( async(req, res, next)=>{
 });
 
 exports.getGroupeStudents = catchAsync( async(req, res, next)=>{
-  const groupe = await Groupe.findByPk(req.body.groupeId.trim());
+  const groupe = await Groupe.findByPk(req.query.groupeId.trim());
   if(!groupe){
     throw new  AppError('No groupe found with that Id', 404);
   }
@@ -220,7 +220,7 @@ exports.deleteStudentGroupe = catchAsync( async(req, res, next)=>{
 });
 
 exports.getGroupePresenceByDate = catchAsync(async(req,res,next)=>{
-    const {datePresence} = req.body;
+    const {datePresence} = req.query;
     const groupe = await Groupe.findOne({
         where:{
             id:req.params.id
