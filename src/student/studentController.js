@@ -46,10 +46,7 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         saisonActuel,
         dateInscription,
         reinscription,
-        mantant1Tranche,
-        status1Tranche,
-        mantant2Tranche,
-        status2Tranche,
+        
         numeroTelephone,
         anneeExamen,
         commune,
@@ -71,10 +68,7 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         saisonActuel,
         dateInscription,
         reinscription,
-        mantant1Tranche,
-        status1Tranche,
-        mantant2Tranche,
-        status2Tranche,
+        
         numeroTelephone,
         anneeExamen,
         commune,
@@ -105,10 +99,7 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         saisonActuel,
         dateInscription,
         reinscription,
-        mantant1Tranche,
-        status1Tranche,
-        mantant2Tranche,
-        status2Tranche,
+        
         numeroTelephone,
         anneeExamen,
         commune,
@@ -151,10 +142,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            'mantant1Tranche',
-            'status1Tranche',
-            'mantant2Tranche',
-            'status2Tranche',
+            
             'numeroTelephone',
             'anneeExamen',
             'commune',
@@ -181,10 +169,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            'mantant1Tranche',
-            'status1Tranche',
-            'mantant2Tranche',
-            'status2Tranche',
+            
             'anneeExamen',
             'commune',
             'operateur',
@@ -254,10 +239,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            'mantant1Tranche',
-            'status1Tranche',
-            'mantant2Tranche',
-            'status2Tranche',
+            
             'numeroTelephone',
             'anneeExamen',
             'commune',
@@ -288,10 +270,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            'mantant1Tranche',
-            'status1Tranche',
-            'mantant2Tranche',
-            'status2Tranche',
+            
             'anneeExamen',
             'commune',
             'operateur',
@@ -361,10 +340,7 @@ exports.updateStudent = catchAsync(async (req, res, next) => {
     saisonActuel,
     dateInscription,
     reinscription,
-    mantant1Tranche,
-    status1Tranche,
-    mantant2Tranche,
-    status2Tranche,
+    
     numeroTelephone,
     anneeExamen,
     commune,
@@ -387,10 +363,7 @@ if(!student) {
     if(saisonActuel) student.saisonActuel = saisonActuel;
     if(dateInscription) student.dateInscription = dateInscription;
     if(reinscription) student.reinscription = reinscription;
-    if(mantant1Tranche) student.mantant1Tranche = mantant1Tranche;
-    if(status1Tranche) student.status1Tranche = status1Tranche;
-    if(mantant2Tranche) student.mantant2Tranche = mantant2Tranche;
-    if(status2Tranche) student.status2Tranche = status2Tranche;
+    
     if(numeroTelephone) student.status2Tranche = status2Tranche;
     if(anneeExamen) student.anneeExamen = req.body.anneeExamen;
     if(commune) student.commune = commune;
@@ -447,10 +420,7 @@ exports.getBlockedStudents = catchAsync(async (req,res,next)=>{
            'saisonActuel',
            'dateInscription',
            'reinscription',
-           'mantant1Tranche',
-           'status1Tranche',
-           'mantant2Tranche',
-           'status2Tranche',
+           
            'numeroTelephone',
            'anneeExamen',
            'commune',
@@ -478,10 +448,7 @@ exports.getBlockedStudents = catchAsync(async (req,res,next)=>{
            'saisonActuel',
            'dateInscription',
            'reinscription',
-           'mantant1Tranche',
-           'status1Tranche',
-           'mantant2Tranche',
-           'status2Tranche',
+           
            'anneeExamen',
            'commune',
            'operateur',
@@ -610,46 +577,46 @@ exports.lastEvaluation = catchAsync(async (req,res,next)=>{
   });
 });
 
-exports.getStudentPayment = catchAsync(async(req,res,next) =>{
-  const {saison} = req.body;  
-  const student = await Student.findOne({
-    attributes:['mantant1Tranche','mantant2Tranche','status1Tranche','status2Tranche'],
-    where:{
-      saisonActuel : saison,
-      id:req.params.id.trim()
-    }
-  });
-  if(!student){
-    throw new AppError('no payment data found by this id on this saison',404); 
-  }
+// exports.getStudentPayment = catchAsync(async(req,res,next) =>{
+//   const {saison} = req.body;  
+//   const student = await Student.findOne({
+//     attributes:['mantant1Tranche','mantant2Tranche','status1Tranche','status2Tranche'],
+//     where:{
+//       saisonActuel : saison,
+//       id:req.params.id.trim()
+//     }
+//   });
+//   if(!student){
+//     throw new AppError('no payment data found by this id on this saison',404); 
+//   }
 
-  res.status(200).json({
-    status:'succes',
-    data:{
-      student
-    }
-  })
-})
+//   res.status(200).json({
+//     status:'succes',
+//     data:{
+//       student
+//     }
+//   })
+// })
 
-exports.updateStudentPayment = catchAsync(async(req,res,next)=>{
-  const {mantant1Tranche,mantant2Tranche,status1Tranche,status2Tranche} = req.body
-  const student = await Student.findByPk(req.params.id.trim());
-  if(!student){
-    throw new AppError('there is no student found with this id');
-  }
-  if(mantant1Tranche) student.mantant1Tranche = mantant1Tranche;
-  if(mantant2Tranche) student.mantant2Tranche = mantant2Tranche;
-  if(status1Tranche) student.status1Tranche = status1Tranche;
-  if(status2Tranche) student.status2Tranche = status2Tranche;
+// exports.updateStudentPayment = catchAsync(async(req,res,next)=>{
+//   const {mantant1Tranche,mantant2Tranche,status1Tranche,status2Tranche} = req.body
+//   const student = await Student.findByPk(req.params.id.trim());
+//   if(!student){
+//     throw new AppError('there is no student found with this id');
+//   }
+//   if(mantant1Tranche) student.mantant1Tranche = mantant1Tranche;
+//   if(mantant2Tranche) student.mantant2Tranche = mantant2Tranche;
+//   if(status1Tranche) student.status1Tranche = status1Tranche;
+//   if(status2Tranche) student.status2Tranche = status2Tranche;
 
-  await student.save();
-  res.status(200).json({
-    status:'succes',
-    data:{
-      student
-    }
-  })
-})
+//   await student.save();
+//   res.status(200).json({
+//     status:'succes',
+//     data:{
+//       student
+//     }
+//   })
+// })
 
 exports.getStudentAllPresence = catchAsync(async(req,res,next)=>{
   const student = await Student.findByPk(req.params.id.trim());
@@ -664,4 +631,4 @@ exports.getStudentAllPresence = catchAsync(async(req,res,next)=>{
       presences
     },
   }); 
-})
+});

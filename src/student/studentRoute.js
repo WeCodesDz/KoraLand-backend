@@ -33,10 +33,10 @@ router
       .route('/blockStudent/:id')      
       .patch(studentController.blockStudent);
 
-router
-      .route('/payment/:id')      
-      .get(studentController.getStudentPayment)
-      .patch(studentController.updateStudentPayment);
+// router
+//       .route('/payment/:id')      
+//       .get(studentController.getStudentPayment)
+//       .patch(studentController.updateStudentPayment);
 
 router
       .route('/:id')

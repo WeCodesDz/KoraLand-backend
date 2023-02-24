@@ -42,24 +42,7 @@ const studentModel = db.define("student", {
         values: ['oui', 'nouveau'],
         allowNull: false,
     },
-    mantant1Tranche:{
-        type: Sequelize.DOUBLE,
-        allowNull: false,
-    },
-    status1Tranche:{
-        type: Sequelize.ENUM,
-        values: ['oui', 'non', 'avance','abandonne'],
-        allowNull: false,
-    },
-    mantant2Tranche:{
-        type: Sequelize.DOUBLE,
-        allowNull: true,
-    },
-    status2Tranche:{
-        type: Sequelize.ENUM,
-        values: ['oui', 'non', 'avance','abandonne'],
-        allowNull: true,
-    },
+    
     numeroTelephone:{
         type: Sequelize.STRING,
         allowNull: false,
