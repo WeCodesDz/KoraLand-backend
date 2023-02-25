@@ -7,12 +7,13 @@ const { request } = require('http');
 const Coach = require('../coach/coachModel');
 
 exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
-    const cookies = req.cookies;
-    if(!cookies){
+    const {cookies} = req;
+    if(!cookies.jwt){
         throw new AppError('unautorized',401);
     }
 
     const refreshToken = cookies.jwt;
+   
     const clearCookieOptions = { httpOnly: true, sameSite: 'None' };
     if (process.env.NODE_ENV === 'production') clearCookieOptions.secure = true;
 

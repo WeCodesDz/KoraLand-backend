@@ -6,8 +6,8 @@ const RefreshAdmin = require('./refreshAdminModel');
 const Admin = require('../administrateur/administrateurModel');
 
 exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
-    const cookies = req.cookies;
-    if(!cookies){
+    const {cookies} = req;
+    if(!cookies.jwt){
         throw new AppError('unautorized',401);
     }
     const refreshToken = cookies.jwt;
