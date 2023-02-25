@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../../database');
 
-const Message = db.define('refresh_coach', {
+const Message = db.define('message', {
     id: {
         type: Sequelize.Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
