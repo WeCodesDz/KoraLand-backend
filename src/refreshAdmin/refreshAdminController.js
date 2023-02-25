@@ -11,7 +11,12 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
         res.sendStatus(401);
     }
     const refreshToken = cookies.jwt;
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    const clearCookieOptions = { httpOnly: true, sameSite: 'None' }
+    
+    if (process.env.NODE_ENV === 'production') clearCookieConfig.secure = true;
+   
+
+    res.clearCookie('jwt',clearCookieOptions);
     const where= refreshToken?{
         jwt: refreshToken
     }:{}
@@ -22,7 +27,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     });
     
 
-    const adminRefreshTokenRaw = adminRefreshToken?adminRefreshToken.dataValues:undefined;
+    const adminRefreshTokenRaw = adminRefreshToken?{...adminRefreshToken.dataValues}:undefined;
     
     let admin;
     if(adminRefreshTokenRaw){
@@ -33,7 +38,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
         });
     }
     if(!adminRefreshTokenRaw){
-        const decoded = await promisify(jwt.verify)(adminRefreshTokenRaw, process.env.REFRESH_TOKEN_SECRET);
+        const decoded = await promisify(jwt.verify)(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         if(decoded){
              admin = await Admin.findOne({
                     where:{
@@ -64,20 +69,23 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN }
     );
 
     const newRefreshToken = jwt.sign(
       { "username": admin.username },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
   );
   const createdRefreshToken = await RefreshAdmin.create({jwt:newRefreshToken});
   
   await admin.addRefreshes(createdRefreshToken)
-  res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
+  const cookieOptions = { httpOnly: true, sameSite: 'None' };
+    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
-  res.json({ role:'admin', accessToken });
+    res.cookie('jwt',newRefreshToken,cookieOptions);
+
+  res.json({ role:'admin',adminLevel:admin.adminLevel, accessToken });
 
 
 });

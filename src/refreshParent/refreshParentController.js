@@ -11,22 +11,31 @@ exports.handleParentRefreshToken = catchAsync(async (req, res, next) => {
         res.sendStatus(401);
     }
     const refreshToken = cookies.jwt;
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    const clearCookieOptions = { httpOnly: true, sameSite: 'None' };
+    if (process.env.NODE_ENV === 'production') clearCookieOptions.secure = true;
+
+    res.clearCookie('jwt',clearCookieOptions);
+
+    const where= refreshToken?{
+        jwt: refreshToken
+    }:{}
 
     const parentRefreshToken = await RefreshParent.findOne({
-        where: {
-            jwt: refreshToken
-        },
+        where:where
     });
+
+    const parentRefreshTokenRaw = parentRefreshToken?{...parentRefreshToken.dataValues}:undefined;
+
+
     let parent;
-    if(parentRefreshToken){
+    if(parentRefreshTokenRaw){
         parent = await Parent.findOne({
             where: {
-                id: parentRefreshToken.parentId
+                id: parentRefreshTokenRaw.parentId
             },
         }); 
     }
-    if(!parentRefreshToken){
+    if(!parentRefreshTokenRaw){
         const decoded = await promisify(jwt.verify)(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         if(decoded){
             //  parent = await parentRefreshToken.getParent();
@@ -45,10 +54,10 @@ exports.handleParentRefreshToken = catchAsync(async (req, res, next) => {
         throw new AppError('Fordbidden', 403);
     }
     
-    const deletedParentRefreshToken =parentRefreshToken;
+    //const deletedParentRefreshToken =parentRefreshToken;
     await parentRefreshToken.destroy();
 
-    const decoded = await promisify(jwt.verify)(deletedParentRefreshToken.jwt, process.env.REFRESH_TOKEN_SECRET);
+    const decoded = await promisify(jwt.verify)(parentRefreshTokenRaw.jwt, process.env.REFRESH_TOKEN_SECRET);
     if (!decoded || decoded.username !== parent?.username) {
         throw new AppError('Fordbidden', 403);
     }
@@ -59,19 +68,21 @@ exports.handleParentRefreshToken = catchAsync(async (req, res, next) => {
                 "role": "parent"
             }
         },
-        process.env.JWT_SECRET,
-        { expiresIn: '10s' }
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN }
     );
 
     const newRefreshToken = jwt.sign(
       { "username": parent.username },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
   );
   const createdRefreshToken = await RefreshParent.create({jwt:newRefreshToken});
   await parent.addRefreshes(createdRefreshToken); 
-  res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 7*24 * 60 * 60 * 1000 });
+  const cookieOptions = { httpOnly: true, sameSite: 'None' };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
+  res.cookie('jwt',newRefreshToken,cookieOptions);
   res.json({ role:'parent', accessToken });
 
 

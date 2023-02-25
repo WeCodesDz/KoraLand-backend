@@ -52,13 +52,13 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN}
     );
 
     const newRefreshToken = jwt.sign(
       { "username": user.username ,"role": "admin"},
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
   );
    
   if(cookies?.jwt){
@@ -81,7 +81,7 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   //res.setHeader('Access-Control-Allow-Origin', '*');
   res.cookie('jwt', newRefreshToken, cookieOptions);
-  res.json({ role:'admin', accessToken });
+  res.json({ role:'admin',adminLevel:user.adminLevel, accessToken });
 
 });  
 
@@ -112,13 +112,13 @@ exports.loginCoach = catchAsync(async (req, res, next) => {
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN }
     );
 
     const newRefreshToken = jwt.sign(
       { "username": user.username ,"role": "coach"},
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
   );
    
   if(cookies?.jwt){
@@ -172,13 +172,13 @@ exports.loginParent = catchAsync(async (req, res, next) => {
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '15m' }
+        { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN}
     );
 
     const newRefreshToken = jwt.sign(
       { "username": user.username ,"role": "parent"},
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn:process.env.REFRESH_TOKEN_EXPIRES_IN }
   );
    
   if(cookies?.jwt){
@@ -274,8 +274,11 @@ exports.logout =  catchAsync(async (req, res, next) => {
     await currentRefreshToken.destroy();
   }
 
-
-  res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+  const clearCookieConfig = { httpOnly: true, sameSite: 'None' }
+    
+  if (process.env.NODE_ENV === 'production') clearCookieConfig.secure = true;
+  res.clearCookie('jwt',clearCookieConfig );
+  
   res.sendStatus(204);
 });
 
