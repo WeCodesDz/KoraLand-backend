@@ -8,7 +8,7 @@ const Parent = require('../parent/parentModel');
 exports.handleParentRefreshToken = catchAsync(async (req, res, next) => {
     const cookies = req.cookies;
     if(!cookies){
-        res.sendStatus(401);
+        throw new AppError('unautorized',401);
     }
     const refreshToken = cookies.jwt;
     const clearCookieOptions = { httpOnly: true, sameSite: 'None' };
