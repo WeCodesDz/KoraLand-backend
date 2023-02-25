@@ -32,6 +32,7 @@ const AdminSubscription = require('./src/subscribtionAdmin/subscribtionAdminMode
 const CoachSubscription = require('./src/subscribtionCoach/subscribtionCoachModel');
 const ParentSubscription = require('./src/subscribtionParent/subscribtionParentModel');
 const Payment = require('./src/studentPayments/studentPaymentModel');
+const Message = require('./src/message/messageModel');
 
 
 // Models
@@ -55,6 +56,17 @@ Evaluation.belongsTo(Student, {onDelete: 'cascade'});
 
 Parent.hasMany(Student, { onDelete: 'cascade' });
 Student.belongsTo(Parent, { onDelete: 'cascade' });
+
+//message associations
+Parent.hasMany(Message, {as:'rooms', onDelete: 'cascade' });
+Message.belongsTo(Parent, { onDelete: 'cascade' });
+
+Parent.hasMany(Message, { onDelete: 'cascade' });
+Message.belongsTo(Parent, { onDelete: 'cascade' });
+
+Admin.hasMany(Message, {as:'admins', onDelete: 'cascade' });
+Message.belongsTo(Parent, { onDelete: 'cascade' });
+
 // Refresh Models
 Parent.hasMany(RefreshParent, {as:'refreshes', onDelete: 'cascade' });
 RefreshParent.belongsTo(Parent, { onDelete: 'cascade' });
@@ -109,7 +121,7 @@ ParentSubscription.belongsToMany(Parent, {
     await db.authenticate();
     console.log('database connected');
     // db.sync({ force: true })
-    //Payment.sync({ force: true })
+    //Message.sync({ force: true })
     // await Admin.create({
     //     nomAdmin:'admin',
     //     prenomAdmin:'admin',

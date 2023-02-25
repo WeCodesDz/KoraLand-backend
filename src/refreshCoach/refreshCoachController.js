@@ -9,7 +9,7 @@ const Coach = require('../coach/coachModel');
 exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
     const {cookies} = req;
     if(!cookies.jwt){
-        throw new AppError('unautorized',401);
+        throw new AppError('unauthorized',401);
     }
 
     const refreshToken = cookies.jwt;
