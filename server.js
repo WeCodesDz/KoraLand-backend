@@ -1,5 +1,7 @@
 const dotenv = require('dotenv');
 const Sequelize = require('sequelize');
+const { promisify } = require('util');
+const jwt = require('jsonwebtoken');
 
 process.on('uncaughtException', (err) => {
   console.error(err);
@@ -140,6 +142,25 @@ ParentSubscription.belongsToMany(Parent, {
   const server = app.listen(port, () => console.log(`Listening on ${port}`));
   //const server = app.listen();
   
+
+  const io = require("socket.io")(server, {
+    cors: {
+      origin: true,
+      methods: ['GET', 'POST'],
+      credentials: true
+    }
+  });
+
+  io.use(async (socket, next) => {
+    try {
+      const token = socket.handshake.auth.token;
+      const payload = await promisify(jwt.verify)(token, process.env.ACCESS_TOKEN_SECRET);
+      socket.username = payload.UserInfo.username;
+      next();
+    } catch (err) {console.error(err);}
+  });
+
+
   process.on('unhandledRejection', (err) => {
     console.error(err);
     console.log('Unhandled Rejection  ');

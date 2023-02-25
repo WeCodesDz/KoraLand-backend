@@ -27,6 +27,7 @@ const historiqueGroupeRouter = require('./src/historiqueGroupe/historiqueGroupeR
 const historiqueEvaluationRouter = require('./src/historiqueEvaluation/historiqueEvaluationRoute');
 const historiquePresenceRouter = require('./src/historiquePresence/historiquePresenceRoute');
 const paymentRouter = require('./src/studentPayments/studentPaymentRoute');
+const messageRouter = require('./src/message/messageRoute');
 
 const authRouter = require('./src/auth/authRoute');
 
@@ -86,6 +87,7 @@ app.use(xss());
  app.use('/api/v1/historique_evaluation', historiqueEvaluationRouter);
  app.use('/api/v1/historique_presence', historiquePresenceRouter);
  app.use('/api/v1/payment', paymentRouter);
+ app.use('/api/v1/message', messageRouter);
 
  
 
