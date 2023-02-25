@@ -76,7 +76,7 @@ exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
     const newRefreshToken = jwt.sign(
       { "username": coach.username },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN}
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN}
   );
   const createdRefreshToken = await RefreshCoach.create({jwt:newRefreshToken});
    await coach.addRefreshes(createdRefreshToken); 
