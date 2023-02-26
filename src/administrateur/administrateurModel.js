@@ -103,7 +103,7 @@ const administrateurModel = db.define('administrateur', {
     hooks:{
       afterValidate: async (administrateur) => {
         if (administrateur.passwordConfirm && administrateur.password) {
-          console.log(`administrateur.passwordConfirm: ${administrateur.passwordConfirm}`);
+          //console.log(`administrateur.passwordConfirm: ${administrateur.passwordConfirm}`);
           if (administrateur.passwordConfirm !== administrateur.password) {
             throw new AppError('both password are not match!!!!!!!!!!', 400);
           }

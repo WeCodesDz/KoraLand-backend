@@ -4,7 +4,7 @@ const HistoriqueGroupe = require('./historiqueGroupeModel');
 
 exports.getAllHistoriqueGroupe = catchAsync(async (req, res, next) => {
     const { saisonActuel,groupeName } = req.query;
-    console.log(saisonActuel,groupeName)
+    //console.log(saisonActuel,groupeName)
     const historiqueGroupe = await HistoriqueGroupe.findOne({
         where:{
             saisonActuel: saisonActuel,

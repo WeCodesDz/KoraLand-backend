@@ -91,9 +91,9 @@ exports.createBulkPresence = catchAsync(async (req, res, next) => {
     const uniqueGroupeStudents = [...new Set(groupeStudents.map((vi) => vi.id))];
     const uniqueStudents = [...new Set(students.map((vi) => vi.id))];
     const isStudents =  uniqueGroupeStudents.every((el) => {return uniqueStudents.includes(el)})
-    console.log("isStudents",isStudents);
-    console.log("uniqueGroupeStudents",uniqueGroupeStudents);
-    console.log("uniqueStudents",uniqueStudents);
+    //console.log("isStudents",isStudents);
+    //console.log("uniqueGroupeStudents",uniqueGroupeStudents);
+    //console.log("uniqueStudents",uniqueStudents);
     if(!isStudents){
         throw new AppError('Some students are not in this groupe', 404);
     }

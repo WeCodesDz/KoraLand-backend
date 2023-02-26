@@ -90,7 +90,7 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
   let results;
   //filtering
   const where = filter(req.query);
-  console.log(req.user.adminLevel)
+  //console.log(req.user.adminLevel)
   //here we should test the admin role before setting the attributs (only super admin can see the phone number)
   if(req.user.adminLevel === 'superadmin'){
      results = await Coach.findAndCountAll({

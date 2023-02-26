@@ -21,16 +21,13 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
         jwt: refreshToken
     }:{}
 
-    console.log('where!     ',where);
 
     const adminRefreshToken = await RefreshAdmin.findOne({
        where:where,
         
     });
     
-    console.log('admin refresh token: ',adminRefreshToken);
     const adminRefreshTokenRaw = adminRefreshToken?adminRefreshToken.dataValues:undefined;
-    console.log('adminrefrestoken raw     ',adminRefreshTokenRaw)
     let admin;
     if(adminRefreshTokenRaw){
         admin = await Admin.findOne({
@@ -59,7 +56,6 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     await adminRefreshToken.destroy();
 
     const decoded = await promisify(jwt.verify)(adminRefreshTokenRaw.jwt, process.env.REFRESH_TOKEN_SECRET);
-    console.log(decoded);
     if (!decoded || decoded.username !== admin?.username) {
         throw new AppError('Fordbidden', 403); 
     }
@@ -75,7 +71,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     );
 
     const newRefreshToken = jwt.sign(
-      { "username": admin.username },
+      { "username": admin.username,"role": "admin" },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
   );
