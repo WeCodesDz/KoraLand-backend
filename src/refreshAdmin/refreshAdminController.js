@@ -21,15 +21,15 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
         jwt: refreshToken
     }:{}
 
-    console.log('where :',where);
+
     const adminRefreshToken = await RefreshAdmin.findOne({
        where:where,
         
     });
-    console.log('adminRefreshToken :',adminRefreshToken);
+    console.log('********* adminRefreshToken :',adminRefreshToken);
     const adminRefreshTokenRaw = adminRefreshToken?adminRefreshToken.dataValues:undefined;
     let admin;
-    console.log('adminRefreshTokenRaw :',adminRefreshTokenRaw)
+ 
     if(adminRefreshTokenRaw){
         admin = await Admin.findOne({
             where: {
@@ -81,6 +81,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
   const createdRefreshToken = await RefreshAdmin.create({jwt:newRefreshToken});
   
   await admin.addRefreshes(createdRefreshToken)
+  console.log("***************NEW REFRESH TOKEN",newRefreshToken)
   const cookieOptions = { httpOnly: true, sameSite: 'None' };
     if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
