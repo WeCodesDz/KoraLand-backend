@@ -142,7 +142,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            
+            'sport',
             'numeroTelephone',
             'anneeExamen',
             'commune',
@@ -169,7 +169,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            
+            'sport',
             'anneeExamen',
             'commune',
             'operateur',
@@ -198,6 +198,7 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'anneeExamen',
             'commune',
             'operateur',
+            'sport',
             'guardianDeBut',
             'posteEleve',
             'taille',
@@ -239,7 +240,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            
+            'sport',
             'numeroTelephone',
             'anneeExamen',
             'commune',
@@ -270,7 +271,7 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'saisonActuel',
             'dateInscription',
             'reinscription',
-            
+            'sport',
             'anneeExamen',
             'commune',
             'operateur',
