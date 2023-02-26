@@ -27,7 +27,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     });
     
 
-    const adminRefreshTokenRaw = adminRefreshToken?{...adminRefreshToken.dataValues}:undefined;
+    const adminRefreshTokenRaw = adminRefreshToken?adminRefreshToken.dataValues:undefined;
     
     let admin;
     if(adminRefreshTokenRaw){
