@@ -1,7 +1,8 @@
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Message = require('./messageModel');
-
+const Parent = require('../parent/parentModel');
+const { model } = require('../../database');
 
 exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
     let { page, limit } = req.query;
@@ -32,15 +33,24 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
 });
 
 
-// request t affiher les parent avec message lekher ta3hom ki y cliquer 3la wahda fihom ydir join l chatroom 
-// parents.findAll({
-//     {
-//         where : {
-//             status : actif
-//     },
-//     include:[
-//         message:
-//         onder desc 
-//         limit 1
-//     ]
-// })
+ exports.getAllDisscussions = catchAsync(async (req, res, next) => {
+    const parents = await Parent.findAll({ 
+        where:{
+            status: 'actif'
+        },
+        include:{
+            model: Message,
+            as: 'messages',
+            attributes: ['id', 'body', 'createdAt'],
+            order: [['createdAt', 'DESC']],
+            limit: 1
+    }
+    });
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            parents
+        }
+    });
+ });
