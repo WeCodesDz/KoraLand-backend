@@ -13,7 +13,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     const refreshToken = cookies.jwt;
     const clearCookieOptions = { httpOnly: true, sameSite: 'None' }
     
-    if (process.env.NODE_ENV === 'production') clearCookieConfig.secure = true;
+    if (process.env.NODE_ENV === 'production') clearCookieOptions.secure = true;
    
 
     res.clearCookie('jwt',clearCookieOptions);
