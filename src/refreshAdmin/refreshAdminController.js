@@ -47,7 +47,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
                 });
             await RefreshAdmin.destroy({
                 where:{
-                    adminId: admin.id
+                    administrateurId: admin.id
                 }
             });
         }
