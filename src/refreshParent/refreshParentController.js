@@ -73,8 +73,8 @@ exports.handleParentRefreshToken = catchAsync(async (req, res, next) => {
     );
 
     const newRefreshToken = jwt.sign(
-      { "username": parent.username },
-      process.env.REFRESH_TOKEN_SECRET,
+        { "username": user.username ,"role": "parent"},
+        process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN }
   );
   const createdRefreshToken = await RefreshParent.create({jwt:newRefreshToken});

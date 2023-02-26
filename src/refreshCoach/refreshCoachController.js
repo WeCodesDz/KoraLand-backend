@@ -75,7 +75,7 @@ exports.handleCoachRefreshToken = catchAsync(async (req, res, next) => {
     );
 
     const newRefreshToken = jwt.sign(
-      { "username": coach.username },
+        { "username": user.username ,"role": "coach"},
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN}
   );

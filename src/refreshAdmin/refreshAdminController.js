@@ -21,23 +21,26 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
         jwt: refreshToken
     }:{}
 
-
+    console.log('where :',where);
     const adminRefreshToken = await RefreshAdmin.findOne({
        where:where,
         
     });
-    
+    console.log('adminRefreshToken :',adminRefreshToken);
     const adminRefreshTokenRaw = adminRefreshToken?adminRefreshToken.dataValues:undefined;
     let admin;
+    console.log('adminRefreshTokenRaw :',adminRefreshTokenRaw)
     if(adminRefreshTokenRaw){
         admin = await Admin.findOne({
             where: {
                 id: adminRefreshTokenRaw.administrateurId
             }
         });
+        console.log('i m in the first if')
     }
     if(!adminRefreshTokenRaw){
         const decoded = await promisify(jwt.verify)(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        console.log('i m in the second if')
         if(decoded){
              admin = await Admin.findOne({
                     where:{
