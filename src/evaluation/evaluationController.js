@@ -360,7 +360,7 @@ exports.handleEvaluation = catchAsync(async (req, res, next) => {
   }
   if(etatEvaluation === 'blocked') {
     // HERE WE SHOULD SEND NOTIFICATION TO THE COACH
-    console.log(req.user.username + ' ' + 'a refusé votre demande d\'évaluation')
+    //console.log(req.user.username + ' ' + 'a refusé votre demande d\'évaluation')
   }
   res.status(200).json({
     status: 'success',
