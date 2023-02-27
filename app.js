@@ -6,6 +6,8 @@ const xss = require('xss-clean');
 const hpp = require('hpp');;
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const compression = require('compression')
+
 
 const AppError = require('./src/utils/appError');
 const globalErrorHandler = require('./src/utils/errorController');
@@ -29,9 +31,11 @@ const historiquePresenceRouter = require('./src/historiquePresence/historiquePre
 const paymentRouter = require('./src/studentPayments/studentPaymentRoute');
 const messageRouter = require('./src/message/messageRoute');
 
+
 const authRouter = require('./src/auth/authRoute');
 
 const app = express();
+app.use(compression());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json

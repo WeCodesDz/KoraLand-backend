@@ -4,33 +4,27 @@ const Admin = require('../administrateur/administrateurModel');
 const AppError = require('../util/appError');
 
 exports.saveSubscription = catchAsync(async (req, res, next) => {
-  if (!req.body.subscription || !req.body.adminId) {
-    throw new AppError('you must send a subscription and a user id', 400);
+  if (!req.body.subscription || !req.body.username) {
+    throw new AppError('you must send a subscription and a username', 400);
   }
   const subscription = JSON.parse(req.body.subscription);
 
-  const admin = await Admin.findByPk(req.body.adminId);
+  const  admin = await Admin.findOne({
+    where:{
+        username: req.body.username.trim()
+    }
+});
   if (!admin) {
     throw new AppError('user not found ', 404);
   }
 
-  const sub = await AdminSubscription.findOne({
-    where: {
-      endpoint: subscription.endpoint,
-    },
-  });
-  if (sub) {
-    await sub.destroy();
-  }
+  
 
   const newSubscription = await AdminSubscription.create({
-    endpoint: subscription.endpoint,
-    expirationTime: subscription.expirationTime,
-    keys_Auth: subscription.keys.auth,
-    keys_p256dh: subscription.keys.p256dh,
+    body: subscription
   });
 
-  newSubscription.addAdmin(req.body.adminId);
+  await newSubscription.addAdmin(admin);
   res.status(201).json({
     status: 'success',
     data: {

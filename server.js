@@ -124,6 +124,7 @@ ParentSubscription.belongsToMany(Parent, {
     console.log('database connected');
     // db.sync({ force: true })
     //Message.sync({ force: true })
+    //AdminSubscription.sync({ force: true })
     // await Admin.create({
     //     nomAdmin:'admin',
     //     prenomAdmin:'admin',

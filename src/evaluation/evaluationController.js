@@ -129,6 +129,10 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
         dateEvaluation
     });
     await student.addEvaluation(evaluation);
+
+
+    //send notif to admin
+    //send push to admin 
     res.status(201).json({
         status: 'success',
         data: {
@@ -357,11 +361,11 @@ exports.handleEvaluation = catchAsync(async (req, res, next) => {
         etatEvaluation,
           historiqueStudentId:historiqueStudent.id,
       });
+      //send notif to paarent 
   }
-  if(etatEvaluation === 'blocked') {
+ 
     // HERE WE SHOULD SEND NOTIFICATION TO THE COACH
-    //console.log(req.user.username + ' ' + 'a refusé votre demande d\'évaluation')
-  }
+   
   res.status(200).json({
     status: 'success',
     data: {

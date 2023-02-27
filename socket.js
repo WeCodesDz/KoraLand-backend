@@ -69,6 +69,11 @@ module.exports = {
             administrateurId,
             createAt: message.createAt,
           });
+
+
+          // send notification to user
+          // send push to user if he is outta the room
+
         }
             }catch(err){
             console.error(err)
