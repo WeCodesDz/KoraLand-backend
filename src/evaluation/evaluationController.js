@@ -1,10 +1,10 @@
-const AppError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
-const Evaluation = require('./evaluationModel');
-const Student = require('../student/studentModel');
-const historiqueEvaluation  = require('../historiqueEvaluation/historiqueEvaluationModel');
-const HistoriqueStudent  = require('../historiqueStudent/historiqueStudentModel');
-  
+const AppError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsync");
+const Evaluation = require("./evaluationModel");
+const Student = require("../student/studentModel");
+const historiqueEvaluation = require("../historiqueEvaluation/historiqueEvaluationModel");
+const HistoriqueStudent = require("../historiqueStudent/historiqueStudentModel");
+
 const filter = (queryParams) => {
   const tempQueryParams = { ...queryParams };
 
@@ -19,16 +19,15 @@ const filter = (queryParams) => {
   });
 
   const queryObj = { ...tempQueryParams };
-  const excludedFields = ['page', 'sort', 'limit', 'fields','order'];
+  const excludedFields = ["page", "sort", "limit", "fields", "order"];
   excludedFields.forEach((field) => delete queryObj[field]);
-
 
   const queryArray = Object.entries(queryObj);
 
   const where = {};
 
   queryArray.forEach((obj) => {
-    if (['dateEvaluation','etatEvaluation','studentId'].includes(obj[0])) {
+    if (["dateEvaluation", "etatEvaluation", "studentId"].includes(obj[0])) {
       where[obj[0]] = obj[1];
     }
   });
@@ -77,157 +76,158 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
     duel,
     inteligenceDansLeJeu,
     dateEvaluation,
-  } = req.body; 
+  } = req.body;
 
-  if (!dateEvaluation){
-    throw new AppError('Please provide a date for the evaluation', 400);
+  if (!dateEvaluation) {
+    throw new AppError("Please provide a date for the evaluation", 400);
   }
   const student = await Student.findByPk(req.params.id.trim());
-  if(!student){
-    throw new AppError('No student found by this id',404);
+  if (!student) {
+    throw new AppError("No student found by this id", 404);
   }
-    const evaluation = await Evaluation.create({
-        vitesse30m1,
-        coordination1,
-        souplesse1,
-        endurance1,
-        force1,
-        vitesse30m2,
-        coordination2,
-        souplesse2,
-        endurance2,
-        force2,
-        jonglerie,
-        conduitDeBalleEnSlalom,
-        qualiteDePasse,
-        controleDeBalle,
-        controleOrionte,
-        precisionDeTir,
-        passeCourte,
-        passeLongue,
-        dribble,
-        penalty,
-        conduiteDeBalle,
-        piedFaible,
-        jeuxDeTete,
-        tackle,
-        coupsFrancCourts,
-        coupsFrancLongs,
-        corners,
-        confienceEnSoi,
-        concentration,
-        attitude,
-        aggrisiveSaine,
-        combativite,
-        collectif,
-        motivationPersonnelle,
-        timidite,
-        comportementOffensif,
-        comportementDefensive,
-        duel,
-        inteligenceDansLeJeu,
-        dateEvaluation
-    });
-    await student.addEvaluation(evaluation);
+  const evaluation = await Evaluation.create({
+    vitesse30m1,
+    coordination1,
+    souplesse1,
+    endurance1,
+    force1,
+    vitesse30m2,
+    coordination2,
+    souplesse2,
+    endurance2,
+    force2,
+    jonglerie,
+    conduitDeBalleEnSlalom,
+    qualiteDePasse,
+    controleDeBalle,
+    controleOrionte,
+    precisionDeTir,
+    passeCourte,
+    passeLongue,
+    dribble,
+    penalty,
+    conduiteDeBalle,
+    piedFaible,
+    jeuxDeTete,
+    tackle,
+    coupsFrancCourts,
+    coupsFrancLongs,
+    corners,
+    confienceEnSoi,
+    concentration,
+    attitude,
+    aggrisiveSaine,
+    combativite,
+    collectif,
+    motivationPersonnelle,
+    timidite,
+    comportementOffensif,
+    comportementDefensive,
+    duel,
+    inteligenceDansLeJeu,
+    dateEvaluation,
+  });
+  await student.addEvaluation(evaluation);
 
-
-    //send notif to admin
-    //send push to admin 
-    res.status(201).json({
-        status: 'success',
-        data: {
-        evaluation,
-        },
-    });
-});
-
-exports.getStudentEvaluationByDateEvaluation = catchAsync(async (req, res, next) => {
-
-  const {dateEvaluation} = req.query;
-  const student = await Student.findByPk(req.params.id);
-  if(!student){
-    throw new AppError('No student found with this id',404)
-  }
-  const evaluation = await Evaluation.findOne({
-    where:{
-      studentId:student.id,
-      dateEvaluation:dateEvaluation
-    }
-  })
-  const technique = {
-    jonglerie : evaluation.get('jonglerie'),
-    conduitDeBalleEnSlalom : evaluation.get('conduitDeBalleEnSlalom'),
-    qualiteDePasse : evaluation.get('qualiteDePasse'),
-    controleDeBalle : evaluation.get('controleDeBalle'),
-    passeLongue : evaluation.get('passeLongue'),
-    passeCourte : evaluation.get('passeCourte'),
-    dribble : evaluation.get('dribble'),
-    piedFaible : evaluation.get('piedFaible'),
-    jeuxDeTete : evaluation.get('jeuxDeTete') 
-  } 
-  const physique = {
-    vitesse30m1: evaluation.get('vitesse30m1'),
-    coordination1: evaluation.get('coordination1'),
-    souplesse1: evaluation.get('souplesse1'),
-    endurance1: evaluation.get('endurance1'),
-    force1: evaluation.get('force1'),
-    vitesse30m2: evaluation.get('vitesse30m2'),
-    coordination2: evaluation.get('coordination2'),
-    souplesse2: evaluation.get('souplesse2'),
-    endurance2: evaluation.get('endurance2'),
-    force2: evaluation.get('force2')
-  } 
-  const mental = {
-    confienceEnSoi : evaluation.get('confienceEnSoi'),
-    concentration : evaluation.get('concentration'),
-    attitude : evaluation.get('attitude'),
-    aggrisiveSaine : evaluation.get('aggrisiveSaine'),
-    combativite : evaluation.get('combativite'),
-    collectif : evaluation.get('collectif'),
-    motivationPersonnelle : evaluation.get('motivationPersonnelle'),
-    timidite : evaluation.get('timidite') 
-  }
-  const tactique = {
-    comportementOffensif : evaluation.get('comportementOffensif'),
-    comportementDefensive : evaluation.get('comportementDefensive'),
-    duel : evaluation.get('duel'),
-    inteligenceDansLeJeu : evaluation.get('inteligenceDansLeJeu'),  
-  }
-  res.status(200).json({
-    status:'status',
-    data:{
-      dateEvaluation,
-      technique,
-      mental,
-      tactique,
-      physique
-    }
+  //NotificationAdminController.createNotif
+  //send notif to admin
+  //req.app.get('NodeEventEmitter')?.emit('sendNotification',dataToEmit)
+  //send push to admin
+  //NotificationAdminController.sendPushNotificationToAdmin
+  res.status(201).json({
+    status: "success",
+    data: {
+      evaluation,
+    },
   });
 });
 
-exports.getStudentLastEvaluation = catchAsync(async (req, res, next) => {
+exports.getStudentEvaluationByDateEvaluation = catchAsync(
+  async (req, res, next) => {
+    const { dateEvaluation } = req.query;
     const student = await Student.findByPk(req.params.id);
-    if(!student){
-      throw new AppError('No student found with this id',404)
+    if (!student) {
+      throw new AppError("No student found with this id", 404);
     }
     const evaluation = await Evaluation.findOne({
-      where:{
-        studentId:student.id
+      where: {
+        studentId: student.id,
+        dateEvaluation: dateEvaluation,
       },
-      order: [
-        ['createdAt', 'DESC']
-      ]
     });
+    const technique = {
+      jonglerie: evaluation.get("jonglerie"),
+      conduitDeBalleEnSlalom: evaluation.get("conduitDeBalleEnSlalom"),
+      qualiteDePasse: evaluation.get("qualiteDePasse"),
+      controleDeBalle: evaluation.get("controleDeBalle"),
+      passeLongue: evaluation.get("passeLongue"),
+      passeCourte: evaluation.get("passeCourte"),
+      dribble: evaluation.get("dribble"),
+      piedFaible: evaluation.get("piedFaible"),
+      jeuxDeTete: evaluation.get("jeuxDeTete"),
+    };
+    const physique = {
+      vitesse30m1: evaluation.get("vitesse30m1"),
+      coordination1: evaluation.get("coordination1"),
+      souplesse1: evaluation.get("souplesse1"),
+      endurance1: evaluation.get("endurance1"),
+      force1: evaluation.get("force1"),
+      vitesse30m2: evaluation.get("vitesse30m2"),
+      coordination2: evaluation.get("coordination2"),
+      souplesse2: evaluation.get("souplesse2"),
+      endurance2: evaluation.get("endurance2"),
+      force2: evaluation.get("force2"),
+    };
+    const mental = {
+      confienceEnSoi: evaluation.get("confienceEnSoi"),
+      concentration: evaluation.get("concentration"),
+      attitude: evaluation.get("attitude"),
+      aggrisiveSaine: evaluation.get("aggrisiveSaine"),
+      combativite: evaluation.get("combativite"),
+      collectif: evaluation.get("collectif"),
+      motivationPersonnelle: evaluation.get("motivationPersonnelle"),
+      timidite: evaluation.get("timidite"),
+    };
+    const tactique = {
+      comportementOffensif: evaluation.get("comportementOffensif"),
+      comportementDefensive: evaluation.get("comportementDefensive"),
+      duel: evaluation.get("duel"),
+      inteligenceDansLeJeu: evaluation.get("inteligenceDansLeJeu"),
+    };
     res.status(200).json({
-      status:'status',
-      data:{
-        evaluation
-      }
+      status: "status",
+      data: {
+        dateEvaluation,
+        technique,
+        mental,
+        tactique,
+        physique,
+      },
     });
+  }
+);
+
+exports.getStudentLastEvaluation = catchAsync(async (req, res, next) => {
+  const student = await Student.findByPk(req.params.id);
+  if (!student) {
+    throw new AppError("No student found with this id", 404);
+  }
+  const evaluation = await Evaluation.findOne({
+    where: {
+      studentId: student.id,
+    },
+    order: [["createdAt", "DESC"]],
+  });
+  res.status(200).json({
+    status: "status",
+    data: {
+      evaluation,
+    },
+  });
 });
 
 exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
-  let { page ,limit ,order } = req.query;
+  let { page, limit, order } = req.query;
   page = page * 1 || 1;
   limit = limit * 1 || 100;
   // offset is the number of rows skipped
@@ -239,137 +239,136 @@ exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
     where,
     limit,
     offset,
-    order : [['dateEvaluation', 'ASC']]
+    order: [["dateEvaluation", "ASC"]],
   });
   res.status(200).json({
-    status: 'success',
+    status: "success",
     rows: results.count,
     data: {
-        totalEvaluations: Math.ceil(results.count / limit),
-        page,
-        limit,
-        rows: results.rows.length,
-        Evaluations: results.rows
+      totalEvaluations: Math.ceil(results.count / limit),
+      page,
+      limit,
+      rows: results.rows.length,
+      Evaluations: results.rows,
     },
-});
+  });
 });
 
 exports.handleEvaluation = catchAsync(async (req, res, next) => {
-
   const evaluation = await Evaluation.findByPk(req.params.id);
-  if(!evaluation){
-    throw new AppError('No evaluation found with this id',404)
+  if (!evaluation) {
+    throw new AppError("No evaluation found with this id", 404);
   }
   const { etatEvaluation } = req.body;
-  if(etatEvaluation) {
+  if (etatEvaluation) {
     evaluation.etatEvaluation = etatEvaluation;
     await evaluation.save();
   }
   const student = await Student.findByPk(evaluation.studentId);
   const historiqueStudent = await HistoriqueStudent.findOne({
-    where:{
-      nomEleve:student.nomEleve,
-      prenomEleve:student.prenomEleve,
-      dateNaissance:student.dateNaissance
-    }
+    where: {
+      nomEleve: student.nomEleve,
+      prenomEleve: student.prenomEleve,
+      dateNaissance: student.dateNaissance,
+    },
   });
-  if(etatEvaluation === 'accepted') {
-      const {
-        vitesse30m1,
-        coordination1,
-        souplesse1,
-        endurance1,
-        force1,
-        vitesse30m2,
-        coordination2,
-        souplesse2,
-        endurance2,
-        force2,
-        jonglerie,
-        conduitDeBalleEnSlalom,
-        qualiteDePasse,
-        controleDeBalle,
-        controleOrionte,
-        precisionDeTir,
-        passeCourte,
-        passeLongue,
-        dribble,
-        penalty,
-        conduiteDeBalle,
-        piedFaible,
-        jeuxDeTete,
-        tackle,
-        coupsFrancCourts,
-        coupsFrancLongs,
-        corners,
-        confienceEnSoi,
-        concentration,
-        attitude,
-        aggrisiveSaine,
-        combativite,
-        collectif,
-        motivationPersonnelle,
-        timidite,
-        comportementOffensif,
-        comportementDefensive,
-        duel,
-        inteligenceDansLeJeu,
-        dateEvaluation,
-        etatEvaluation
-      } = evaluation;
-      await historiqueEvaluation.create({
-        vitesse30m1,
-        coordination1,
-        souplesse1,
-        endurance1,
-        force1,
-        vitesse30m2,
-        coordination2,
-        souplesse2,
-        endurance2,
-        force2,
-        jonglerie,
-        conduitDeBalleEnSlalom,
-        qualiteDePasse,
-        controleDeBalle,
-        controleOrionte,
-        precisionDeTir,
-        passeCourte,
-        passeLongue,
-        dribble,
-        penalty,
-        conduiteDeBalle,
-        piedFaible,
-        jeuxDeTete,
-        tackle,
-        coupsFrancCourts,
-        coupsFrancLongs,
-        corners,
-        confienceEnSoi,
-        concentration,
-        attitude,
-        aggrisiveSaine,
-        combativite,
-        collectif,
-        motivationPersonnelle,
-        timidite,
-        comportementOffensif,
-        comportementDefensive,
-        duel,
-        inteligenceDansLeJeu,
-        dateEvaluation,
-        etatEvaluation,
-          historiqueStudentId:historiqueStudent.id,
-      });
-      //send notif to paarent 
+  if (etatEvaluation === "accepted") {
+    const {
+      vitesse30m1,
+      coordination1,
+      souplesse1,
+      endurance1,
+      force1,
+      vitesse30m2,
+      coordination2,
+      souplesse2,
+      endurance2,
+      force2,
+      jonglerie,
+      conduitDeBalleEnSlalom,
+      qualiteDePasse,
+      controleDeBalle,
+      controleOrionte,
+      precisionDeTir,
+      passeCourte,
+      passeLongue,
+      dribble,
+      penalty,
+      conduiteDeBalle,
+      piedFaible,
+      jeuxDeTete,
+      tackle,
+      coupsFrancCourts,
+      coupsFrancLongs,
+      corners,
+      confienceEnSoi,
+      concentration,
+      attitude,
+      aggrisiveSaine,
+      combativite,
+      collectif,
+      motivationPersonnelle,
+      timidite,
+      comportementOffensif,
+      comportementDefensive,
+      duel,
+      inteligenceDansLeJeu,
+      dateEvaluation,
+      etatEvaluation,
+    } = evaluation;
+    await historiqueEvaluation.create({
+      vitesse30m1,
+      coordination1,
+      souplesse1,
+      endurance1,
+      force1,
+      vitesse30m2,
+      coordination2,
+      souplesse2,
+      endurance2,
+      force2,
+      jonglerie,
+      conduitDeBalleEnSlalom,
+      qualiteDePasse,
+      controleDeBalle,
+      controleOrionte,
+      precisionDeTir,
+      passeCourte,
+      passeLongue,
+      dribble,
+      penalty,
+      conduiteDeBalle,
+      piedFaible,
+      jeuxDeTete,
+      tackle,
+      coupsFrancCourts,
+      coupsFrancLongs,
+      corners,
+      confienceEnSoi,
+      concentration,
+      attitude,
+      aggrisiveSaine,
+      combativite,
+      collectif,
+      motivationPersonnelle,
+      timidite,
+      comportementOffensif,
+      comportementDefensive,
+      duel,
+      inteligenceDansLeJeu,
+      dateEvaluation,
+      etatEvaluation,
+      historiqueStudentId: historiqueStudent.id,
+    });
+    //send notif to paarent
   }
- 
-    // HERE WE SHOULD SEND NOTIFICATION TO THE COACH
-   
+
+  // HERE WE SHOULD SEND NOTIFICATION TO THE COACH
+
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
-      evaluation
+      evaluation,
     },
   });
 });
