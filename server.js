@@ -30,9 +30,9 @@ const historiqueEvaluation = require('./src/historiqueEvaluation/historiqueEvalu
 const historiquePresence = require('./src/historiquePresence/historiquePresenceModel');
 const historiqueCoach = require('./src/historiqueCoach/historiqueCoachModel');
 const historiqueParent = require('./src/historiqueParent/historiqueParentModel');
-const AdminSubscription = require('./src/subscribtionAdmin/subscribtionAdminModel');
-const CoachSubscription = require('./src/subscribtionCoach/subscribtionCoachModel');
-const ParentSubscription = require('./src/subscribtionParent/subscribtionParentModel');
+const AdminSubscription = require('./src/subscriptionAdmin/subscriptionAdminModel');
+const CoachSubscription = require('./src/subscriptionCoach/subscriptionCoachModel');
+const ParentSubscription = require('./src/subscriptionParent/subscriptionParentModel');
 const Payment = require('./src/studentPayments/studentPaymentModel');
 const Message = require('./src/message/messageModel');
 

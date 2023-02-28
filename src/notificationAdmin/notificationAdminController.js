@@ -1,55 +1,102 @@
-const appError = require('../utils/appError');
-const catchAsync = require('../utils/catchAsync');
-const NotificationAdmin = require('./notificationAdminModel');
-const Admin = require('../administrateur/administrateurModel');
+const webpush = require("web-push");
+const appError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsync");
+const NotificationAdmin = require("./notificationAdminModel");
+const Admin = require("../administrateur/administrateurModel");
+
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+
+webpush.setVapidDetails(
+  "mailto: <contact@we-codes.com>",
+  publicVapidKey,
+  privateVapidKey
+);
+exports.sendNotificationToAdmin = async (admins, notification) => {
+  try {
+    const newAdmins = await Promise.all(
+      admins.map(async (admin) => {
+        await Admin.findByPk(admin);
+      })
+    );
+
+    const adminsSubs = await Promise.all(
+      newAdmins.map(async (admin) => {
+        await admin.getSubcriptionAdmins({
+          attributes: ["body"],
+          raw: true,
+        });
+      })
+    );
+
+    adminsSubs.forEach(async (subscription) => {
+      webpush
+        .sendNotification(subscription.body, JSON.stringify(notification))
+        .catch((err) => {
+          console.error(err);
+        });
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.createNotificationAdmin = async (admins, notification) => {
+  //we add validations after
+  const notification = await NotificationAdmin.create(notification);
+
+  await notification.setAdministrateurs(admins);
+
+  //return something
+};
 
 exports.getMyNotifications = catchAsync(async (req, res, next) => {
-    const { id } = req.user;
-    const admin = await Admin.findByPk(id);
+  const { id } = req.user;
+  const admin = await Admin.findByPk(id);
 
-    const notifications = await admin.getNotifications();
-    if (!notifications) {
-        throw new appError('No notifications found', 404);
-    }
-        
-    res.status(200).json({
-        status: 'success',
-        body: notifications,
-    });
+  const notifications = await admin.getNotifications();
+  if (!notifications) {
+    throw new appError("No notifications found", 404);
+  }
+
+  res.status(200).json({
+    status: "success",
+    body: notifications,
+  });
 });
 
 exports.getNotificationById = catchAsync(async (req, res, next) => {
-    const { id } = req.params;
-    const notification = await NotificationAdmin.findByPk(id);
-    if (!notification) {
-        throw new appError('No notification found with that ID', 404);
-    }
+  const { id } = req.params;
+  const notification = await NotificationAdmin.findByPk(id);
+  if (!notification) {
+    throw new appError("No notification found with that ID", 404);
+  }
 
-    res.status(200).json({
-        status: 'success',
-        body: notification,
-    });
+  res.status(200).json({
+    status: "success",
+    body: notification,
+  });
 });
 
 exports.deleteNotification = catchAsync(async (req, res, next) => {
-    const { id } = req.params;
-    const notification = await NotificationAdmin.findByPk(id);
-    if (!notification) {
-        throw new appError('No notification found with that ID', 404);
-    }
-    await notification.destroy();
-    res.status(200).json({
-        status: 'success',
-        data: notification,
-    });
+  const { id } = req.params;
+  const notification = await NotificationAdmin.findByPk(id);
+  if (!notification) {
+    throw new appError("No notification found with that ID", 404);
+  }
+  await notification.destroy();
+  res.status(200).json({
+    status: "success",
+    data: notification,
+  });
 });
 
 exports.deleteAllMyNotifications = catchAsync(async (req, res, next) => {
-    const { id } = req.user;
-    const admin = await Admin.findByPk(id);
-    await admin.setNotifications([]);
-    
-    res.status(200).json({
-        status: 'success',
-    });
+  const { id } = req.user;
+  const admin = await Admin.findByPk(id);
+  await admin.setNotifications([]);
+
+  res.status(200).json({
+    status: "success",
+  });
 });

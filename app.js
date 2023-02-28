@@ -11,6 +11,7 @@ const compression = require('compression')
 
 const AppError = require('./src/utils/appError');
 const globalErrorHandler = require('./src/utils/errorController');
+const rateLimit = require('express-rate-limit');
 // HERE WE INSERE ROUTES 
 const studentRouter = require('./src/student/studentRoute');
 const groupeRouter = require('./src/groupe/groupeRoute');
@@ -28,9 +29,9 @@ const historiqueStudentRouter = require('./src/historiqueStudent/historiqueStude
 const historiqueGroupeRouter = require('./src/historiqueGroupe/historiqueGroupeRoute');
 const historiqueEvaluationRouter = require('./src/historiqueEvaluation/historiqueEvaluationRoute');
 const historiquePresenceRouter = require('./src/historiquePresence/historiquePresenceRoute');
-const subscriptionAdminRouter = require('./src/subscribtionAdmin/subscribtionAdminRoute');
-const subscriptionCoachRouter = require('./src/subscribtionCoach/subscribtionCoachRoute');
-const subscriptionParentRouter = require('./src/subscribtionParent/subscribtionParentRoute');
+const subscriptionAdminRouter = require('./src/subscriptionAdmin/subscriptionAdminRoute');
+const subscriptionCoachRouter = require('./src/subscriptionCoach/subscriptionCoachRoute');
+const subscriptionParentRouter = require('./src/subscriptionParent/subscriptionParentRoute');
 const paymentRouter = require('./src/studentPayments/studentPaymentRoute');
 const messageRouter = require('./src/message/messageRoute');
 
@@ -39,15 +40,15 @@ const authRouter = require('./src/auth/authRoute');
 
 const app = express();
 app.use(compression());
-app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
+app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
-app.use(express.json());
+
 
 
 
@@ -69,8 +70,12 @@ app.use(
     ],
   })
 );
-// Body parser, reading data from body into req.body
-app.use(express.json({ limit: '10kb' }));
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour!'
+});
+app.use('/api', limiter);
 
 // Data sanitization against XSS
 app.use(xss());

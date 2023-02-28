@@ -1,6 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
-const CoachSubscription = require('./subscribtionCoachModel');
-const Coach = require('../coach/coachModel');
+const AdminSubscription = require('./subscriptionAdminModel');
+const Admin = require('../administrateur/administrateurModel');
 const AppError = require('../utils/appError');
 
 exports.saveSubscription = catchAsync(async (req, res, next) => {
@@ -9,23 +9,22 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
   }
   //const subscription = JSON.parse(req.body.subscription);
 
-  const coach = await Coach.findOne({
+  const  admin = await Admin.findOne({
     where:{
         username: req.body.username.trim()
     }
 });
-  if (!coach) {
+  if (!admin) {
     throw new AppError('user not found ', 404);
   }
 
- 
-
-  const newSubscription = await CoachSubscription.create({
-    body: req.body.subscription
-  });
   
 
- await newSubscription.addCoach(coach);
+  const newSubscription = await AdminSubscription.create({
+    body: req.body.subscription
+  });
+
+  await newSubscription.addAdministrateur(admin);
   res.status(201).json({
     status: 'success',
     data: {
@@ -40,7 +39,7 @@ exports.deleteSubscription = catchAsync(async (req, res, next) => {
   }
   //const subscription = JSON.parse(req.body.subscription);
 
-  const sub = await CoachSubscription.findOne({
+  const sub = await AdminSubscription.findOne({
     where: {
       body: req.body.subscription,
     },

@@ -1,5 +1,5 @@
 const catchAsync = require('../utils/catchAsync');
-const ParentSubscription = require('./subscribtionParentModel');
+const ParentSubscription = require('./subscriptionParentModel');
 const Parent = require('../parent/parentModel');
 const AppError = require('../utils/appError');
 
