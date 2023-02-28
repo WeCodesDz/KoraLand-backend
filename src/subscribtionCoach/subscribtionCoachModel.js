@@ -10,23 +10,10 @@ const subscriptionCoach = db.define(
       primaryKey: true,
       allowNull: false,
     },
-    endpoint: {
-      type: Sequelize.STRING,
+    body: {
+      type: Sequelize.DataTypes.JSONB,
       allowNull: false,
       unique: true,
-      validate: {
-        notNull: { args: false, msg: 'Required' },
-      },
-    },
-    expirationTime: {
-      type: Sequelize.STRING,
-      allowNull: true,
-    },
-    keys_Auth: {
-      type: Sequelize.STRING,
-    },
-    keys_p256dh: {
-      type: Sequelize.STRING,
     },
   },
   {

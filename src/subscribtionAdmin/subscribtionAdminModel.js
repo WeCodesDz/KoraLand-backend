@@ -13,10 +13,7 @@ const SubscriptionAdmin = db.define(
     body: {
       type: Sequelize.DataTypes.JSONB,
       allowNull: false,
-    
       unique: true,
-     
-      
     },
     
     

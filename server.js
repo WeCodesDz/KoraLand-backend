@@ -108,7 +108,7 @@ AdminSubscription.belongsToMany(Admin, {
 Coach.belongsToMany(CoachSubscription, {
   through: 'coach_subscriptions',
 });
-CoachSubscription.belongsToMany(Admin, {
+CoachSubscription.belongsToMany(Coach, {
   through: 'coach_subscriptions',
 });
 Parent.belongsToMany(ParentSubscription, {
@@ -121,10 +121,11 @@ ParentSubscription.belongsToMany(Parent, {
 
 (async () => {
     await db.authenticate();
-    console.log('database connected');
+    //console.log('database connected');
     // db.sync({ force: true })
     //Message.sync({ force: true })
-    //AdminSubscription.sync({ force: true })
+   // CoachSubscription.sync({ force: true })
+    //Coach.sync({ force: true })
     // await Admin.create({
     //     nomAdmin:'admin',
     //     prenomAdmin:'admin',
