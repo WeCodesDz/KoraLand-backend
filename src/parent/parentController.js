@@ -290,11 +290,13 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
             parentId: parentId
         }
     });
+    const evaluations = await student.getEvaluations();
+    const resultStudent = {...student.dataValues, evaluations};
     res.status(200).json({
         status: 'success',
         data: {
             ...parent.dataValues,
-            student,
+            resultStudent,
         },
     });
 });
