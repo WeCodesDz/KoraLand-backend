@@ -28,6 +28,9 @@ const historiqueStudentRouter = require('./src/historiqueStudent/historiqueStude
 const historiqueGroupeRouter = require('./src/historiqueGroupe/historiqueGroupeRoute');
 const historiqueEvaluationRouter = require('./src/historiqueEvaluation/historiqueEvaluationRoute');
 const historiquePresenceRouter = require('./src/historiquePresence/historiquePresenceRoute');
+const subscriptionAdminRouter = require('./src/subscribtionAdmin/subscribtionAdminRoute');
+const subscriptionCoachRouter = require('./src/subscribtionCoach/subscribtionCoachRoute');
+const subscriptionParentRouter = require('./src/subscribtionParent/subscribtionParentRoute');
 const paymentRouter = require('./src/studentPayments/studentPaymentRoute');
 const messageRouter = require('./src/message/messageRoute');
 
@@ -92,6 +95,9 @@ app.use(xss());
  app.use('/api/v1/historique_presence', historiquePresenceRouter);
  app.use('/api/v1/payment', paymentRouter);
  app.use('/api/v1/message', messageRouter);
+ app.use('/api/v1/subscription_admin', subscriptionAdminRouter);
+ app.use('/api/v1/subscription_coach', subscriptionCoachRouter);
+ app.use('/api/v1/subscription_parent', subscriptionParentRouter);
 
  
 

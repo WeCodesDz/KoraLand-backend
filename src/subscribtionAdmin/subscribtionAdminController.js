@@ -1,13 +1,13 @@
-const catchAsync = require('../util/catchAsync');
-const AdminSubscription = require('./subscriptionModel');
+const catchAsync = require('../utils/catchAsync');
+const AdminSubscription = require('./subscribtionAdminModel');
 const Admin = require('../administrateur/administrateurModel');
-const AppError = require('../util/appError');
+const AppError = require('../utils/appError');
 
 exports.saveSubscription = catchAsync(async (req, res, next) => {
   if (!req.body.subscription || !req.body.username) {
     throw new AppError('you must send a subscription and a username', 400);
   }
-  const subscription = JSON.parse(req.body.subscription);
+  //const subscription = JSON.parse(req.body.subscription);
 
   const  admin = await Admin.findOne({
     where:{
@@ -21,14 +21,14 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
   
 
   const newSubscription = await AdminSubscription.create({
-    body: subscription
+    body: req.body.subscription
   });
 
-  await newSubscription.addAdmin(admin);
+  await newSubscription.addAdministrateur(admin);
   res.status(201).json({
     status: 'success',
     data: {
-      newSubscription,
+      subscription:newSubscription,
     },
   });
 });
@@ -37,11 +37,11 @@ exports.deleteSubscription = catchAsync(async (req, res, next) => {
   if (!req.body.subscription) {
     throw new AppError('you must send a subscription ', 400);
   }
-  const subscription = JSON.parse(req.body.subscription);
+  //const subscription = JSON.parse(req.body.subscription);
 
   const sub = await AdminSubscription.findOne({
     where: {
-      endpoint: subscription.endpoint,
+      body: req.body.subscription,
     },
   });
 
@@ -52,6 +52,7 @@ exports.deleteSubscription = catchAsync(async (req, res, next) => {
   await sub.destroy();
 
   res.status(200).json({
-    message: 'Admin deleted successfully',
+    status: 'success',
+    message: 'subscription deleted successfully',
   });
 });

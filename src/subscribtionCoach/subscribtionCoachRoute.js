@@ -1,6 +1,6 @@
 const express = require('express');
 
-const subscriptionCoachController = require('./subscribtionCoachModel');
+const subscriptionCoachController = require('./subscribtionCoachController');
 const authController = require('../auth/authController');
 
 const router = express.Router();
