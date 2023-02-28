@@ -94,21 +94,34 @@ exports.getAllGroupes = catchAsync(async (req, res, next) => {
     const offset = (page - 1) * limit;
     //filtering
     const where = filter(req.query);
-    const results = await Groupe.findAndCountAll({ 
+    const results = await Groupe.findAll({ 
         attributes: ['id', 'groupeName','saisonActuel','horaireEntrainement', 'sport', 'categorieAge'],
         where,
         limit,
-        offset
+        offset,
+        include: [
+          {
+            model: Student, 
+            attributes: ['id'],
+          },
+          {
+            model: Coach,
+            attributes: ['id', 'username', 'nomCoach', 'prenomCoach', 'email'],
+          }
+        ],
+     });
+      results.forEach((groupe) => {
+      studentCount = groupe.dataValues.students?.length;
+      groupe.dataValues.studentsCount = studentCount;
      });
     res.status(200).json({
         status: 'success',
-        rows: results.length,
     data: {
       totalPages: Math.ceil(results.count / limit),
       page,
       limit,
-      rows: results.rows.length,
-      totalGroupes: results.rows,
+      rows: results?.length,
+      totalGroupes: results,
     },
     });
 });
