@@ -12,7 +12,7 @@ webpush.setVapidDetails(
   publicVapidKey,
   privateVapidKey
 );
-exports.sendNotificationToAdmin = async (admins, notification) => {
+exports.sendPushNotificationToAdmin = async (admins, notification) => {
   try {
     const newAdmins = await Promise.all(
       admins.map(async (admin) => {
