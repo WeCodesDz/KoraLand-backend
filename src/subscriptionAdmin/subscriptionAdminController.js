@@ -35,7 +35,7 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
 
 exports.test = catchAsync(async (req, res, next) => {
   await Notf.sendPushNotificationToAdmin(
-    ["921e4ffa-bbc2-464c-a6f4-cde895aaaec0"],
+    ["9e5ac37d-505b-4f19-95e0-60119212f59e"],
     { test: "test" }
   );
   res.json({ status: "success" });
