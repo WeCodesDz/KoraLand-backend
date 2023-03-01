@@ -14,6 +14,13 @@ webpush.setVapidDetails(
 );
 exports.sendPushNotificationToAdmin = async (admins, notification) => {
   try {
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
+    console.log("----------aaaaaaaaaaaaaa--------------------------------");
+    console.log(admins);
+    console.log("-------------aaaaaaaaaaaa-----------------------------");
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
     const newAdmins = await Promise.all(
       admins.map(async (admin) => {
         await Admin.findByPk(admin);
