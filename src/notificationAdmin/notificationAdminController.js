@@ -20,34 +20,30 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
 
     const adminsArraySubs = await Promise.all(
       newAdmins.map(
-        async (subscriptionArray) =>
+        async (admin) =>
+          await admin.getSub({
+            attributes: ["body"],
+            raw: true,
+          })
+      )
+    );
+    const c = await Promise.all(
+      adminsArraySubs.map(
+        async (adminsSubs) =>
           await Promise.all(
-            subscriptionArray.map(
-              async (admin) =>
-                await admin.getSub({
-                  attributes: ["body"],
-                  raw: true,
-                })
-            )
+            adminsSubs.forEach(async (subscription) => {
+              webpush
+                .sendNotification(
+                  subscription.body,
+                  JSON.stringify(notification)
+                )
+                .catch((err) => {
+                  console.error(err);
+                });
+            })
           )
       )
     );
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
-    console.log("----------ssssssssssssssssss--------------------------------");
-    console.log(adminsSubs);
-    console.log(adminsSubs[0]);
-    console.log(adminsSubs[0].body);
-    console.log("-------------ssssssssssssssss-----------------------------");
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
-    adminsSubs.forEach(async (subscription) => {
-      webpush
-        .sendNotification(subscription.body, JSON.stringify(notification))
-        .catch((err) => {
-          console.error(err);
-        });
-    });
   } catch (err) {
     console.error(err);
   }
