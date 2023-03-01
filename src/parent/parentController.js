@@ -2,6 +2,7 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Student = require('../student/studentModel');
 const Parent = require('./parentModel');
+const Groupe = require('../groupe/groupeModel');
 const HistoriqueParent = require('../historiqueParent/historiqueParentModel');
 
 const filter = (queryParams) => {
@@ -198,6 +199,7 @@ exports.getParentAllStudent = catchAsync(async (req, res, next)=>{
             'saisonActuel',
             'dateInscription',
             'reinscription',
+            'sport',
             'anneeExamen',
             'commune',
             'operateur',
@@ -207,13 +209,20 @@ exports.getParentAllStudent = catchAsync(async (req, res, next)=>{
             'poids',
             'remarque',
             'status'
+        ],
+        include: [
+            {
+                model: Groupe,
+                attributes: ['id', 'groupeName'],
+            },
         ]
     });
+
     res.status(200).json({
         status: 'success',
         data: {
             ...parent.dataValues,
-            students,
+            students
         },
     });
 });
@@ -275,6 +284,7 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
             'saisonActuel',
             'dateInscription',
             'reinscription',
+            'sport',
             'anneeExamen',
             'commune',
             'operateur',
@@ -288,7 +298,13 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
         where: {
             id: req.params.id,
             parentId: parentId
-        }
+        },
+        include: [
+            {
+                model: Groupe,
+                attributes: ['id', 'groupeName'],
+            }
+        ]
     });
     const evaluations = await student.getEvaluations();
     const resultStudent = {...student.dataValues, evaluations};
