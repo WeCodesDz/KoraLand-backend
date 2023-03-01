@@ -24,7 +24,7 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
     body: req.body.subscription,
   });
 
-  await newSubscription.addSubs(admin);
+  await newSubscription.addSub(admin);
   res.status(201).json({
     status: "success",
     data: {
