@@ -19,6 +19,13 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
         await Admin.findByPk(admin);
       })
     );
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
+    console.log(newAdmins);
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
 
     const adminsSubs = await Promise.all(
       newAdmins.map(async (admin) => {
