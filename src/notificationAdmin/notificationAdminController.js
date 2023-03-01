@@ -14,23 +14,9 @@ webpush.setVapidDetails(
 );
 exports.sendPushNotificationToAdmin = async (admins, notification) => {
   try {
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
-    console.log("----------aaaaaaaaaaaaaa--------------------------------");
-    console.log(admins);
-    console.log("-------------aaaaaaaaaaaa-----------------------------");
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
     const newAdmins = await Promise.all(
       admins.map(async (admin) => await Admin.findByPk(admin))
     );
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
-    console.log(newAdmins);
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
-    console.log("------------------------------------------");
 
     const adminsSubs = await Promise.all(
       newAdmins.map(
@@ -41,7 +27,13 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
           })
       )
     );
-
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
+    console.log("----------ssssssssssssssssss--------------------------------");
+    console.log(adminsSubs);
+    console.log("-------------ssssssssssssssss-----------------------------");
+    console.log("------------------------------------------");
+    console.log("------------------------------------------");
     adminsSubs.forEach(async (subscription) => {
       webpush
         .sendNotification(subscription.body, JSON.stringify(notification))
