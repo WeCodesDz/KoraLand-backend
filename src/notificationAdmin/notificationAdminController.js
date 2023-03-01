@@ -18,13 +18,18 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
       admins.map(async (admin) => await Admin.findByPk(admin))
     );
 
-    const adminsSubs = await Promise.all(
+    const adminsArraySubs = await Promise.all(
       newAdmins.map(
-        async (admin) =>
-          await admin.getSub({
-            attributes: ["body"],
-            raw: true,
-          })
+        async (subscriptionArray) =>
+          await Promise.all(
+            subscriptionArray.map(
+              async (admin) =>
+                await admin.getSub({
+                  attributes: ["body"],
+                  raw: true,
+                })
+            )
+          )
       )
     );
     console.log("------------------------------------------");
