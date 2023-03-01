@@ -11,6 +11,7 @@ const presence = db.define('presence', {
     datePresence:{
         type: Sequelize.DATEONLY,
         allowNull: false,
+        unique: { args: true, msg: 'Date already exists' }
     },
     presence:{
         type: Sequelize.ENUM,
