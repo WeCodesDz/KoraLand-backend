@@ -282,3 +282,20 @@ exports.logout =  catchAsync(async (req, res, next) => {
   res.sendStatus(204);
 });
 
+exports.getMyProfilsInfo = catchAsync(async (req, res, next) => {
+  const user = {...req.user.dataValues};
+  user.password = undefined;
+  user.passwordConfirm = undefined;
+  user.passwordChangedAt = undefined;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  user.createdAt = undefined;
+  user.updatedAt = undefined;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
