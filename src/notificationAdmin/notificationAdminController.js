@@ -35,7 +35,7 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
     const adminsSubs = await Promise.all(
       newAdmins.map(
         async (admin) =>
-          await admin.getSubscriptionAdmins({
+          await admin.getSubs({
             attributes: ["body"],
             raw: true,
           })
