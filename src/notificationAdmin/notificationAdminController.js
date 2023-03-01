@@ -38,11 +38,6 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
                   JSON.stringify(notification)
                 )
                 .catch((err) => {
-                  if (err instanceof webpush.WebPushError) {
-                    console.error(
-                      "-------------------------------------------------------l7wa dwa "
-                    );
-                  }
                   console.error(err);
                 });
             })
