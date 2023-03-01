@@ -3,6 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const Student = require('./studentModel');
 const Presence = require('../presence/presenceModel');
 const Evaluation = require('../evaluation/evaluationModel');
+const Groupe = require('../groupe/groupeModel');
 const HistoriqueParent = require('../historiqueParent/historiqueParentModel');
 const HistoriqueGroupe = require('../historiqueGroupe/historiqueGroupeModel');
 const HistoriqueStudent = require('../historiqueStudent/historiqueStudentModel');
@@ -46,11 +47,9 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         saisonActuel,
         dateInscription,
         reinscription,
-        
         numeroTelephone,
         anneeExamen,
         commune,
-        operateur,
         guardianDeBut,
         posteEleve,
         taille,
@@ -60,7 +59,7 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         groupeId,
         sport
     } = req.body;
-    
+    const adminName = req.user.nomAdmin+' '+req.user.prenomAdmin;
     const student = await Student.create({
         nomEleve,
         prenomEleve,
@@ -68,11 +67,10 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         saisonActuel,
         dateInscription,
         reinscription,
-        
         numeroTelephone,
         anneeExamen,
         commune,
-        operateur,
+        operateur:adminName,
         guardianDeBut,
         posteEleve,
         taille,
@@ -99,11 +97,10 @@ exports.createStudent = catchAsync(async (req, res, next) => {
         saisonActuel,
         dateInscription,
         reinscription,
-        
         numeroTelephone,
         anneeExamen,
         commune,
-        operateur,
+        operateur:adminName,
         guardianDeBut,
         posteEleve,
         taille,
@@ -160,7 +157,13 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         ],
         where,
         limit,
-        offset
+        offset,
+        include: [
+          {
+            model: Groupe,
+            attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+          }
+        ]
       });
   }
   if(req.user.adminLevel === 'level2') {
