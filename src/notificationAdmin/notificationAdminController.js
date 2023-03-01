@@ -30,7 +30,7 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
     console.log("------------------------------------------");
     console.log("------------------------------------------");
     console.log("----------ssssssssssssssssss--------------------------------");
-    console.log(adminsSubs);
+    console.log(adminsSubs[0].body);
     console.log("-------------ssssssssssssssss-----------------------------");
     console.log("------------------------------------------");
     console.log("------------------------------------------");
