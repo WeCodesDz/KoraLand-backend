@@ -306,7 +306,11 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
             }
         ]
     });
-    const evaluations = await student.getEvaluations();
+    const evaluations = await student.getEvaluations({
+        where:{
+            etatEvaluation:'accepted'
+        }
+    });
     const resultStudent = {...student.dataValues, evaluations};
     res.status(200).json({
         status: 'success',
