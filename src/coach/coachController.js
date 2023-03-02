@@ -5,6 +5,7 @@ const Coach = require('./coachModel');
 const Groupe = require('../groupe/groupeModel');
 const Student = require('../student/studentModel');
 const HistoriqueCoach = require('../historiqueCoach/historiqueCoachModel');
+const coachModel = require('../historiqueCoach/historiqueCoachModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -395,3 +396,31 @@ exports.getMyGroupesStudents = catchAsync(async (req, res, next) => {
         }
     });
 });
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+
+    const coach = await coachModel.findOne({
+      where: {
+        id: req.user.id,
+      },
+      attributes: ['id', 'password'],
+    });
+  
+    if (
+      !(await coach.correctPassword(
+        req.body.passwordCurrent.trim(),
+        user.password
+      ))
+    ) {
+      return next(new AppError('Your current password is wrong.', 401));
+    }
+  
+    coach.password = req.body.password;
+    coach.passwordConfirm = req.body.passwordConfirm;
+  
+    await coach.save();
+    res.status(200).json({
+      status: 'success',
+      message: 'Password updated successfully',
+    });
+  });

@@ -20,6 +20,8 @@ router
         .post(authController.role('admin'),coachController.addCoachToGroupe)
         .delete(authController.role('admin'),coachController.deleteCoachGroupe);
 
+router.patch('/update_my_password', coachController.updatePassword);  
+
 router
         .route('/myGroupes/')
         .get(authController.protect, coachController.getMyGroupes);
