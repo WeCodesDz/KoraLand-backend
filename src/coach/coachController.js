@@ -409,7 +409,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     if (
       !(await coach.correctPassword(
         req.body.passwordCurrent.trim(),
-        user.password
+        coach.password
       ))
     ) {
       return next(new AppError('Your current password is wrong.', 401));

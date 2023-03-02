@@ -336,7 +336,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     if (
       !(await parent.correctPassword(
         req.body.passwordCurrent.trim(),
-        user.password
+        parent.password
       ))
     ) {
       return next(new AppError('Your current password is wrong.', 401));
