@@ -399,7 +399,7 @@ exports.getMyGroupesStudents = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
 
-    const coach = await coachModel.findOne({
+    const coach = await Coach.findOne({
       where: {
         id: req.user.id,
       },
