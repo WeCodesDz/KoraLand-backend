@@ -53,7 +53,7 @@ exports.createNotificationAdmin = async (admins, notif) => {
   //we add validations after
   const notification = await NotificationAdmin.create(notif);
 
-  await notification.setAdministrateurModel(admins);
+  await notification.setAdministrateurModels(admins);
 
   //return something
 };
