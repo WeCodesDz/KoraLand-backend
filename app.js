@@ -34,6 +34,9 @@ const subscriptionCoachRouter = require('./src/subscriptionCoach/subscriptionCoa
 const subscriptionParentRouter = require('./src/subscriptionParent/subscriptionParentRoute');
 const paymentRouter = require('./src/studentPayments/studentPaymentRoute');
 const messageRouter = require('./src/message/messageRoute');
+const notificationAdminRouter = require('./src/notificationAdmin/notificationAdminRoute')
+const notificationCoachRouter = require('./src/notificationCoach/notificationCoachRoute')
+const notificationParentRouter = require('./src/notificationParent/notificationParentRoute')
 
 
 const authRouter = require('./src/auth/authRoute');
@@ -103,6 +106,9 @@ app.use(xss());
  app.use('/api/v1/subscription_admin', subscriptionAdminRouter);
  app.use('/api/v1/subscription_coach', subscriptionCoachRouter);
  app.use('/api/v1/subscription_parent', subscriptionParentRouter);
+ app.use('/api/v1/notification_admin', notificationAdminRouter);
+ app.use('/api/v1/notification_coach', notificationCoachRouter);
+ app.use('/api/v1/notification_parent', notificationParentRouter);
 
  
 
