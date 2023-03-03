@@ -67,7 +67,7 @@ exports.getMyNotifications = catchAsync(async (req, res, next) => {
   console.log(id)
   console.log('----------------------------------------------------------------admin------')
 
-  const notifications = await admin.getNotificationAdmin();
+  const notifications = await admin.getNotifications();
   if (!notifications) {
     throw new appError("No notifications found", 404);
   }
