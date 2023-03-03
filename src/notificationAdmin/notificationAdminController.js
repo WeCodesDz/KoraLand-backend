@@ -56,6 +56,7 @@ exports.createNotificationAdmin = async (admins, notif) => {
 
   await notification.setAdmins(admins);
 
+  return notification;
   //return something
 };
 

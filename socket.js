@@ -2,28 +2,106 @@ const EventEmitter = require("events");
 const Message = require("./src/message/messageModel");
 const Parent = require("./src/parent/parentModel");
 const Administrateur = require("./src/admin/adminModel");
+const notificationParentController = require("./src/notificationParent/notificationParentController");
+const notificationAdminController = require("./src/notificationAdmin/notificationAdminController");
+const notificationCoachController = require("./src/notificationCoach/notificationCoachController");
 module.exports = {
   listenSockets: (io, app) => {
     io.on("connection", (socket) => {
+      let nodeEventEmitter = app.get("nodeEventEmitter")
+      if(!nodeEventEmitter){
+        nodeEventEmitter = new EventEmitter();
+        app.set("nodeEventEmitter", nodeEventEmitter); // set nodeEventEmitter to express app so that we can access it from anywhere
+      }
+      
+      nodeEventEmitter.on("send_message_to_all_parents",async (data) => {
+        try {
+          const parents = await Parent.findAll({
+            where:{status:'actif'}
+          });
+          const ids = parents.map(parent => parent.id);
+          const usernames = parents.map(parent => parent.username);
+  
+         const messageBody={
+            body:data.message,
+            roomsId:id,
+            parentId:undefined,
+            adminId:data.admin.userId,
+          }
+  
+          const message = await Message.create({body});
+
+         await Promise.all(parents.map(async parent => await parent.addRooms(message)));
+          await data.admin.addMessage(message);
+  
+          ids.forEach(id => {
+            io.to(id).emit("newMessage",{
+              body:messageBody.body,
+              roomsId:messageBody.roomsId,
+              parentId:messageBody.parentId,
+              adminId:messageBody.adminId,
+              createAt: message.createAt,
+            })
+          });
+
+          const notification= await notificationParentController.createNotificationParent([roomsId],{
+            title:'Nouveau message',
+            desc:'Vous avez reçu un nouveau message',
+            type:'message'
+          });
+
+          usernames.forEach(username=>{
+            io.to(username).emit("newNotification", 
+               notification.dataValues
+              );
+          });
+          
+          await notificationParentController.sendPushNotificationToParent([ids],notification.dataValues);
+
+          nodeEventEmitter.emit('message_sent_to_all_parents',{status:'success'});
+          
+          
+        } catch (error) {
+          console.error(error);
+          nodeEventEmitter.emit('message_sent_to_all_parents',{status:'error'});
+        }
+        
+        
+      });
+
+      nodeEventEmitter.on("send_new_evaluation", (data) => {
+        // console.log("data ", data);
+        io.of("/admin").to(data.storeId).emit("new_order", data);
+      });
+      nodeEventEmitter.on("send_status_evaluation", (data) => {
+        // console.log("data ", data);
+        io.of("/admin").to(data.storeId).emit("new_order", data);
+      });
+
       console.log("Connected: " + socket.username);
 
       socket.on("disconnect", () => {
         console.log("Disconnected: " + socket.username);
       });
 
-      socket.on("joinRoom", ({ roomsId }) => {
-        socket.join(roomsId);
-        console.log("A user joined chatroom: " + roomsId);
+      socket.on("joinMessageRoom", (data) => {
+        socket.join(data.roomsId);
+        console.log("A user joined chatroom: " + data.roomsId);
+      });
+      socket.on("joinNotificationRoom", (data) => {
+        socket.join(data.username);
+        console.log("A user joined notification room: " + data.username);
       });
 
-      socket.on("leaveRoom", ({ roomsId }) => {
-        socket.leave(roomsId);
-        console.log("A user left chatroom: " + roomsId);
+      socket.on("leaveRoom", (data) => {
+        socket.leave(data.roomsId);
+        console.log("A user left chatroom: " + data.roomsId);
       });
 
       //socket.on("chatroomMessage", async ({ chatroomId, message }) => {
-      socket.on("chatroomMessage", async ({ roomsId,parentId,adminId, body }) => {
+      socket.on("chatroomMessage", async (data) => {
         try{
+          const { roomsId,parentId,adminId, body }=data;
             let parent;
             let admin;
         if (body.trim().length > 0) {
@@ -37,28 +115,25 @@ module.exports = {
                 throw new Error('no body !')
             }
             const message = await Message.create({body});
+            parentRoom = await Parent.findByPk(roomsId);
+            if(!parentRoom){
+                throw new Error('parent doesn\'t exist !');
+            }
             if(parentId){
-                parent = await Parent.findByPk(parentId);
-                if(!parent){
-                    throw new Error('parent doesn\'t exist !');
-                }
                 if (parentId !== roomsId) {
                     throw new Error('parent id and room id are not the same !');
                 }
-                await parent.addRooms(message);
-                await parent.addMessages(message);
+                await parentRoom.addRooms(message);
+                await parentRoom.addMessages(message);
             }
             if(adminId){
                 admin = await Administrateur.findByPk(adminId);
                 if(!admin){
                     throw new Error('admin doesn\'t exist !');
                 }
-                parent = await Parent.findByPk(roomsId);
-                if(!parent){
-                    throw new Error('parent doesn\'t exist !');
-                }
+                
                 await parent.addRooms(message);
-                await admin.addMessages(message);
+                await admin.addMessage(message);
             }
           
             
@@ -70,10 +145,41 @@ module.exports = {
             createAt: message.createAt,
           });
 
+          if(parentId && !adminId) {
 
-          // send notification to user
-          // send push to user if he is outta the room
+            const admins = await Administrateur.findAll({
+              attributes:['username','id'],
+              raw:true
+            })
+            if(admins.length > 0) {
+              const ids= admins.map((admin)=>admin.id);
+              const usernames = admins.map((admin)=>admin.username);
+             const notification= await notificationAdminController.createNotificationAdmin(ids,{
+                title:'Nouveau message',
+                desc:`${parent.prenomParent} ${parent.nomParent} vous a envoyé un nouveau message`,
+                type:'message'
+              });
+              usernames.forEach((admin)=>{
+                io.to(admin).emit("newNotification", notification.dataValues);
+              });
+              await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+            }
+          }
+          if(adminId && !parentId){
+            
+            const notification= await notificationParentController.createNotificationParent([roomsId],{
+              title:'Nouveau message',
+              desc:'Vous avez reçu un nouveau message',
+              type:'message'
+            });
+            io.to(parentRoom.username).emit("newNotification", 
+             notification.dataValues
+            );
 
+            await notificationParentController.sendPushNotificationToParent([roomsId],notification.dataValues);
+
+          }
+          
         }
             }catch(err){
             console.error(err)

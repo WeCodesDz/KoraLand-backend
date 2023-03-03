@@ -57,6 +57,7 @@ exports.createNotificationParent = async (parents, notif) => {
   await notification.setParents(parents);
 
   //return something
+  return notification;
 };
 
 exports.getMyNotifications = catchAsync(async (req, res, next) => {
@@ -109,3 +110,29 @@ exports.deleteAllMyNotifications = catchAsync(async (req, res, next) => {
         status: 'success',
     });
 });
+
+exports.sendMessageToAllParents= catchAsync(async (req,res,next)=>{
+  const {message} = req.body;
+  const nodeEventEmitter = req.app.get('nodeEventEmitter')
+  if (nodeEventEmitter) {
+    nodeEventEmitter.emit(
+      "send_message_to_all_parents",
+      {message,admin:req.user}
+    );
+    nodeEventEmitter.on(
+      "message_sent_to_all_parents",
+      (data) => {
+        if (data.status === "success"){
+          res.status(200).json({
+            status: 'success',
+        });
+        }
+        if(data.status === "error"){
+          throw new appError('something went wrong',500);
+        }
+      }
+      );
+    }
+    
+    throw new appError('something went wrong',500);
+})

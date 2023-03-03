@@ -57,6 +57,7 @@ exports.createNotificationCoach = async (coachs, notif) => {
   await notification.setCoachs(coachs);
 
   //return something
+  return notification;
 };
 
 
