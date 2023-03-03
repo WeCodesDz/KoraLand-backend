@@ -31,7 +31,8 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
       adminsArraySubs.map(
         async (adminsSubs) =>
           await Promise.all(
-            adminsSubs.forEach(async (subscription) => {
+            adminsSubs?.forEach(async (subscription) => {
+              
               webpush
                 .sendNotification(
                   subscription.body,
