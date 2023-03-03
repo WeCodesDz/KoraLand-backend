@@ -69,14 +69,63 @@ module.exports = {
         
       });
 
-      nodeEventEmitter.on("send_new_evaluation", (data) => {
-        // console.log("data ", data);
-        io.of("/admin").to(data.storeId).emit("new_order", data);
+
+      nodeEventEmitter.on("send_new_evaluation",async (data) => {
+        const admins = await Administrateur.findAll({
+          attributes:['username','id'],
+          where:{
+            adminLevel:'superadmin'
+          },
+          raw:true
+        });
+        const ids= admins.map((admin)=>admin.id);
+        const usernames = admins.map((admin)=>admin.username);
+
+        const notification = await notificationParentController.createNotificationParent(ids,{
+          title:data.title,
+          desc:data.desc,
+          type:data.type
+        });
+        usernames.forEach((username)=>{
+          io.to(username).emit("newNotification", notification.dataValues);
+        });
+        await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+
+
       });
-      nodeEventEmitter.on("send_status_evaluation", (data) => {
-        // console.log("data ", data);
-        io.of("/admin").to(data.storeId).emit("new_order", data);
-      });
+
+
+      nodeEventEmitter.on("send_status_evaluation",async (data) => {
+        if (data.etatEvaluation === 'accepted') {
+          const notificationBodyCoach = {
+            title:'Evaluation acceptée',
+            desc:`L\'evaluation de l\'élève ${data.student.prenomEleve} ${data.student.nomEleve} a été acceptée`,
+            type:'evaluation'
+        }
+          const notificationBodyParent = {
+            title:'Nouvelle Evaluation',
+            desc:`Vous avez une nouvelle evaluation de l\'élève ${data.student.prenomEleve} ${data.student.nomEleve}.`,
+            type:'evaluation'
+        }
+          const notificationParent = await notificationParentController.createNotificationParent([data.parentId],notificationBodyParent);
+          const notificationCoach = await notificationCoachController.createNotificationCoach([data.coachId],notificationBodyCoach);
+          io.to(data.parentUsername).emit("newNotification", notificationParent.dataValues);
+          io.to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
+          await notificationParentController.sendPushNotificationToParent([data.parentId],notificationParent.dataValues);
+          await notificationCoachController.sendPushNotificationToCoach([data.coachId],notificationCoach.dataValues);
+      }
+      if (data.etatEvaluation === 'blocked') {
+        const notificationBodyCoach = {
+          title:'Evaluation refusée',
+          desc:`L\'evaluation de l\'élève ${data.student.prenomEleve} ${data.student.nomEleve} a été refusée`,
+          type:'evaluation'
+      }
+      const notificationCoach = await notificationCoachController.createNotificationCoach([data.coachId],notificationBodyCoach);
+      io.to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
+      await notificationCoachController.sendPushNotificationToCoach([data.coachId],notificationCoach.dataValues);
+      
+    }
+      })
 
       console.log("Connected: " + socket.username);
 

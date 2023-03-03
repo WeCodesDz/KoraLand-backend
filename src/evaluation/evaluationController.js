@@ -129,6 +129,15 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
   });
   await student.addEvaluation(evaluation);
 
+
+  const nodeEventEmitter = req.app.get('NodeEventEmitter');
+  if(nodeEventEmitter){
+    nodeEventEmitter.emit('send_new_evaluation',{
+      title: 'Nouvel Evaluation',
+      body: 'Une nouvelle evaluation a été ajoutée',
+      type: 'evaluation'
+    })
+  }
   //NotificationAdminController.createNotif
   //send notif to admin
   //req.app.get('NodeEventEmitter')?.emit('sendNotification',dataToEmit)
@@ -362,8 +371,21 @@ exports.handleEvaluation = catchAsync(async (req, res, next) => {
     });
     //send notif to paarent
   }
-
+  const groupe  = await student.getGroupe();
+  const parent = await student.getParent();
+  const coach = await groupe.getCoach();
   // HERE WE SHOULD SEND NOTIFICATION TO THE COACH
+  const nodeEventEmitter = req.app.get('NodeEventEmitter');
+  if(nodeEventEmitter){
+    nodeEventEmitter.emit('send_status_evaluation',{
+      etatEvaluation,
+      coachId: coach.id,
+      parentId: parent.id,
+      student,
+      parentUsername: parent.username,
+      coachUsername: coach.username,
+    });
+  }
 
   res.status(200).json({
     status: "success",
