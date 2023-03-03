@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const RefreshAdmin = require('./refreshAdminModel');
-const Admin = require('../administrateur/administrateurModel');
+const Admin = require('../admin/adminModel');
 
 exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     const {cookies} = req;
@@ -32,7 +32,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
     if(adminRefreshTokenRaw){
         admin = await Admin.findOne({
             where: {
-                id: adminRefreshTokenRaw.administrateurId
+                id: adminRefreshTokenRaw.adminId
             }
         });
     }
@@ -46,7 +46,7 @@ exports.handleAdminRefreshToken = catchAsync(async (req, res, next) => {
                 });
             await RefreshAdmin.destroy({
                 where:{
-                    administrateurId: admin.id
+                    adminId: admin.id
                 }
             });
         }

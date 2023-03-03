@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const AppError = require('../utils/appError');
 const db = require('../../database');
 
-const parentModel = db.define('parent', {
+const Parent = db.define('parent', {
     id: {
         type: Sequelize.Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -114,7 +114,7 @@ const parentModel = db.define('parent', {
   }
    });
 
-   parentModel.prototype.correctPassword = async function (
+   Parent.prototype.correctPassword = async function (
     candidatePassword,
     userPassword
   ) {
@@ -123,4 +123,4 @@ const parentModel = db.define('parent', {
   
 
   
-  module.exports = parentModel;
+  module.exports = Parent;

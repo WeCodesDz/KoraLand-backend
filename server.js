@@ -15,7 +15,7 @@ const db = require("./database");
 const port = process.env.PORT;
 
 const Coach = require("./src/coach/coachModel");
-const Admin = require("./src/administrateur/administrateurModel");
+const Admin = require("./src/admin/adminModel");
 const Groupe = require("./src/groupe/groupeModel");
 const Student = require("./src/student/studentModel");
 const Evaluation = require("./src/evaluation/evaluationModel");
@@ -30,6 +30,9 @@ const historiqueEvaluation = require("./src/historiqueEvaluation/historiqueEvalu
 const historiquePresence = require("./src/historiquePresence/historiquePresenceModel");
 const historiqueCoach = require("./src/historiqueCoach/historiqueCoachModel");
 const historiqueParent = require("./src/historiqueParent/historiqueParentModel");
+const NotificationAdmin = require("./src/notificationAdmin/notificationAdminModel");
+const NotificationCoach = require("./src/notificationCoach/notificationCoachModel");
+const NotificationParent = require("./src/notificationParent/notificationParentModel")
 const AdminSubscription = require("./src/subscriptionAdmin/subscriptionAdminModel");
 const CoachSubscription = require("./src/subscriptionCoach/subscriptionCoachModel");
 const ParentSubscription = require("./src/subscriptionParent/subscriptionParentModel");
@@ -115,7 +118,7 @@ historiqueParent.hasMany(historiqueStudent, {
 });
 historiqueStudent.belongsTo(historiqueParent, { onDelete: "cascade" });
 
-// Relations between models and their subscriptions models
+// Relations between USer models and their subscriptions models
 Admin.belongsToMany(AdminSubscription, {
   as: "sub",
   through: "admin_subscriptions",
@@ -125,16 +128,46 @@ AdminSubscription.belongsToMany(Admin, {
   through: "admin_subscriptions",
 });
 Coach.belongsToMany(CoachSubscription, {
+  as: "sub",
   through: "coach_subscriptions",
 });
 CoachSubscription.belongsToMany(Coach, {
+  as: "sub",
   through: "coach_subscriptions",
 });
 Parent.belongsToMany(ParentSubscription, {
+  as: "sub",
   through: "parent_subscriptions",
 });
 ParentSubscription.belongsToMany(Parent, {
+  as: "sub",
   through: "parent_subscriptions",
+});
+
+// Relations between User models and their Notifications models
+Admin.belongsToMany(NotificationAdmin, {
+  
+  through: "admin_notifications",
+});
+NotificationAdmin.belongsToMany(Admin, {
+  
+  through: "admin_notifications",
+});
+Coach.belongsToMany(NotificationCoach, {
+  
+  through: "coach_notifications",
+});
+NotificationCoach.belongsToMany(Coach, {
+  
+  through: "coach_notifications",
+});
+Parent.belongsToMany(NotificationParent, {
+  
+  through: "parent_notifications",
+});
+NotificationParent.belongsToMany(Parent, {
+  
+  through: "parent_notifications",
 });
 
 (async () => {
@@ -142,7 +175,7 @@ ParentSubscription.belongsToMany(Parent, {
   //console.log('database connected');
   //Admin.sync({ force: true });
   //AdminSubscription.sync({ force: true });
-  // db.sync({ force: true })
+   //db.sync({ force: true })
   //Message.sync({ force: true })
   // CoachSubscription.sync({ force: true })
   //Coach.sync({ force: true })

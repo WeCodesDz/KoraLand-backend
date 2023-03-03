@@ -4,7 +4,7 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const Admin = require('../administrateur/administrateurModel');
+const Admin = require('../admin/adminModel');
 const Coach = require('../coach/coachModel');
 const Parent = require('../parent/parentModel');
 const RefreshAdmin = require('../refreshAdmin/refreshAdminModel');
@@ -66,7 +66,7 @@ exports.loginAdmin = catchAsync(async (req, res, next) => {
     const foundToken = await user.getRefreshes({where:{jwt:refreshToken.jwt}});
     
     if (!foundToken) {
-      await RefreshAdmin.destroy({where:{administrateurId:user.id}});
+      await RefreshAdmin.destroy({where:{adminId:user.id}});
     }
     const clearCookieConfig = { httpOnly: true, sameSite: 'None' }
     

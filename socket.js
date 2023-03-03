@@ -1,7 +1,7 @@
 const EventEmitter = require("events");
 const Message = require("./src/message/messageModel");
 const Parent = require("./src/parent/parentModel");
-const Administrateur = require("./src/administrateur/administrateurModel");
+const Administrateur = require("./src/admin/adminModel");
 module.exports = {
   listenSockets: (io, app) => {
     io.on("connection", (socket) => {
@@ -22,12 +22,12 @@ module.exports = {
       });
 
       //socket.on("chatroomMessage", async ({ chatroomId, message }) => {
-      socket.on("chatroomMessage", async ({ roomsId,parentId,administrateurId, body }) => {
+      socket.on("chatroomMessage", async ({ roomsId,parentId,adminId, body }) => {
         try{
             let parent;
             let admin;
         if (body.trim().length > 0) {
-            if (!parentId || !administrateurId){
+            if (!parentId || !adminId){
                 throw new Error('no parent or admin !')
             }
             if (!roomsId){
@@ -48,8 +48,8 @@ module.exports = {
                 await parent.addRooms(message);
                 await parent.addMessages(message);
             }
-            if(administrateurId){
-                admin = await Administrateur.findByPk(administrateurId);
+            if(adminId){
+                admin = await Administrateur.findByPk(adminId);
                 if(!admin){
                     throw new Error('admin doesn\'t exist !');
                 }
@@ -66,7 +66,7 @@ module.exports = {
             body,
             roomsId,
             parentId,
-            administrateurId,
+            adminId,
             createAt: message.createAt,
           });
 

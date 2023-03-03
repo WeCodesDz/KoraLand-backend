@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const AppError = require('../utils/appError');
 const db = require('../../database');
 
-const coachModel = db.define('coach', {
+const Coach = db.define('coach', {
     id: {
         type: Sequelize.Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -110,10 +110,10 @@ const coachModel = db.define('coach', {
   }
 });
 
-coachModel.prototype.correctPassword = async function (
+Coach.prototype.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
-module.exports = coachModel;
+module.exports = Coach;

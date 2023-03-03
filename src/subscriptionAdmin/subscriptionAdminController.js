@@ -1,6 +1,6 @@
 const catchAsync = require("../utils/catchAsync");
 const AdminSubscription = require("./subscriptionAdminModel");
-const Admin = require("../administrateur/administrateurModel");
+const Admin = require("../admin/adminModel");
 const AppError = require("../utils/appError");
 
 const Notf = require("../notificationAdmin/notificationAdminController");

@@ -2,7 +2,7 @@ const webpush = require("web-push");
 const appError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const NotificationAdmin = require("./notificationAdminModel");
-const Admin = require("../administrateur/administrateurModel");
+const Admin = require("../admin/adminModel");
 
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
@@ -53,7 +53,7 @@ exports.createNotificationAdmin = async (admins, notif) => {
   //we add validations after
   const notification = await NotificationAdmin.create(notif);
 
-  await notification.setAdministrateurModels(admins);
+  await notification.setAdmins(admins);
 
   //return something
 };
