@@ -11,6 +11,8 @@ router
           parentController.getAllParents)
     .post(authController.role('admin'),parentController.createParent);
 
+router.patch('/update_my_password', parentController.updatePassword);
+
 router
     .route('/myStudents')
     .get(parentController.getMyStudents);

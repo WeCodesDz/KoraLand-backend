@@ -4,10 +4,14 @@ const authController = require('../auth/authController')
 
 const router = express.Router();
 
-router.use(authController.protect , authController.role('admin'));   
+router.use(authController.protect , authController.role('admin'));  
+
 router.
     route('/statistics')
-    .get(administrateurController.getAdminStatistcs)
+    .get(administrateurController.getAdminStatistcs);
+
+router.patch('/update_my_password', administrateurController.updatePassword);
+
 router.route('/')
     .get(administrateurController.getAllAdmin)
     .post(administrateurController.createAdmin);

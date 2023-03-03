@@ -309,7 +309,8 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
     const evaluations = await student.getEvaluations({
         where:{
             etatEvaluation:'accepted'
-        }
+        },
+        order: [["createdAt", "DESC"]],
     });
     const resultStudent = {...student.dataValues, evaluations};
     res.status(200).json({
@@ -320,3 +321,35 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
         },
     });
 });
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+    // 1) Get Parent from database
+  
+    const parent = await Parent.findOne({
+      where: {
+        id: req.user.id,
+      },
+      attributes: ['id', 'password'],
+    });
+  
+    // 2) Check if POSTed current password is correct
+    if (
+      !(await parent.correctPassword(
+        req.body.passwordCurrent.trim(),
+        parent.password
+      ))
+    ) {
+      return next(new AppError('Your current password is wrong.', 401));
+    }
+  
+    // 3) If so, update password
+  
+    parent.password = req.body.password;
+    parent.passwordConfirm = req.body.passwordConfirm;
+  
+    await parent.save();
+    res.status(200).json({
+      status: 'success',
+      message: 'Password updated successfully',
+    });
+  });

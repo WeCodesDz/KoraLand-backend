@@ -239,7 +239,7 @@ exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
     where,
     limit,
     offset,
-    order: [["dateEvaluation", "ASC"]],
+    order: [["dateEvaluation", "DESC"]],
   });
   res.status(200).json({
     status: "success",
