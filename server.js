@@ -68,7 +68,7 @@ Message.belongsTo(Parent, { as: "rooms", onDelete: "cascade" });
 Parent.hasMany(Message, { onDelete: "cascade" });
 Message.belongsTo(Parent, { onDelete: "cascade" });
 
-Admin.hasMany(Message, { as: "admins", onDelete: "cascade" });
+Admin.hasMany(Message, { onDelete: "cascade" });
 Message.belongsTo(Parent, { onDelete: "cascade" });
 
 // Refresh Models

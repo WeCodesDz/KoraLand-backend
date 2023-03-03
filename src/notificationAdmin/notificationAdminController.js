@@ -63,9 +63,9 @@ exports.getMyNotifications = catchAsync(async (req, res, next) => {
   const { id } = req.user;
   const admin = await Admin.findByPk(id);
 
-  //console.log('----------------------------------------------------------------admin------')
-  //console.log(Object.getPrototypeOf(admin))
-  //console.log('----------------------------------------------------------------admin------')
+  console.log('----------------------------------------------------------------admin------')
+  console.log(Object.getPrototypeOf(admin))
+  console.log('----------------------------------------------------------------admin------')
 
   const notifications = await admin.getNotification_admins();
   if (!notifications) {
