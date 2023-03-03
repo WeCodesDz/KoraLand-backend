@@ -63,7 +63,7 @@ exports.getMyNotifications = catchAsync(async (req, res, next) => {
   const admin = await Admin.findByPk(id);
 
   console.log('----------------------------------------------------------------admin------')
-  console.log(admin)
+  console.log(id)
   console.log('----------------------------------------------------------------admin------')
 
   const notifications = await admin.getNotificationAdmins();
