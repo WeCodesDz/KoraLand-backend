@@ -38,6 +38,12 @@ exports.test = catchAsync(async (req, res, next) => {
     ["9e5ac37d-505b-4f19-95e0-60119212f59e"],
     { test: "test" }
   );
+  await Notf.createNotificationAdmin(["9e5ac37d-505b-4f19-95e0-60119212f59e"],
+  { 
+    title: "test",
+    desc: "test",
+    type: "message",
+  });
   res.json({ status: "success" });
 });
 
