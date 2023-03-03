@@ -35,10 +35,10 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
 
 exports.test = catchAsync(async (req, res, next) => {
   await Notf.sendPushNotificationToAdmin(
-    ["9e5ac37d-505b-4f19-95e0-60119212f59e"],
+    ["83033851-7bea-4c57-8633-9d8faeae2f52"],
     { test: "test" }
   );
-  await Notf.createNotificationAdmin(["9e5ac37d-505b-4f19-95e0-60119212f59e"],
+  await Notf.createNotificationAdmin(["83033851-7bea-4c57-8633-9d8faeae2f52"],
   { 
     title: "test",
     desc: "test",
