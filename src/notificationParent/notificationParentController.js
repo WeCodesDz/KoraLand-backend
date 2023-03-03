@@ -1,7 +1,63 @@
+const webpush = require("web-push");
 const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const NotificationParent = require('./notificationParentModel');
 const Parent = require('../parent/parentModel');
+
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+
+webpush.setVapidDetails(
+  "mailto: <contact@we-codes.com>",
+  publicVapidKey,
+  privateVapidKey
+);
+exports.sendPushNotificationToParent = async (parents, notification) => {
+  try {
+    const newParents = await Promise.all(
+      parents.map(async (parent) => await Parent.findByPk(parent))
+    );
+
+    const parentsArraySubs = await Promise.all(
+      newParents.map(
+        async (parent) =>
+          await parent.getSub({
+            attributes: ["body"],
+            raw: true,
+          })
+      )
+    );
+    const c = await Promise.all(
+      parentsArraySubs.map(
+        async (parentsSubs) =>
+          await Promise.all(
+            parentsSubs?.map(async (subscription) => {
+              
+              webpush
+                .sendNotification(
+                  subscription.body,
+                  JSON.stringify(notification)
+                )
+                .catch((err) => {
+                  console.error(err);
+                });
+            })
+          )
+      )
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.createNotificationParent = async (parents, notif) => {
+  //we add validations after
+  const notification = await NotificationParent.create(notif);
+
+  await notification.setParents(parents);
+
+  //return something
+};
 
 exports.getMyNotifications = catchAsync(async (req, res, next) => {
     const { id } = req.user;

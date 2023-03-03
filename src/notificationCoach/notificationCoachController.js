@@ -1,20 +1,77 @@
+const webpush = require("web-push");
 const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const NotificationCoach = require('./notificationCoachModel');
 const Coach = require('../coach/coachModel');
 
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+
+webpush.setVapidDetails(
+  "mailto: <contact@we-codes.com>",
+  publicVapidKey,
+  privateVapidKey
+);
+exports.sendPushNotificationToCoach = async (coachs, notification) => {
+  try {
+    const newCoachs = await Promise.all(
+      coachs.map(async (coach) => await Coach.findByPk(coach))
+    );
+
+    const coachsArraySubs = await Promise.all(
+        newCoachs.map(
+        async (coach) =>
+          await coach.getSub({
+            attributes: ["body"],
+            raw: true,
+          })
+      )
+    );
+    const c = await Promise.all(
+      coachsArraySubs.map(
+        async (coachsSubs) =>
+          await Promise.all(
+            coachsSubs?.map(async (subscription) => {
+              
+              webpush
+                .sendNotification(
+                  subscription.body,
+                  JSON.stringify(notification)
+                )
+                .catch((err) => {
+                  console.error(err);
+                });
+            })
+          )
+      )
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+exports.createNotificationCoach = async (coachs, notif) => {
+  //we add validations after
+  const notification = await NotificationCoach.create(notif);
+
+  await notification.setCoachs(coachs);
+
+  //return something
+};
+
+
 exports.getMyNotifications = catchAsync(async (req, res, next) => {
     const { id } = req.user;
     const coach = await Coach.findByPk(id);
 
-    const notifications = await coach.getNotifications();
+    const notifications = await coach.getNotifications_coachs();
     if (!notifications) {
         throw new appError('No notifications found', 404);
     }
         
     res.status(200).json({
-        status: 'success',
-        body: notifications,
+        status: "success",
+        data:{notifications} ,
     });
 });
 
@@ -26,8 +83,8 @@ exports.getNotificationById = catchAsync(async (req, res, next) => {
     }
 
     res.status(200).json({
-        status: 'success',
-        body: notification,
+        status: "success",
+        data:{notification} ,
     });
 });
 
@@ -40,7 +97,6 @@ exports.deleteNotification = catchAsync(async (req, res, next) => {
     await notification.destroy();
     res.status(200).json({
         status: 'success',
-        data: notification,
     });
 });
 

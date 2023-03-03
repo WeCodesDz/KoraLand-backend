@@ -8,6 +8,7 @@ const router = express.Router();
 router
   .route('/')
   .post(authController.protect, subscriptionParentController.saveSubscription)
+  .get(authController.protect, subscriptionParentController.test)
   .delete(authController.protect, subscriptionParentController.deleteSubscription);
 
 module.exports = router;

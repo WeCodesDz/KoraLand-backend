@@ -1,7 +1,23 @@
 const catchAsync = require('../utils/catchAsync');
 const ParentSubscription = require('./subscriptionParentModel');
+const Notf = require('../notificationParent/notificationParentController')
 const Parent = require('../parent/parentModel');
 const AppError = require('../utils/appError');
+
+
+exports.test = catchAsync(async (req, res, next) => {
+  await Notf.sendPushNotificationToParent(
+    ["24da984c-76e5-4d05-ada0-068976957dce"],
+    { test: "test" }
+  );
+  await Notf.createNotificationParent(["24da984c-76e5-4d05-ada0-068976957dce"],
+  { 
+    title: "test",
+    desc: "test",
+    type: "message",
+  });
+  res.json({ status: "success" });
+});
 
 exports.saveSubscription = catchAsync(async (req, res, next) => {
   if (!req.body.subscription || !req.body.username) {
