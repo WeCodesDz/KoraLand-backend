@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const AppError = require('../utils/appError');
 const db = require('../../database');
 
-const administrateurModel = db.define('administrateur', {
+const Administrateur = db.define('administrateur', {
     id: {
         type: Sequelize.Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -116,11 +116,11 @@ const administrateurModel = db.define('administrateur', {
     }
     });
 
-administrateurModel.prototype.correctPassword = async function (
+    Administrateur.prototype.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
-module.exports = administrateurModel;
+module.exports = Administrateur;
 
