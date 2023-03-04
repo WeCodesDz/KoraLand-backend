@@ -11,7 +11,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
     limit = limit * 1 || 100;
     const offset = (page - 1) * limit;
     const where = {
-        roomId: roomId
+        roomsId: roomId
     }
     console.log("**************************************")
     console.log(page,'-------',limit)
