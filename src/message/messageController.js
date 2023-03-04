@@ -5,8 +5,8 @@ const Parent = require('../parent/parentModel');
 const { model } = require('../../database');
 
 exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
-    let { page, limit } = req.query;
-    let { roomId } = req.params;
+    let { page, limit,roomId  } = req.query;
+    // let { roomId } = req.params;
     page = page * 1 || 1;
     limit = limit * 1 || 100;
     const offset = (page - 1) * limit;
