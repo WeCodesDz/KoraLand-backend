@@ -13,6 +13,9 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
     const where = {
         roomId: roomId
     }
+    console.log("**************************************")
+    console.log(where)
+    console.log("**************************************")
     const results = await Message.findAndCountAll({
         where,
         limit,
