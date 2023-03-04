@@ -200,6 +200,7 @@ const server = app.listen(port, () => console.log(`Listening on ${port}`));
 const io = require("socket.io")(server, {
   cors: {
     origin: true,
+    allowedHeaders: ["Access-Control-Allow-Origin"],
     methods: ["GET", "POST"],
     credentials: true,
   },
