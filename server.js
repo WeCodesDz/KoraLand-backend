@@ -1,7 +1,6 @@
 const dotenv = require("dotenv");
 const Sequelize = require("sequelize");
 const { promisify } = require("util");
-const http = require("http");
 const jwt = require("jsonwebtoken");
 
 process.on("uncaughtException", (err) => {
@@ -195,16 +194,14 @@ const app = require("./app");
 
 ////////////
 
-// const server = app.listen(port, () => console.log(`Listening on ${port}`));
+const server = app.listen(port, () => console.log(`Listening on ${port}`));
 //const server = app.listen();
-const httpServer = http.createServer(app);
-const io = require("socket.io")(httpServer, {
+
+const io = require("socket.io")(server, {
   cors: {
-    origin: ['http://127.0.0.1:5173','http://localhost','http://localhost:5173','https://koralandacad.link'],
+    origin: true,
     methods: ["GET", "POST"],
     credentials: true,
-    
-    // withCredentials: true,
   },
 });
 
@@ -221,9 +218,12 @@ io.use(async (socket, next) => {
     console.error(err);
   }
 });
-const server = httpServer.listen(port, () => console.log(`Listening on ${port}`));
+
+
 const sockets = require("./socket");
 sockets.listenSockets(io,app);
+
+
 process.on("unhandledRejection", (err) => {
   console.error(err);
   console.log("Unhandled Rejection  ");
