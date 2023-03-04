@@ -11,6 +11,8 @@ process.on("uncaughtException", (err) => {
 
 dotenv.config({ path: "./config.env" });
 
+const https = require("https");
+
 const db = require("./database");
 const port = process.env.PORT;
 
@@ -193,12 +195,14 @@ NotificationParent.belongsToMany(Parent, {
 const app = require("./app");
 
 ////////////
+const httpsServer = https.createServer(app);
 
-const server = app.listen(port, () => console.log(`Listening on ${port}`)); 
+//const server =
+httpsServer.listen(port, () => console.log(`Listening on ${port}`)); 
 //const server = app.listen();
 
 
-const io = require("socket.io")(server, {
+const io = require("socket.io")(httpsServer, {
   cors: {
     origin: ['http://127.0.0.1:5173','http://localhost','http://localhost:5173','https://koralandacad.link'],
     credentials: true,
