@@ -194,14 +194,18 @@ const app = require("./app");
 
 ////////////
 
-const server = app.listen(port, () => console.log(`Listening on ${port}`));
+const server = app.listen(port, () => console.log(`Listening on ${port}`)); 
 //const server = app.listen();
+const httpServer = require("http").createServer();
 
-const io = require("socket.io")(server, {
+httpServer.listen(443, () => {
+  console.log("server up and running on PORT :", 443);
+});
+
+const io = require("socket.io")(httpServer, {
   cors: {
     origin: ['http://127.0.0.1:5173','http://localhost','http://localhost:5173','https://koralandacad.link'],
     credentials: true,
-    withCredentials: true,
     methods: ["GET", "POST"],
   },
 });
@@ -219,7 +223,6 @@ io.use(async (socket, next) => {
     console.error(err);
   }
 });
-
 
 const sockets = require("./socket");
 sockets.listenSockets(io,app);
