@@ -196,13 +196,13 @@ const app = require("./app");
 
 const server = app.listen(port, () => console.log(`Listening on ${port}`));
 //const server = app.listen();
-
-const io = require("socket.io")(server, {
+const httpServer = http.createServer(app);
+const io = require("socket.io")(httpServer, {
   cors: {
-    origin: ['http://127.0.0.1:5173','http://localhost','http://localhost:5173','https://koralandacad.link'],
+    origin: "*",
     methods: ["GET", "POST"],
-    credentials: true,
-    withCredentials: true,
+    // credentials: true,
+    // withCredentials: true,
   },
 });
 
