@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const Sequelize = require("sequelize");
 const { promisify } = require("util");
+const http = require("http");
 const jwt = require("jsonwebtoken");
 
 process.on("uncaughtException", (err) => {
@@ -196,8 +197,8 @@ const app = require("./app");
 
 const server = app.listen(port, () => console.log(`Listening on ${port}`));
 //const server = app.listen();
-
-const io = require("socket.io")(app, {
+const httpServer = http.createServer(app);
+const io = require("socket.io")(httpServer, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -220,7 +221,7 @@ io.use(async (socket, next) => {
   }
 });
 
-const sockets = require("./sockets");
+const sockets = require("./socket");
 sockets.listenSockets(io,app);
 process.on("unhandledRejection", (err) => {
   console.error(err);
