@@ -21,7 +21,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
         where,
         limit,
         offset,
-        order : [['createAt', 'ASC']]
+        order : [['createdAt', 'ASC']]
     });
     res.status(200).json({
         status: 'success',
