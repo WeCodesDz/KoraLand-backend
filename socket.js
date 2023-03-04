@@ -7,7 +7,7 @@ const notificationAdminController = require("./src/notificationAdmin/notificatio
 const notificationCoachController = require("./src/notificationCoach/notificationCoachController");
 module.exports = {
   listenSockets: (io, app) => {
-    io.on("connection", (socket) => {
+    io.of("/socket").on("connection", (socket) => {
       let nodeEventEmitter = app.get("nodeEventEmitter")
       if(!nodeEventEmitter){
         nodeEventEmitter = new EventEmitter();
@@ -35,7 +35,7 @@ module.exports = {
           await data.admin.addMessage(message);
   
           ids.forEach(id => {
-            io.to(id).emit("newMessage",{
+            io.of("/socket").to(id).emit("newMessage",{
               body:messageBody.body,
               roomsId:messageBody.roomsId,
               parentId:messageBody.parentId,
@@ -51,7 +51,7 @@ module.exports = {
           });
 
           usernames.forEach(username=>{
-            io.to(username).emit("newNotification", 
+            io.of("/socket").to(username).emit("newNotification", 
                notification.dataValues
               );
           });
@@ -87,7 +87,7 @@ module.exports = {
           type:data.type
         });
         usernames.forEach((username)=>{
-          io.to(username).emit("newNotification", notification.dataValues);
+          io.of("/socket").to(username).emit("newNotification", notification.dataValues);
         });
         await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
 
@@ -109,8 +109,8 @@ module.exports = {
         }
           const notificationParent = await notificationParentController.createNotificationParent([data.parentId],notificationBodyParent);
           const notificationCoach = await notificationCoachController.createNotificationCoach([data.coachId],notificationBodyCoach);
-          io.to(data.parentUsername).emit("newNotification", notificationParent.dataValues);
-          io.to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
+          io.of("/socket").to(data.parentUsername).emit("newNotification", notificationParent.dataValues);
+          io.of("/socket").to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
           await notificationParentController.sendPushNotificationToParent([data.parentId],notificationParent.dataValues);
           await notificationCoachController.sendPushNotificationToCoach([data.coachId],notificationCoach.dataValues);
       }
@@ -121,7 +121,7 @@ module.exports = {
           type:'evaluation'
       }
       const notificationCoach = await notificationCoachController.createNotificationCoach([data.coachId],notificationBodyCoach);
-      io.to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
+      io.of("/socket").to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
       await notificationCoachController.sendPushNotificationToCoach([data.coachId],notificationCoach.dataValues);
       
     }
@@ -186,7 +186,7 @@ module.exports = {
             }
           
             
-          io.to(roomsId).emit("newMessage", {
+          io.of("/socket").to(roomsId).emit("newMessage", {
             body,
             roomsId,
             parentId,
@@ -209,7 +209,7 @@ module.exports = {
                 type:'message'
               });
               usernames.forEach((admin)=>{
-                io.to(admin).emit("newNotification", notification.dataValues);
+                io.of("/socket").to(admin).emit("newNotification", notification.dataValues);
               });
               await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
             }
@@ -221,7 +221,7 @@ module.exports = {
               desc:'Vous avez reçu un nouveau message',
               type:'message'
             });
-            io.to(parentRoom.username).emit("newNotification", 
+            io.of("/socket").to(parentRoom.username).emit("newNotification", 
              notification.dataValues
             );
 
