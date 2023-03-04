@@ -161,12 +161,12 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 exports.getAdminStatistcs = catchAsync(async (req, res, next) => {
 
   const nbTotalStudents = await Student.findAll({
-    attributes: [[Sequelize.fn('COUNT', 'id'), 'total students']],
+    attributes: [[Sequelize.fn('COUNT', 'id'), 'total_students']],
     plain: true,
   });
 
   const nbTotalFootball = await Student.findAll({
-    attributes: [[Sequelize.fn('COUNT', 'id'), 'total football students']],
+    attributes: [[Sequelize.fn('COUNT', 'id'), 'total_football_students']],
     where:{
       sport: 'football'
     },
@@ -174,7 +174,7 @@ exports.getAdminStatistcs = catchAsync(async (req, res, next) => {
   });
 
   const nbTotalBasketball = await Student.findAll({
-    attributes: [[Sequelize.fn('COUNT', 'id'), 'total basketball students']],
+    attributes: [[Sequelize.fn('COUNT', 'id'), 'total_basketball_students']],
     where:{
       sport: 'basketball'
     },
@@ -182,7 +182,7 @@ exports.getAdminStatistcs = catchAsync(async (req, res, next) => {
   });
 
   const nbTotalParCommune = await Student.findAll({
-    attributes: ['commune',[Sequelize.fn('COUNT', 'commune'), 'total students par commune']],
+    attributes: ['commune',[Sequelize.fn('COUNT', 'commune'), 'total_students_par_commune']],
     group: ['commune'],
     raw: true,
   });
