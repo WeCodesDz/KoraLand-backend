@@ -184,6 +184,7 @@ exports.getAdminStatistcs = catchAsync(async (req, res, next) => {
   const nbTotalParCommune = await Student.findAll({
     attributes: ['commune',[Sequelize.fn('COUNT', 'commune'), 'total_students_par_commune']],
     group: ['commune'],
+    order:[['total_students_par_commune','DESC']],
     raw: true,
   });
   
