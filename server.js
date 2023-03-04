@@ -207,6 +207,7 @@ const io = require("socket.io")(server, {
     credentials: true,
     methods: ["GET", "POST"],
   },
+  path: '/socket'
 });
 
 io.use(async (socket, next) => {
