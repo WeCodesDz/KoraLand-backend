@@ -369,7 +369,7 @@ exports.getMyGroupesStudents = catchAsync(async (req, res, next) => {
         where:{
             id:groupesIds
         },
-        attributes:['id','groupeName','horaireEntrainement','saisonActuel'],
+        attributes:['id','groupeName','horaireEntrainement','saisonActuel','sport'],
         include:{
             model:Student,
             attributes:[
