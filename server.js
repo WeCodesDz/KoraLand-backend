@@ -196,11 +196,7 @@ const app = require("./app");
 
 const server = app.listen(port, () => console.log(`Listening on ${port}`)); 
 //const server = app.listen();
-const httpServer = require("http").createServer();
 
-httpServer.listen(443, () => {
-  console.log("server up and running on PORT :", 443);
-});
 
 const io = require("socket.io")(httpServer, {
   cors: {
