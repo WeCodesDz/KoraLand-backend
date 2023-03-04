@@ -7,12 +7,13 @@ router.use(authController.protect , authController.role('admin'));
 router
     .route('/')
     .get(
+      authController.role('admin'),
         studentController.getAllstudents)
-    .post(studentController.createStudent);
+    .post(authController.role('admin'),studentController.createStudent);
 
 router
       .route('/evaluations/:id')
-      .get(studentController.getStudentEvaluation);
+      .get(authController.role('admin'),studentController.getStudentEvaluation);
 
 router
       .route('/inActifStudents')
@@ -28,10 +29,10 @@ router
       .get(authController.role('admin','coach'),studentController.getStudentAllPresence);
 router
       .route('/lastEvaluation/:id')
-      .get(studentController.lastEvaluation);
+      .get(authController.role('admin'),studentController.lastEvaluation);
 router
       .route('/blockStudent/:id')      
-      .patch(studentController.blockStudent);
+      .patch(authController.role('admin'),studentController.blockStudent);
 
 // router
 //       .route('/payment/:id')      
@@ -40,8 +41,8 @@ router
 
 router
       .route('/:id')
-      .get(studentController.getStudentById)
-      .patch(studentController.updateStudent)
-      .delete(studentController.deleteStudent);
+      .get(authController.role('admin'),studentController.getStudentById)
+      .patch(authController.role('admin'),studentController.updateStudent)
+      .delete(authController.role('admin'),studentController.deleteStudent);
   
 module.exports = router;
