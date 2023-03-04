@@ -214,7 +214,7 @@ exports.getGroupeStudents = catchAsync( async(req, res, next)=>{
   }
   res.status(200).json({
     status: 'success',
-    body:{
+    data:{
       ...groupe.dataValues,
       students
     }
@@ -290,7 +290,7 @@ exports.getGroupeStudentById = catchAsync(async(req,res,next)=>{
   }
   res.status(200).json({
     status: 'success',
-    body:{
+    data:{
       student
     }
   });
