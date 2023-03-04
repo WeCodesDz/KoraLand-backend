@@ -14,7 +14,7 @@ router.route('/')
 
     router
         .route('/students/')    
-        .get(authController.role('admin'),groupeController.getGroupeStudents)
+        .get(authController.role('admin','coach'),groupeController.getGroupeStudents)
         .post(authController.role('admin'),groupeController.addStudentToGroupe)
         .delete(authController.role('admin'),groupeController.deleteStudentGroupe);
 

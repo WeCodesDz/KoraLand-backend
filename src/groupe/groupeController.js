@@ -201,7 +201,14 @@ exports.getGroupeStudents = catchAsync( async(req, res, next)=>{
     throw new  AppError('No groupe found with that Id', 404);
   }
 
-  const students = await groupe.getStudents();
+  const students = await groupe.getStudents({
+    include: [
+      {
+        model: Presence,
+        order:[['createdAt', 'DESC']],
+      }
+    ]
+  });
   if(!students){
     throw new  AppError('No students found in this groupe', 404);
   }
