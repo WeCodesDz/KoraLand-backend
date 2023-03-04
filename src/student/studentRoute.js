@@ -3,7 +3,7 @@ const studentController = require('./studentController');
 const authController = require('../auth/authController');
 const router = express.Router();
 
-router.use(authController.protect , authController.role('admin'));   
+router.use(authController.protect);   
 router
     .route('/')
     .get(
