@@ -569,7 +569,7 @@ exports.lastEvaluation = catchAsync(async (req,res,next)=>{
   }
   const lastEvaluation = await Evaluation.findAll({
     where: { 'studentId' : student.id },
-    order: [ [ 'createdAt', 'DESC' ]],
+    order: [ [ 'updatedAt', 'DESC' ]],
     limit: 2
   });
 

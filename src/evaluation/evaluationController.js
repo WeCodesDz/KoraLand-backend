@@ -225,7 +225,7 @@ exports.getStudentLastEvaluation = catchAsync(async (req, res, next) => {
     where: {
       studentId: student.id,
     },
-    order: [["createdAt", "DESC"]],
+    order: [["updatedAt", "DESC"]],
   });
   res.status(200).json({
     status: "status",
@@ -248,7 +248,7 @@ exports.getAllStudentEvaluation = catchAsync(async (req, res, next) => {
     where,
     limit,
     offset,
-    order: [["dateEvaluation", "DESC"]],
+    order: [["updatedAt", "DESC"]],
   });
   res.status(200).json({
     status: "success",

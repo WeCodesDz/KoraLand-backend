@@ -310,7 +310,7 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
         where:{
             etatEvaluation:'accepted'
         },
-        order: [["createdAt", "DESC"]],
+        order: [["updatedAt", "DESC"]],
     });
     const resultStudent = {...student.dataValues, evaluations};
     res.status(200).json({
