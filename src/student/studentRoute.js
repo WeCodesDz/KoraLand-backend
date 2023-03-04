@@ -22,10 +22,10 @@ router
             studentController.getBlockedStudents);
 router
       .route('/presenceByDate/:id')
-      .get(studentController.getStudentPresenceByDate);
+      .get(authController.role('admin','coach'),studentController.getStudentPresenceByDate);
 router
       .route('/presence/:id')
-      .get(studentController.getStudentAllPresence);
+      .get(authController.role('admin','coach'),studentController.getStudentAllPresence);
 router
       .route('/lastEvaluation/:id')
       .get(studentController.lastEvaluation);
