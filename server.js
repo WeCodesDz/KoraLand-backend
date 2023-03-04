@@ -196,8 +196,8 @@ const app = require("./app");
 
 const server = app.listen(port, () => console.log(`Listening on ${port}`));
 //const server = app.listen();
-const httpServer = http.createServer(app);
-const io = require("socket.io")(httpServer, {
+
+const io = require("socket.io")(app, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -220,6 +220,8 @@ io.use(async (socket, next) => {
   }
 });
 
+const sockets = require("./sockets");
+sockets.listenSockets(io,app);
 process.on("unhandledRejection", (err) => {
   console.error(err);
   console.log("Unhandled Rejection  ");
