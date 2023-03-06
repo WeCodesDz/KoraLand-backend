@@ -103,12 +103,13 @@ module.exports = {
         console.log('ids',ids)
         const usernames = admins.map((admin)=>admin.username);
         console.log('-------------------------------')
-        console.log(usernames)
-        const notification = await notificationParentController.createNotificationParent(ids,{
+        console.log('usernames',usernames)
+        const notification = await notificationAdminController.createNotificationAdmin(ids,{
           title:data.title,
           desc:data.desc,
           type:data.type
         });
+        console.log(notification.dataValues)
         usernames.forEach((username)=>{
           console.log('sending notification to ',username,' with data ',notification.dataValues)
           io.to(username).emit("newNotification", notification.dataValues);
