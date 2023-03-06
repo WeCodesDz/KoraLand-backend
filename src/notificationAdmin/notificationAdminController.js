@@ -53,8 +53,8 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
 exports.createNotificationAdmin = async (admins, notif) => {
   //we add validations after
   const notification = await NotificationAdmin.create(notif);
-
   await notification.setAdmins(admins);
+  console.log('NOTIFICATION', notification.dataValues)
 
   return notification;
   //return something
