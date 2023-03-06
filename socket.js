@@ -24,6 +24,8 @@ module.exports = {
       });
 
       let nodeEventEmitter = app.get("nodeEventEmitter")
+      console.log('---------------------------------- in socket.js',nodeEventEmitter)
+      console.log(Object.getPrototypeOf(nodeEventEmitter))
       if(!nodeEventEmitter){
         console.log('---------------------------------- in !nodeEventEmitter')
         nodeEventEmitter = new EventEmitter();
