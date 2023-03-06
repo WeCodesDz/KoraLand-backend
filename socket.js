@@ -25,8 +25,7 @@ module.exports = {
 
       let nodeEventEmitter = app.get("nodeEventEmitter")
       console.log('---------------------------------- in socket.js',nodeEventEmitter)
-      console.log(Object.getPrototypeOf(nodeEventEmitter))
-      if(!nodeEventEmitter){
+      if(!nodeEventEmitter || nodeEventEmitter === undefined){
         console.log('---------------------------------- in !nodeEventEmitter')
         nodeEventEmitter = new EventEmitter();
         app.set("nodeEventEmitter", nodeEventEmitter); // set nodeEventEmitter to express app so that we can access it from anywhere
