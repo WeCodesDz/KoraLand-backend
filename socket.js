@@ -8,6 +8,21 @@ const notificationCoachController = require("./src/notificationCoach/notificatio
 module.exports = {
   listenSockets: (io, app) => {
     io.on("connection", (socket) => {
+      console.log("Connected: " + socket.username);
+
+      socket.on("disconnect", () => {
+        console.log("Disconnected: " + socket.username);
+      });
+
+      socket.on("joinMessageRoom", (data) => {
+        socket.join(data.roomsId);
+        console.log("A user joined chatroom: " + data.roomsId);
+      });
+      socket.on("joinNotificationRoom", (data) => {
+        socket.join(data.username);
+        console.log("A user joined notification room: " + data.username);
+      });
+      
       let nodeEventEmitter = app.get("nodeEventEmitter")
       if(!nodeEventEmitter){
         nodeEventEmitter = new EventEmitter();
@@ -127,20 +142,7 @@ module.exports = {
     }
       })
 
-      console.log("Connected: " + socket.username);
-
-      socket.on("disconnect", () => {
-        console.log("Disconnected: " + socket.username);
-      });
-
-      socket.on("joinMessageRoom", (data) => {
-        socket.join(data.roomsId);
-        console.log("A user joined chatroom: " + data.roomsId);
-      });
-      socket.on("joinNotificationRoom", (data) => {
-        socket.join(data.username);
-        console.log("A user joined notification room: " + data.username);
-      });
+      
 
       socket.on("leaveRoom", (data) => {
         socket.leave(data.roomsId);
