@@ -110,6 +110,7 @@ module.exports = {
           type:data.type
         });
         usernames.forEach((username)=>{
+          console.log('sending notification to ',username,' with data ',notification.dataValues)
           io.to(username).emit("newNotification", notification.dataValues);
         });
         await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
