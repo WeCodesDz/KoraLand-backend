@@ -9,8 +9,7 @@ module.exports = {
   listenSockets: (io, app) => {
     io.on("connection", (socket) => {
       console.log("Connected: " + socket.username);
-      let nodeEventEmitter = new EventEmitter();
-      app.set("nodeEventEmitter", nodeEventEmitter);
+
       socket.on("disconnect", () => {
         console.log("Disconnected: " + socket.username);
       });
@@ -24,9 +23,9 @@ module.exports = {
         console.log("A user joined notification room: " + data.username);
       });
 
-      // let nodeEventEmitter = app.get("nodeEventEmitter")
+      let nodeEventEmitter = app.get("nodeEventEmitter")
       console.log('---------------------------------- in socket.js',nodeEventEmitter)
-      if(!nodeEventEmitter || nodeEventEmitter === undefined){
+      if(!nodeEventEmitter){
         console.log('---------------------------------- in !nodeEventEmitter')
         nodeEventEmitter = new EventEmitter();
         app.set("nodeEventEmitter", nodeEventEmitter); // set nodeEventEmitter to express app so that we can access it from anywhere
@@ -90,8 +89,6 @@ module.exports = {
 
 
       nodeEventEmitter.on("send_new_evaluation",async (data) => {
-        console.log('---------------------------------- in send new evaluation emmitter')
-        console.log('data',data)
         const admins = await Administrateur.findAll({
           attributes:['username','id'],
           where:{
@@ -100,22 +97,15 @@ module.exports = {
           raw:true
         });
         const ids= admins.map((admin)=>admin.id);
-        console.log('----------------------------------')
-        console.log('ids',ids)
         const usernames = admins.map((admin)=>admin.username);
-        console.log('-------------------------------')
-        console.log('usernames',usernames)
-        let notification;
-        await Promise.all( notification = await notificationAdminController.createNotificationAdmin(ids,{
+        const notification = await notificationAdminController.createNotificationAdmin(ids,{
           title:data.title,
           desc:data.desc,
           type:data.type
-        }));
-        console.log(notification.dataValues)
-        await Promise.all( usernames.forEach((username)=>{
-          console.log('sending notification to ',username,' with data ',notification.dataValues)
+        });
+        usernames.forEach((username)=>{
           io.to(username).emit("newNotification", notification.dataValues);
-        }));
+        });
         await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
 
 
