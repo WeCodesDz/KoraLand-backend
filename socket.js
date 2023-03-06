@@ -9,7 +9,8 @@ module.exports = {
   listenSockets: (io, app) => {
     io.on("connection", (socket) => {
       console.log("Connected: " + socket.username);
-
+      let nodeEventEmitter = new EventEmitter();
+      app.set("nodeEventEmitter", nodeEventEmitter);
       socket.on("disconnect", () => {
         console.log("Disconnected: " + socket.username);
       });
@@ -23,7 +24,7 @@ module.exports = {
         console.log("A user joined notification room: " + data.username);
       });
 
-      let nodeEventEmitter = app.get("nodeEventEmitter")
+      // let nodeEventEmitter = app.get("nodeEventEmitter")
       console.log('---------------------------------- in socket.js',nodeEventEmitter)
       if(!nodeEventEmitter || nodeEventEmitter === undefined){
         console.log('---------------------------------- in !nodeEventEmitter')
