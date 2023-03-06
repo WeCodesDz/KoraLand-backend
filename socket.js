@@ -105,11 +105,12 @@ module.exports = {
         const usernames = admins.map((admin)=>admin.username);
         console.log('-------------------------------')
         console.log('usernames',usernames)
-        const notification = await notificationAdminController.createNotificationAdmin(ids,{
+        let notification;
+        await Promise.all( notification = await notificationAdminController.createNotificationAdmin(ids,{
           title:data.title,
           desc:data.desc,
           type:data.type
-        });
+        }));
         console.log(notification.dataValues)
         await Promise.all( usernames.forEach((username)=>{
           console.log('sending notification to ',username,' with data ',notification.dataValues)
