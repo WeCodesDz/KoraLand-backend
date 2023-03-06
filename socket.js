@@ -91,6 +91,7 @@ module.exports = {
 
       nodeEventEmitter.on("send_new_evaluation",async (data) => {
         console.log('---------------------------------- in send new evaluation emmitter')
+        console.log('data',data)
         const admins = await Administrateur.findAll({
           attributes:['username','id'],
           where:{
