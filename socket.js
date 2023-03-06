@@ -22,7 +22,7 @@ module.exports = {
         socket.join(data.username);
         console.log("A user joined notification room: " + data.username);
       });
-      
+
       let nodeEventEmitter = app.get("nodeEventEmitter")
       if(!nodeEventEmitter){
         nodeEventEmitter = new EventEmitter();
@@ -94,8 +94,11 @@ module.exports = {
           raw:true
         });
         const ids= admins.map((admin)=>admin.id);
+        console.log('----------------------------------')
+        console.log('ids',ids)
         const usernames = admins.map((admin)=>admin.username);
-
+        console.log('-------------------------------')
+        console.log(usernames)
         const notification = await notificationParentController.createNotificationParent(ids,{
           title:data.title,
           desc:data.desc,
