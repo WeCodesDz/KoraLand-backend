@@ -213,8 +213,6 @@ const io = require("socket.io")(server, {
 io.use(async (socket, next) => {
   try {
     const token = socket.handshake.auth.token;
-    console.log('-------------------------------------');
-    console.log(token);
     const payload = await promisify(jwt.verify)(
       token,
       process.env.ACCESS_TOKEN_SECRET

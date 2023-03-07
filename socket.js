@@ -18,7 +18,7 @@ module.exports = {
         socket.join(data.roomsId);
         console.log("A user joined chatroom: " + data.roomsId);
       });
-      socket.on("joinNotificationRoom", (data) => {
+      socket.on("`joinNotificationRoom`", (data) => {
         socket.join(data.username);
         console.log("A user joined notification room: " + data.username);
       });
@@ -110,6 +110,7 @@ module.exports = {
 
 
       nodeEventEmitter.on("send_status_evaluation",async (data) => {
+        console.log('Data we are getting from send status evaluation',data)
         if (data.etatEvaluation === 'accepted') {
           const notificationBodyCoach = {
             title:'Evaluation acceptée',
@@ -121,11 +122,11 @@ module.exports = {
             desc:`Vous avez une nouvelle evaluation de l\'élève ${data.student.prenomEleve} ${data.student.nomEleve}.`,
             type:'evaluation'
         }
-          const notificationParent = await notificationParentController.createNotificationParent([data.parentId],notificationBodyParent);
+          // const notificationParent = await notificationParentController.createNotificationParent([data.parentId],notificationBodyParent);
           const notificationCoach = await notificationCoachController.createNotificationCoach([data.coachId],notificationBodyCoach);
-          io.to(data.parentUsername).emit("newNotification", notificationParent.dataValues);
+          // io.to(data.parentUsername).emit("newNotification", notificationParent.dataValues);
           io.to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
-          await notificationParentController.sendPushNotificationToParent([data.parentId],notificationParent.dataValues);
+          // await notificationParentController.sendPushNotificationToParent([data.parentId],notificationParent.dataValues);
           await notificationCoachController.sendPushNotificationToCoach([data.coachId],notificationCoach.dataValues);
       }
       if (data.etatEvaluation === 'blocked') {
