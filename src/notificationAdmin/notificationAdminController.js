@@ -67,7 +67,9 @@ exports.getMyNotifications = catchAsync(async (req, res, next) => {
   // console.log(Object.getPrototypeOf(admin))
   // console.log('----------------------------------------------------------------admin------')
 
-  const notifications = await admin.getNotification_admins();
+  const notifications = await admin.getNotification_admins({
+    order: [["createdAt", "DESC"]],
+  });
   if (!notifications) {
     throw new appError("No notifications found", 404);
   }
