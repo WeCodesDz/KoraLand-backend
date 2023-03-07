@@ -375,7 +375,7 @@ exports.handleEvaluation = catchAsync(async (req, res, next) => {
   const parent = await student.getParent();
   const coach = await groupe.getCoach();
   // HERE WE SHOULD SEND NOTIFICATION TO THE COACH
-  const nodeEventEmitter = req.app.get('NodeEventEmitter');
+  const nodeEventEmitter = req.app.get('nodeEventEmitter');
   if(nodeEventEmitter){
     nodeEventEmitter.emit('send_status_evaluation',{
       etatEvaluation,
