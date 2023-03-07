@@ -54,7 +54,7 @@ exports.createNotificationCoach = async (coachs, notif) => {
   //we add validations after
   const notification = await NotificationCoach.create(notif);
   console.log(Object.getPrototypeOf(notification));
-  await notification.setCoachs(coachs);
+  await notification.setCoaches(coachs);
 
   //return something
   return notification;
