@@ -53,7 +53,7 @@ exports.sendPushNotificationToCoach = async (coachs, notification) => {
 exports.createNotificationCoach = async (coachs, notif) => {
   //we add validations after
   const notification = await NotificationCoach.create(notif);
-
+  console.log(Object.getPrototypeOf(notification));
   await notification.setCoachs(coachs);
 
   //return something
