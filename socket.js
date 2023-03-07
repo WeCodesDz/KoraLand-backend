@@ -18,7 +18,8 @@ module.exports = {
         socket.join(data.roomsId);
         console.log("A user joined chatroom: " + data.roomsId);
       });
-      socket.on("`joinNotificationRoom`", (data) => {
+      socket.on("joinNotificationRoom", (data) => {
+        
         socket.join(data.username);
         console.log("A user joined notification room: " + data.username);
       });
