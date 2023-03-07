@@ -131,7 +131,6 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
 
 
   const nodeEventEmitter = req.app.get('nodeEventEmitter');
-  console.log('nodeEventEmitter in evaluatuin Controller',nodeEventEmitter)
   if(nodeEventEmitter){
     nodeEventEmitter.emit('send_new_evaluation',{
       title: 'Nouvel Evaluation',

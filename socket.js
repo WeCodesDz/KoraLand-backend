@@ -24,12 +24,9 @@ module.exports = {
       });
 
       let nodeEventEmitter = app.get("nodeEventEmitter")
-      console.log('---------------------------------- in socket.js',nodeEventEmitter)
       if(!nodeEventEmitter){
-        console.log('---------------------------------- in !nodeEventEmitter')
         nodeEventEmitter = new EventEmitter();
         app.set("nodeEventEmitter", nodeEventEmitter); // set nodeEventEmitter to express app so that we can access it from anywhere
-        console.log('---------------nodeEventEmitter created succesfully',nodeEventEmitter)
       }
       
       nodeEventEmitter.on("send_message_to_all_parents",async (data) => {
@@ -100,7 +97,7 @@ module.exports = {
         const usernames = admins.map((admin)=>admin.username);
         const notification = await notificationAdminController.createNotificationAdmin(ids,{
           title:data.title,
-          desc:data.desc,
+          desc:data.body,
           type:data.type
         });
         usernames.forEach((username)=>{
