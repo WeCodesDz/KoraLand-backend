@@ -124,12 +124,12 @@ exports.getAllcoachs = catchAsync(async (req, res, next) => {
 
 exports.getCoachById = catchAsync(async (req, res, next) => {
   let coach;
-  if(req.user.adminLevel === 'superAdmin'){
+  if(req.user.adminLevel === 'superAdmin' || req.user.adminLevel === 'level3'){
      coach = await Coach.findByPk(req.params.id,{
         attributes:['id','nomCoach','prenomCoach','email',,'username'],
      });
   }
-  if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
+  if(req.user.adminLevel === 'level2' ){
      coach = await Coach.findByPk(req.params.id,{
         attributes:['id','nomCoach','prenomCoach','email','username'],
      });
@@ -260,12 +260,6 @@ exports.getMyGroupes = catchAsync(async (req, res, next) => {
         attributes:['id','groupeName','horaireEntrainement','sport','categorieAge','saisonActuel'],
         include:[{
             model:Student,
-            attributes:[
-                'nomEleve',
-                'prenomEleve',
-                'commune',
-                'posteEleve',
-            ]
         }]
     });
     groupesStats.forEach(groupe => {
@@ -326,20 +320,7 @@ exports.getListStudentOfOneGroupe = catchAsync(async (req, res, next) => {
             coachId:coachId
         },
         include:{
-            model:Student,
-            attributes:[
-            'id',
-            'nomEleve',
-            'prenomEleve',
-            'dateNaissance',
-            'saisonActuel',
-            'anneeExamen',
-            'sport',
-            'commune',
-            'guardianDeBut',
-            'posteEleve',
-            'taille',
-            'poids',],
+            model:Student
         },
     });
     
@@ -372,19 +353,6 @@ exports.getMyGroupesStudents = catchAsync(async (req, res, next) => {
         attributes:['id','groupeName','horaireEntrainement','saisonActuel','sport'],
         include:{
             model:Student,
-            attributes:[
-            'id',
-            'nomEleve',
-            'prenomEleve',
-            'dateNaissance',
-            'saisonActuel',
-            'anneeExamen',
-            'sport',
-            'commune',
-            'guardianDeBut',
-            'posteEleve',
-            'taille',
-            'poids',],
         },
     });
     groupesStats.forEach(groupe => {

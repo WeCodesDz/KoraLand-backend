@@ -162,6 +162,9 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
           {
             model: Groupe,
             attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+          },
+          {
+            model: Parent,
           }
         ]
       });
@@ -189,7 +192,16 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         ],
         where,
         limit,
-        offset
+        offset,
+        include: [
+          {
+            model: Groupe,
+            attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+          },
+          {
+            model: Parent,
+          }
+        ]
       });
   }
   if(req.user.adminLevel === 'level3') {
@@ -215,7 +227,16 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
         ],
         where,
         limit,
-        offset
+        offset,
+        include: [
+          {
+            model: Groupe,
+            attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+          },
+          {
+            model: Parent,
+          }
+        ]
       });
   }
   
@@ -260,13 +281,18 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'groupeId',
             'parentId'
         ],
+        include: [
+          {
+            model: Groupe,
+            attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+          },
+          {
+            model: Parent,
+          }
+        ]
     });
-    parent = await student.getParent({
-      attributes:['username','prenomParent','nomParent','numeroTelephone','status']
-    });
-   groupe = await student.getGroupe({
-      attributes:['groupeName','horaireEntrainement','sport','categorieAge','saisonActuel']
-   });
+    parent = await student.getParent();
+   groupe = await student.getGroupe();
   }
   if(req.user.adminLevel === 'level2') {
      student = await Student.findByPk(req.params.id.trim(),{
@@ -291,12 +317,8 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'parentId'
         ],
     });
-    parent = await student.getParent({
-      attributes:['username','prenomParent','nomParent','status']
-    });
-   groupe = await student.getGroupe({
-      attributes:['groupeName','horaireEntrainement','sport','categorieAge','saisonActuel']
-   });
+    parent = await student.getParent();
+   groupe = await student.getGroupe();
   }
   if(req.user.adminLevel === 'level3') {
      student = await Student.findByPk(req.params.id.trim(),{
@@ -320,12 +342,8 @@ exports.getStudentById = catchAsync(async (req, res, next) => {
             'parentId'
         ],
     });
-    parent = await student.getParent({
-      attributes:['username','prenomParent','nomParent','numeroTelephone','status']
-    });
-   groupe = await student.getGroupe({
-      attributes:['groupeName','horaireEntrainement','sport','categorieAge','saisonActuel']
-   });
+    parent = await student.getParent();
+   groupe = await student.getGroupe();
   }
   student.groupeId = undefined;
   student.parentId = undefined;
@@ -443,7 +461,16 @@ exports.getBlockedStudents = catchAsync(async (req,res,next)=>{
         status: 'inactif'
        },
        limit,
-       offset
+       offset,
+       include: [
+        {
+          model: Groupe,
+          attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+        },
+        {
+          model: Parent,
+        }
+      ]
      });
  }
  if(req.user.adminLevel === 'level2') {
@@ -468,7 +495,16 @@ exports.getBlockedStudents = catchAsync(async (req,res,next)=>{
        ],
        where,
        limit,
-       offset
+       offset,
+       include: [
+        {
+          model: Groupe,
+          attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+        },
+        {
+          model: Parent,
+        }
+      ]
      });
  }
  if(req.user.adminLevel === 'level3') {
@@ -492,7 +528,16 @@ exports.getBlockedStudents = catchAsync(async (req,res,next)=>{
        ],
        where,
        limit,
-       offset
+       offset,
+       include: [
+        {
+          model: Groupe,
+          attributes: ['groupeName','saisonActuel','horaireEntrainement', 'sport',],
+        },
+        {
+          model: Parent,
+        }
+      ]
      });
  }
 

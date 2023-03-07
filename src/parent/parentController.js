@@ -100,12 +100,20 @@ exports.getAllParents = catchAsync(async (req, res, next) => {
         attributes: ['id', 'nomParent', 'prenomParent', 'username',  'numeroTelephone', 'status'],
         where,
         limit,
-        offset
+        offset,
     });
    }
-   if(req.user.adminLevel === 'level2' || req.user.adminLevel === 'level3'){
+   if(req.user.adminLevel === 'level2'){
      results = await Parent.findAndCountAll({
         attributes: ['id', 'nomParent', 'prenomParent', 'username', 'status'],
+        where,
+        limit,
+        offset
+    });
+}
+   if(req.user.adminLevel === 'level3'){
+     results = await Parent.findAndCountAll({
+        attributes: ['id', 'nomParent','numeroTelephone','prenomParent', 'username', 'status'],
         where,
         limit,
         offset
@@ -191,25 +199,6 @@ exports.getParentAllStudent = catchAsync(async (req, res, next)=>{
         throw new  AppError('no parent found with this id', 404);
     }
     const students = await parent.getStudents({
-        attributes: [
-            'id',
-            'nomEleve',
-            'prenomEleve',
-            'dateNaissance',
-            'saisonActuel',
-            'dateInscription',
-            'reinscription',
-            'sport',
-            'anneeExamen',
-            'commune',
-            'operateur',
-            'guardianDeBut',
-            'posteEleve',
-            'taille',
-            'poids',
-            'remarque',
-            'status'
-        ],
         include: [
             {
                 model: Groupe,
@@ -237,25 +226,7 @@ exports.getMyStudents = catchAsync(async (req, res, next)=>{
         throw new AppError('no parent found with this id', 404);
     }
     //console.log(parent, "parent")
-    const students = await parent.getStudents({
-        attributes: [
-            'id',
-            'nomEleve',
-            'prenomEleve',
-            'dateNaissance',
-            'saisonActuel',
-            'dateInscription',
-            'reinscription',
-            'anneeExamen',
-            'commune',
-            'operateur',
-            'guardianDeBut',
-            'posteEleve',
-            'taille',
-            'poids',
-            'status'
-        ]
-    });
+    const students = await parent.getStudents();
 
     res.status(200).json({
         status: 'success',
@@ -276,25 +247,7 @@ exports.getParentStudentById = catchAsync(async (req, res, next)=>{
     }
 
     const student = await Student.findOne({
-        attributes: [
-            'id',
-            'nomEleve',
-            'prenomEleve',
-            'dateNaissance',
-            'saisonActuel',
-            'dateInscription',
-            'reinscription',
-            'sport',
-            'anneeExamen',
-            'commune',
-            'operateur',
-            'guardianDeBut',
-            'posteEleve',
-            'taille',
-            'poids',
-            'remarque',
-            'status'
-        ],
+        
         where: {
             id: req.params.id,
             parentId: parentId
