@@ -4,6 +4,7 @@ const Student = require('./studentModel');
 const Presence = require('../presence/presenceModel');
 const Evaluation = require('../evaluation/evaluationModel');
 const Groupe = require('../groupe/groupeModel');
+const Parent = require('../parent/parentModel');
 const HistoriqueParent = require('../historiqueParent/historiqueParentModel');
 const HistoriqueGroupe = require('../historiqueGroupe/historiqueGroupeModel');
 const HistoriqueStudent = require('../historiqueStudent/historiqueStudentModel');
@@ -153,7 +154,9 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'taille',
             'poids',
             'remarque',
-            'status'
+            'status',
+            'parentId',
+            'groupeId'
         ],
         where,
         limit,
@@ -188,7 +191,9 @@ exports.getAllstudents = catchAsync( async(req,res,next)=>{
             'taille',
             'poids',
             'remarque',
-            'status'
+            'status',
+            'parentId',
+            'groupeId'
         ],
         where,
         limit,
