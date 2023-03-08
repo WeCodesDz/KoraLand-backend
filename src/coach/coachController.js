@@ -6,6 +6,7 @@ const Groupe = require('../groupe/groupeModel');
 const Student = require('../student/studentModel');
 const HistoriqueCoach = require('../historiqueCoach/historiqueCoachModel');
 const coachModel = require('../historiqueCoach/historiqueCoachModel');
+const Presence = require('../presence/presenceModel');
 
 const filter = (queryParams) => {
     const tempQueryParams = { ...queryParams };
@@ -394,3 +395,57 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
       message: 'Password updated successfully',
     });
   });
+
+
+exports.tauxPresenceCoach =catchAsync(async (req, res, next) =>{
+    const coach = await Coach.findByPk(req.params.id);
+    const groupes = await coach.getGroupes();
+    const groupesIds = groupes.map(groupe => groupe.id);
+    const presences = await Presence.count({
+        where:{
+            groupeId:groupesIds,
+        },
+    });
+    const absent = await Presence.count({
+            where:{
+                groupeId:groupesIds,
+                presence:'absent'
+            },
+
+        })
+    const present = await Presence.count({
+            where:{
+                groupeId:groupesIds,
+                presence:'present'
+            },
+        })
+        console.log(presences,present,absent)
+
+// const tauxPresenceCoach = presences.map(presence => {
+//     const absentGroupe = absent.find(abs => abs.groupeId === presence.groupeId);
+//     const presentGroupe = present.find(pres => pres.groupeId === presence.groupeId);
+//     const tauxPresent = (presentGroupe.count / presence.count);
+//     const tauxAbsent = (absentGroupe.count / presence.count);
+
+//     return {
+//         groupeId:presence.groupeId,
+//         nbPlayers:presence.nbPlayers,
+//         nbPlayerPresent:presentGroupe.nbPlayerPresent,
+//         nbPLayerAbsent:absentGroupe.nbPLayerAbsent,
+//         tauxPresent:tauxPresent,
+//         tauxAbsent:tauxAbsent
+//     }
+// });
+
+tauxPresentCoach = (present/presences)*100;
+tauxAbsentCoach = (absent/presences)*100;
+
+    res.status(200).json({
+        status: 'success',
+        data:{
+            tauxPresentCoach,
+            tauxAbsentCoach,
+            
+        }
+    });
+});

@@ -32,7 +32,7 @@ router
         .route('/myGroupeStudent/:id')
         .get(authController.protect, coachController.getListStudentOfOneGroupe);
 
-
+router.get('/coach_stats/:id',authController.role('admin'),coachController.tauxPresenceCoach);
 router.route('/:id')
         .get(authController.role('admin'),coachController.getCoachById)
         .patch(authController.role('admin'),coachController.updateCoach)
