@@ -419,7 +419,6 @@ exports.tauxPresenceCoach =catchAsync(async (req, res, next) =>{
                 presence:'present'
             },
         })
-        console.log(presences,present,absent)
 
 // const tauxPresenceCoach = presences.map(presence => {
 //     const absentGroupe = absent.find(abs => abs.groupeId === presence.groupeId);
