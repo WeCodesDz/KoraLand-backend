@@ -5,6 +5,8 @@ const catchAsync = require('../utils/catchAsync');
 const Admin = require('./adminModel');
 const Student = require('../student/studentModel');
 const Presence = require('../presence/presenceModel');
+const Groupe = require('../groupe/groupeModel');
+const Coach = require('../coach/coachModel');
 const sequelize = require('sequelize');
 
 exports.getAllAdmin = catchAsync(async (req, res, next) => {
@@ -208,6 +210,22 @@ exports.getAdminStatistcs = catchAsync(async (req, res, next) => {
   const tauxPresence = nbPresenceSemaine[0].presence / expectationPresence[0].allseance;
   const tauxAbsence = nbAbsenceSemaine[0].absence / expectationPresence[0].allseance;
 
+  const students = await Student.findAll({
+    include:{
+      model:Presence,
+      order: [["updatedAt", "DESC"]],
+      limit:1,
+      where:{
+        presence:'absent'
+      }
+    }
+  });
+
+  const absentStudent = students.filter(student=>{
+    if(student.presences.length>0){
+      return student
+    }
+  });
   res.status(200).json({
     status: 'success',
     data: {
@@ -216,7 +234,8 @@ exports.getAdminStatistcs = catchAsync(async (req, res, next) => {
       nbTotalBasketball,
       nbTotalParCommune,
       tauxPresence:tauxPresence,
-      tauxAbsence:tauxAbsence
+      tauxAbsence:tauxAbsence,
+      absentStudent
     },
   });
 

@@ -102,7 +102,6 @@ exports.getAllGroupes = catchAsync(async (req, res, next) => {
         include: [
           {
             model: Student, 
-            attributes: ['id'],
           },
           {
             model: Coach,
@@ -301,15 +300,10 @@ exports.getAllGroupePresences = catchAsync(async(req,res,next)=>{
   if(!groupe){
     throw new  AppError('No groupe found with that Id', 404);
   }
-  const nombreStudent = await groupe.getStudents({
-    attributes: [
-      [sequelize.fn("COUNT", sequelize.col("id")), "count_players"],
-    ] 
-  })
   const nombreSeance = await groupe.getPresences({
     attributes: [
       "datePresence",
-      [sequelize.fn("COUNT", sequelize.col("presence")), "count_players"],
+     [sequelize.fn("COUNT", sequelize.col("id")), "count_players"],  
     ],
     group: ['datePresence'],
     order : [['datePresence', 'ASC']] 
@@ -343,7 +337,6 @@ exports.getAllGroupePresences = catchAsync(async(req,res,next)=>{
     status: 'success',
     data:{
       ...groupe.dataValues,
-      nombreStudent,
       nombreSeance,
       nombreAbsence,
       nombrePresence
