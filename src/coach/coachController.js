@@ -420,6 +420,13 @@ exports.tauxPresenceCoach =catchAsync(async (req, res, next) =>{
             },
         })
 
+    const nbSeanceCoach = await Presence.count({
+            where:{
+                groupeId:groupesIds,
+            },
+            group:['createdAt','groupeId'],
+        });
+
 // const tauxPresenceCoach = presences.map(presence => {
 //     const absentGroupe = absent.find(abs => abs.groupeId === presence.groupeId);
 //     const presentGroupe = present.find(pres => pres.groupeId === presence.groupeId);
@@ -444,7 +451,7 @@ tauxAbsentCoach = (absent/presences)*100;
         data:{
             tauxPresentCoach,
             tauxAbsentCoach,
-            
+            nbSeanceCoachs:nbSeanceCoach.length,
         }
     });
 });
