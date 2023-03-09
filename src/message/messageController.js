@@ -2,9 +2,9 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Message = require('./messageModel');
 const Parent = require('../parent/parentModel');
-const notificationParentController = require("./src/notificationParent/notificationParentController");
-const notificationAdminController = require("./src/notificationAdmin/notificationAdminController");
-const notificationCoachController = require("./src/notificationCoach/notificationCoachController");
+const notificationParentController = require("../notificationParent/notificationParentController");
+const notificationAdminController = require("../notificationAdmin/notificationAdminController");
+const notificationCoachController = require("../notificationCoach/notificationCoachController");
 
 exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
     let { page, limit,roomId  } = req.query;
