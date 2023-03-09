@@ -28,7 +28,7 @@ router.route('/get_parent_discussions/:parentId').get(authController.protect,
                                                         authController.role('admin','parent'),
                                                         messageController.getSubjectDistinctByParent);
 
-router.route('/get_admin_discussions/:parentId').get(authController.protect,
+router.route('/get_admin_discussions/:adminId').get(authController.protect,
                                                         authController.role('admin','parent'),
                                                         messageController.getSubjectDistinctByAdmin);
     

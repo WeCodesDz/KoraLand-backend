@@ -141,7 +141,14 @@ module.exports = {
     }
       })
 
-      
+      nodeEventEmitter.on("newNotification", (data) => {
+        const usernames = data.usernames;
+        const notification = data.notification;
+        usernames.forEach((username)=>{
+          io.to(username).emit("newNotification", notification.dataValues);
+        });
+        
+      });
 
       socket.on("leaveRoom", (data) => {
         socket.leave(data.roomsId);
@@ -149,92 +156,92 @@ module.exports = {
       });
 
       //socket.on("chatroomMessage", async ({ chatroomId, message }) => {
-      socket.on("chatroomMessage", async (data) => {
-        try{
-          const { roomsId,parentId,adminId, body }=data;
-            let parent;
-            let admin;
-        if (body.trim().length > 0) {
-            if (!parentId || !adminId){
-                throw new Error('no parent or admin !')
-            }
-            if (!roomsId){
-                throw new Error('no room !')
-            } 
-            if(!body){
-                throw new Error('no body !')
-            }
-            const message = await Message.create({body});
-            parentRoom = await Parent.findByPk(roomsId);
-            if(!parentRoom){
-                throw new Error('parent doesn\'t exist !');
-            }
-            if(parentId){
-                if (parentId !== roomsId) {
-                    throw new Error('parent id and room id are not the same !');
-                }
-                await parentRoom.addRooms(message);
-                await parentRoom.addMessages(message);
-            }
-            if(adminId){
-                admin = await Administrateur.findByPk(adminId);
-                if(!admin){
-                    throw new Error('admin doesn\'t exist !');
-                }
+      // socket.on("chatroomMessage", async (data) => {
+      //   try{
+      //     const { roomsId,parentId,adminId, body }=data;
+      //       let parent;
+      //       let admin;
+      //   if (body.trim().length > 0) {
+      //       if (!parentId || !adminId){
+      //           throw new Error('no parent or admin !')
+      //       }
+      //       if (!roomsId){
+      //           throw new Error('no room !')
+      //       } 
+      //       if(!body){
+      //           throw new Error('no body !')
+      //       }
+      //       const message = await Message.create({body});
+      //       parentRoom = await Parent.findByPk(roomsId);
+      //       if(!parentRoom){
+      //           throw new Error('parent doesn\'t exist !');
+      //       }
+      //       if(parentId){
+      //           if (parentId !== roomsId) {
+      //               throw new Error('parent id and room id are not the same !');
+      //           }
+      //           await parentRoom.addRooms(message);
+      //           await parentRoom.addMessages(message);
+      //       }
+      //       if(adminId){
+      //           admin = await Administrateur.findByPk(adminId);
+      //           if(!admin){
+      //               throw new Error('admin doesn\'t exist !');
+      //           }
                 
-                await parent.addRooms(message);
-                await admin.addMessage(message);
-            }
+      //           await parent.addRooms(message);
+      //           await admin.addMessage(message);
+      //       }
           
             
-          io.to(roomsId).emit("newMessage", {
-            body,
-            roomsId,
-            parentId,
-            adminId,
-            createAt: message.createAt,
-          });
+      //     io.to(roomsId).emit("newMessage", {
+      //       body,
+      //       roomsId,
+      //       parentId,
+      //       adminId,
+      //       createAt: message.createAt,
+      //     });
 
-          if(parentId && !adminId) {
+      //     if(parentId && !adminId) {
 
-            const admins = await Administrateur.findAll({
-              attributes:['username','id'],
-              raw:true
-            })
-            if(admins.length > 0) {
-              const ids= admins.map((admin)=>admin.id);
-              const usernames = admins.map((admin)=>admin.username);
-             const notification= await notificationAdminController.createNotificationAdmin(ids,{
-                title:'Nouveau message',
-                desc:`${parent.prenomParent} ${parent.nomParent} vous a envoyé un nouveau message`,
-                type:'message'
-              });
-              usernames.forEach((admin)=>{
-                io.to(admin).emit("newNotification", notification.dataValues);
-              });
-              await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
-            }
-          }
-          if(adminId && !parentId){
+      //       const admins = await Administrateur.findAll({
+      //         attributes:['username','id'],
+      //         raw:true
+      //       })
+      //       if(admins.length > 0) {
+      //         const ids= admins.map((admin)=>admin.id);
+      //         const usernames = admins.map((admin)=>admin.username);
+      //        const notification= await notificationAdminController.createNotificationAdmin(ids,{
+      //           title:'Nouveau message',
+      //           desc:`${parent.prenomParent} ${parent.nomParent} vous a envoyé un nouveau message`,
+      //           type:'message'
+      //         });
+      //         usernames.forEach((admin)=>{
+      //           io.to(admin).emit("newNotification", notification.dataValues);
+      //         });
+      //         await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+      //       }
+      //     }
+      //     if(adminId && !parentId){
             
-            const notification= await notificationParentController.createNotificationParent([roomsId],{
-              title:'Nouveau message',
-              desc:'Vous avez reçu un nouveau message',
-              type:'message'
-            });
-            io.to(parentRoom.username).emit("newNotification", 
-             notification.dataValues
-            );
+      //       const notification= await notificationParentController.createNotificationParent([roomsId],{
+      //         title:'Nouveau message',
+      //         desc:'Vous avez reçu un nouveau message',
+      //         type:'message'
+      //       });
+      //       io.to(parentRoom.username).emit("newNotification", 
+      //        notification.dataValues
+      //       );
 
-            await notificationParentController.sendPushNotificationToParent([roomsId],notification.dataValues);
+      //       await notificationParentController.sendPushNotificationToParent([roomsId],notification.dataValues);
 
-          }
+      //     }
           
-        }
-            }catch(err){
-            console.error(err)
-        }
-      });
+      //   }
+      //       }catch(err){
+      //       console.error(err)
+      //   }
+      // });
     });
   },
 };
