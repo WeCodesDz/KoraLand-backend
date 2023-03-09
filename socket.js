@@ -14,10 +14,8 @@ module.exports = {
         console.log("Disconnected: " + socket.username);
       });
 
-      socket.on("joinMessageRoom", (data) => {
-        socket.join(data.roomsId);
-        console.log("A user joined chatroom: " + data.roomsId);
-      });
+      
+
       socket.on("joinNotificationRoom", (data) => {
         
         socket.join(data.username);
