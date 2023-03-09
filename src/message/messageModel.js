@@ -8,6 +8,14 @@ const Message = db.define('message', {
         allowNull: false,
         primaryKey: true,
         },
+    subjectId:{
+        type: Sequelize.STRING,
+        allowNull: false,
+    },      
+    subject:{
+        type: Sequelize.STRING,
+        allowNull: false,
+    },      
     body:{
         type: Sequelize.TEXT,
         allowNull: false,

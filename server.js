@@ -64,8 +64,8 @@ Parent.hasMany(Student, { onDelete: "cascade" });
 Student.belongsTo(Parent, { onDelete: "cascade" });
 
 //message associations
-Parent.hasMany(Message, { as: "rooms", onDelete: "cascade" });
-Message.belongsTo(Parent, { as: "rooms", onDelete: "cascade" });
+// Parent.hasMany(Message, { as: "rooms", onDelete: "cascade" });
+// Message.belongsTo(Parent, { as: "rooms", onDelete: "cascade" });
 
 Parent.hasMany(Message, { onDelete: "cascade" });
 Message.belongsTo(Parent, { onDelete: "cascade" });
