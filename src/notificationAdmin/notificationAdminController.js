@@ -12,7 +12,7 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
     const newAdmins = await Promise.all(
       admins.map(async (admin) => await Admin.findByPk(admin))
     );
-
+console.log(newAdmins)
     const adminsArraySubs = await Promise.all(
       newAdmins.map(
         async (admin) =>
@@ -24,7 +24,7 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
     );
     const subs = adminsArraySubs.flat();
     const tokens = subs.map((sub) => sub.token);
-    const notification = await sendFCMNotification(subscription.body, notification);
+    const notification = await sendFCMNotification(tokens, notification);
     return notification;
   } catch (err) {
     console.error(err);
