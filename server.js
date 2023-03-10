@@ -2,6 +2,9 @@ const dotenv = require("dotenv");
 const Sequelize = require("sequelize");
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
+const firebase = require("./src/firebase/firebaseInit");
+
+
 
 process.on("uncaughtException", (err) => {
   console.error(err);
@@ -172,8 +175,10 @@ NotificationParent.belongsToMany(Parent, {
   through: "parent_notifications",
 });
 
+
 (async () => {
   await db.authenticate();
+  firebase.init();
   //console.log('database connected');
   //Admin.sync({ force: true });
   //AdminSubscription.sync({ force: true });
