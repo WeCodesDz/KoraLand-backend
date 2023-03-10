@@ -318,7 +318,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         }
         return {...c,parent}
     })*/
-    for(let subject in subjects){
+    for(let subject of subjects){
         console.log('---------------------------------')
         console.log(subject)
         console.log('---------------------------------')
