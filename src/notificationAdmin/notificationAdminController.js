@@ -24,8 +24,8 @@ console.log(newAdmins)
     );
     const subs = adminsArraySubs.flat();
     const tokens = subs.map((sub) => sub.token);
-    const notification = await sendFCMNotification(tokens, notification);
-    return notification;
+    const notif = await sendFCMNotification(tokens, notification);
+    return notif;
   } catch (err) {
     console.error(err);
   }
