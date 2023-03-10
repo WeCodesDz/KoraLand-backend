@@ -309,16 +309,16 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         //include: [Parent]
     });
     
-    /*const newSubjects =subjects.map(subject => {
+    const newSubjects =await Promise.all(subjects.map( async subject => {
         const c = {...subject.dataValues}
         let parent
         if (subject.parentId){
-            //parent =subject.getParent({raw: true});
-            parent =Object.getPrototypeOf(subject)
+            parent =await subject.getParent({raw: true});
+            //parent =Object.getPrototypeOf(subject)
         }
         return {...c,parent}
-    })*/
-    for(let subject of subjects){
+    }))
+    /*for(let subject of subjects){
         console.log('---------------------------------')
         console.log(subject.getParent())
         console.log('---------------------------------')
@@ -327,12 +327,12 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
             //parent =subject.getParent({raw: true});
             //parent =Object.getPrototypeOf(subject)
         }
-    }
+    }*/
 
     res.status(200).json({
         status: 'success',
         data: {
-            subjects,
+            newSubjects,
             //o:Object.getPrototypeOf(subjects[1])
         }
     });
