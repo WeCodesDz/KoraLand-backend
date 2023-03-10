@@ -310,16 +310,17 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
     });
     
     const newSubjects =await Promise.all(subjects.map( async subject => {
-        const c = {...subject.dataValues}
+        //const c = {...subject.dataValues}
+        subject=subject.dataValues
         let parent
         if (subject.parentId){
-            parent =await subject.getParent({raw: true,attributes:["id",
+            subject['parent'] =await subject.getParent({raw: true,attributes:["id",
             "nomParent",
             "prenomParent",
             "username"]});
             //parent =Object.getPrototypeOf(subject)
         }
-        return {...c,parent}
+        return subject
     }))
     /*for(let subject of subjects){
         console.log('---------------------------------')
