@@ -4,14 +4,9 @@ const catchAsync = require("../utils/catchAsync");
 const NotificationAdmin = require("./notificationAdminModel");
 const Admin = require("../admin/adminModel");
 
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
-const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
+const {sendFCMNotification} = require("../firebase/sendNotification");
 
-webpush.setVapidDetails(
-  "mailto: <contact@we-codes.com>",
-  publicVapidKey,
-  privateVapidKey
-);
+
 exports.sendPushNotificationToAdmin = async (admins, notification) => {
   try {
     const newAdmins = await Promise.all(
@@ -22,29 +17,15 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
       newAdmins.map(
         async (admin) =>
           await admin.getSub({
-            attributes: ["body"],
+            attributes: ["token"],
             raw: true,
           })
       )
     );
-    const c = await Promise.all(
-      adminsArraySubs.map(
-        async (adminsSubs) =>
-          await Promise.all(
-            adminsSubs?.map(async (subscription) => {
-              
-              webpush
-                .sendNotification(
-                  subscription.body,
-                  JSON.stringify(notification)
-                )
-                .catch((err) => {
-                  console.error(err);
-                });
-            })
-          )
-      )
-    );
+    const subs = adminsArraySubs.flat();
+    const tokens = subs.map((sub) => sub.token);
+    const notification = await sendFCMNotification(subscription.body, notification);
+    return notification;
   } catch (err) {
     console.error(err);
   }

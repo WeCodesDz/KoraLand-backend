@@ -10,8 +10,8 @@ const subscriptionCoach = db.define(
       primaryKey: true,
       allowNull: false,
     },
-    body: {
-      type: Sequelize.DataTypes.JSONB,
+    token: {
+      type: Sequelize.STRING,
       allowNull: false,
       unique: true,
     },

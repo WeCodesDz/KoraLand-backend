@@ -3,15 +3,8 @@ const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const NotificationParent = require('./notificationParentModel');
 const Parent = require('../parent/parentModel');
+const {sendFCMNotification} = require("../firebase/sendNotification");
 
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
-const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
-
-webpush.setVapidDetails(
-  "mailto: <contact@we-codes.com>",
-  publicVapidKey,
-  privateVapidKey
-);
 exports.sendPushNotificationToParent = async (parents, notification) => {
   try {
     const newParents = await Promise.all(
@@ -22,29 +15,16 @@ exports.sendPushNotificationToParent = async (parents, notification) => {
       newParents.map(
         async (parent) =>
           await parent.getSub({
-            attributes: ["body"],
+            attributes: ["token"],
             raw: true,
           })
       )
     );
-    const c = await Promise.all(
-      parentsArraySubs.map(
-        async (parentsSubs) =>
-          await Promise.all(
-            parentsSubs?.map(async (subscription) => {
-              
-              webpush
-                .sendNotification(
-                  subscription.body,
-                  JSON.stringify(notification)
-                )
-                .catch((err) => {
-                  console.error(err);
-                });
-            })
-          )
-      )
-    );
+    const subs = parentsArraySubs.flat();
+    const tokens = subs.map((sub) => sub.token);
+    const notif = await sendFCMNotification(tokens, notification);
+    return notif;
+    
   } catch (err) {
     console.error(err);
   }

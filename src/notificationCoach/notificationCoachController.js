@@ -3,15 +3,8 @@ const appError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const NotificationCoach = require('./notificationCoachModel');
 const Coach = require('../coach/coachModel');
+const {sendFCMNotification} = require("../firebase/sendNotification");
 
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
-const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
-
-webpush.setVapidDetails(
-  "mailto: <contact@we-codes.com>",
-  publicVapidKey,
-  privateVapidKey
-);
 exports.sendPushNotificationToCoach = async (coachs, notification) => {
   try {
     const newCoachs = await Promise.all(
@@ -22,29 +15,16 @@ exports.sendPushNotificationToCoach = async (coachs, notification) => {
         newCoachs.map(
         async (coach) =>
           await coach.getSub({
-            attributes: ["body"],
+            attributes: ["token"],
             raw: true,
           })
       )
     );
-    const c = await Promise.all(
-      coachsArraySubs.map(
-        async (coachsSubs) =>
-          await Promise.all(
-            coachsSubs?.map(async (subscription) => {
-              
-              webpush
-                .sendNotification(
-                  subscription.body,
-                  JSON.stringify(notification)
-                )
-                .catch((err) => {
-                  console.error(err);
-                });
-            })
-          )
-      )
-    );
+    const subs = coachsArraySubs.flat();
+    const tokens = subs.map((sub) => sub.token);
+    const notif = await sendFCMNotification(tokens, notification);
+    return notif;
+  
   } catch (err) {
     console.error(err);
   }
