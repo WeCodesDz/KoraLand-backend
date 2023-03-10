@@ -310,7 +310,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
     });
     const newSubjects =subjects.map(subject => {
         if (subject.parentId){
-            subject[parent]=subject.getParent().dataValues;
+            subject['parent']=subject.getParent().dataValues;
         }
         return subject
     })
