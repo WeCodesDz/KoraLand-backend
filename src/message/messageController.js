@@ -80,7 +80,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
     let sender = adminId===senderId ? 'admin' : 'parent';
     let subjectId = subject+''+Date.now();
     subjectId = subjectId.replace(/\s/g, '_');
-    console.log('--------------------------------------subjectId',subjectId)
+    
 
     const message = await Message.create({
         subjectId,
@@ -111,7 +111,8 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             const nodeEventEmitter = req.app.get('nodeEventEmitter')
             const data = {
                 usernames,
-                notification:notification.dataValues
+                notification:notification.dataValues,
+                parent:parent.dataValues
             }
             if(nodeEventEmitter){
               nodeEventEmitter.emit('newNotification',data);
