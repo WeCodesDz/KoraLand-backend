@@ -313,7 +313,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         const c = {...subject.dataValues}
         let parent
         if (subject.parentId){
-            parent =subject.getParent();
+            parent =subject.getParent({raw: true});
         }
         return {...c,parent}
     })
