@@ -314,7 +314,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         let parent
         if (subject.parentId){
             //parent =subject.getParent({raw: true});
-            parent ='---------------------------fff'
+            parent =Object.getPrototypeOf(subject)
         }
         return {...c,parent}
     })
