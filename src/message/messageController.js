@@ -321,7 +321,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         status: 'success',
         data: {
             newSubjects,
-            o:Object.getPrototypeOf(subjects[1])
+            //o:Object.getPrototypeOf(subjects[1])
         }
     });
 });
