@@ -311,10 +311,11 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
     
     const newSubjects =subjects.map(subject => {
         const c = {...subject.dataValues}
+        let parent
         if (subject.parentId){
-            c['parent']=subject.getParent();
+            parent =subject.getParent();
         }
-        return c
+        return {...c,...parent}
     })
 
     res.status(200).json({
