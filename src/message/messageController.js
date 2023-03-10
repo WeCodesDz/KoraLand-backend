@@ -304,12 +304,12 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
 exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
 
     const subjects = await Message.findAll({
-        //attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],  "body", "createdAt", "parentId", "adminId",'subject'], 
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],  "body", "createdAt", "parentId", "adminId",'subject'], 
         order: [['createdAt', 'DESC']],
         //include: [Parent]
     });
     
-    const newSubjects =subjects.map(subject => {
+    /*const newSubjects =subjects.map(subject => {
         const c = {...subject.dataValues}
         let parent
         if (subject.parentId){
@@ -317,7 +317,17 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
             parent =Object.getPrototypeOf(subject)
         }
         return {...c,parent}
-    })
+    })*/
+    for(let subject in subjects){
+        console.log('---------------------------------')
+        console.log(subject)
+        console.log('---------------------------------')
+        let parent
+        if (subject.parentId){
+            //parent =subject.getParent({raw: true});
+            //parent =Object.getPrototypeOf(subject)
+        }
+    }
 
     res.status(200).json({
         status: 'success',
