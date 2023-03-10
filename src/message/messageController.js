@@ -111,8 +111,8 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             const nodeEventEmitter = req.app.get('nodeEventEmitter')
             const data = {
                 usernames,
-                notification:notification.dataValues,
-                parent:parent.dataValues
+                notification:notification.dataValues
+                
             }
             if(nodeEventEmitter){
               nodeEventEmitter.emit('newNotification',data);
@@ -306,6 +306,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
     const subjects = await Message.findAll({
         attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt'], 
         order: [['createdAt', 'DESC']],
+        include: [Parent]
     });
 
     res.status(200).json({

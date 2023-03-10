@@ -144,9 +144,8 @@ module.exports = {
       nodeEventEmitter.on("newNotification", (data) => {
         const usernames = data.usernames;
         const notification = data.notification;
-        const parent  = data.parent
         usernames.forEach((username)=>{
-          io.to(username).emit("newNotification", {notification,parent});
+          io.to(username).emit("newNotification", notification);
         });
         
       });
