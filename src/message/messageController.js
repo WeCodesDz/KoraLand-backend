@@ -320,7 +320,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
     })*/
     for(let subject of subjects){
         console.log('---------------------------------')
-        console.log(subject)
+        console.log(Object.getPrototypeOf(subject))
         console.log('---------------------------------')
         let parent
         if (subject.parentId){
