@@ -308,6 +308,12 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         order: [['createdAt', 'DESC']],
         //include: [Parent]
     });
+    subjects.map(subject => {
+        if (subject.parentId){
+            subject[parent]=subject.getParent().dataValues;
+        }
+        return subject
+    })
 
     res.status(200).json({
         status: 'success',
