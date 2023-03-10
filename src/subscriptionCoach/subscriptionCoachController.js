@@ -21,7 +21,7 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
  
 
   const newSubscription = await CoachSubscription.create({
-    body: req.body.subscription
+    token: req.body.subscription
   });
   
 
@@ -42,7 +42,7 @@ exports.deleteSubscription = catchAsync(async (req, res, next) => {
 
   const sub = await CoachSubscription.findOne({
     where: {
-      body: req.body.subscription,
+      token: req.body.subscription,
     },
   });
 

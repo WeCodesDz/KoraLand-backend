@@ -36,7 +36,7 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
 
 
   const newSubscription = await ParentSubscription.create({
-    body: req.body.subscription
+    token: req.body.subscription
   });
 
  await newSubscription.addParent(parent);
@@ -56,7 +56,7 @@ exports.deleteSubscription = catchAsync(async (req, res, next) => {
 
   const sub = await ParentSubscription.findOne({
     where: {
-      body: req.body.subscription,
+      token: req.body.subscription,
     },
   });
 

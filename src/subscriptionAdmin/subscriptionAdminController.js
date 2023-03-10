@@ -21,7 +21,7 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
   }
 
   const newSubscription = await AdminSubscription.create({
-    body: req.body.subscription,
+    token: req.body.subscription,
   });
 
   await newSubscription.addSub(admin);
@@ -55,7 +55,7 @@ exports.deleteSubscription = catchAsync(async (req, res, next) => {
 
   const sub = await AdminSubscription.findOne({
     where: {
-      body: req.body.subscription,
+      token: req.body.subscription,
     },
   });
 
