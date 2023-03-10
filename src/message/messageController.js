@@ -308,7 +308,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         order: [['createdAt', 'DESC']],
         //include: [Parent]
     });
-    subjects.map(subject => {
+    const newSubjects =subjects.map(subject => {
         if (subject.parentId){
             subject[parent]=subject.getParent().dataValues;
         }
@@ -318,7 +318,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
     res.status(200).json({
         status: 'success',
         data: {
-            subjects
+            newSubjects
         }
     });
 });
