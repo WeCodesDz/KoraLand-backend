@@ -315,7 +315,7 @@ exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
         if (subject.parentId){
             parent =subject.getParent();
         }
-        return {...c,...parent}
+        return {...c,parent}
     })
 
     res.status(200).json({
