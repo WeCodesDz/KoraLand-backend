@@ -23,6 +23,7 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
     );
     const subs = adminsArraySubs.flat();
     console.log('********************subs',subs)
+    console.log("********************notification", notification)
     const tokens = subs.map((sub) => sub.token);
     const notif = await sendFCMNotification(tokens, notification);
     return notif;
