@@ -102,6 +102,9 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
           })
           if(admins.length > 0) {
             const ids= admins.map((admin)=>admin.id);
+            await Promise.all(admins.map(async (admin)=>{
+                await admin.addMessages(message);
+            }));
             const usernames = admins.map((admin)=>admin.username);
            const notification= await notificationAdminController.createNotificationAdmin(ids,{
               title:'Nouveau message',
@@ -225,6 +228,9 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
           if(admins.length > 0) {
             const ids= admins.map((admin)=>admin.id);
             const usernames = admins.map((admin)=>admin.username);
+            await Promise.all(admins.map(async (admin)=>{
+                await admin.addMessages(message);
+            }));
            const notification= await notificationAdminController.createNotificationAdmin(ids,{
               title:'Nouveau message',
               desc:`${parent.prenomParent} ${parent.nomParent} vous a envoyé un nouveau message`,
@@ -329,11 +335,31 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
 
 exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
 
-    const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'id',  "body", "createdAt", "parentId","adminId","senderId",'subject'], 
-        order: [['createdAt', 'DESC']],
-        //include: [Parent]
+    const distinctSubjects = await Message.findAll({
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId']],
+        // raw:true
     });
+    
+    const subjects = await Promise.all(distinctSubjects.map(async (subject)=>{
+       return await Message.findOne({
+            attributes: ['id',"subjectId","body", "createdAt", "parentId","adminId","senderId",'subject'], 
+            order: [['createdAt', 'DESC']],
+            where:{
+                subjectId:subject.subjectId
+            },
+            limit:1,
+            // raw:true
+        });
+    }))
+
+    // const subjects = await Message.findAll({
+    //     attributes: ['id',"subjectId","body", "createdAt", "parentId","adminId","senderId",'subject'], 
+    //     order: [['createdAt', 'DESC']],
+    //     where:{
+    //         subjectId:c.subjectId
+    //     },
+    //     limit:1
+    // });
     
     const newSubjects =await Promise.all(subjects.map( async subject => {
         //const c = {...subject.dataValues}
