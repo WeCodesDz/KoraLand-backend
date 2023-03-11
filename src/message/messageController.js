@@ -95,7 +95,6 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
         }
         
         await parent.addMessages(message);
-
         const admins = await Administrateur.findAll({
             attributes:['username','id'],
             raw:true
@@ -130,7 +129,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
                 }
         const parent = await Parent.findByPk(parentId);
         await admin.addMessages(message);
-
+        await parent.addMessages(message);
         const notification= await notificationParentController.createNotificationParent([parentId],{
             title:'Nouveau message',
             desc:'Vous avez reçu un nouveau message',
@@ -239,7 +238,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
                 }
         const parent = await Parent.findByPk(parentId);        
         await admin.addMessages(message);
-
+        await parent.addMessages(message);
         const notification= await notificationParentController.createNotificationParent([parentId],{
             title:'Nouveau message',
             desc:'Vous avez reçu un nouveau message',
@@ -285,7 +284,7 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
     const {subjectId,parentId} = req.params;
 
     const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt'],
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','senderId','createdAt'],
         where:{
             parentId:parentId
         },
@@ -303,7 +302,7 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
 exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
 
     const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt'], 
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','senderId','createdAt'], 
         order: [['createdAt', 'DESC']],
     });
 
