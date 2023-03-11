@@ -285,7 +285,7 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
     const {subjectId,parentId} = req.params;
 
     const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'id',  "body", "createdAt", "parentId","senderId","adminId",'subject'],
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt'],
         where:{
             parentId:parentId
         },
@@ -303,7 +303,7 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
 exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
 
     const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'id',  "body", "createdAt", "parentId","senderId","adminId",'subject'], 
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'id',  "body", "createdAt", "parentId","adminId",'subject'], 
         order: [['createdAt', 'DESC']],
         //include: [Parent]
     });
