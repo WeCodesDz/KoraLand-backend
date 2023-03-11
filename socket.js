@@ -145,7 +145,7 @@ module.exports = {
         const usernames = data.usernames;
         const notification = data.notification;
         usernames.forEach((username)=>{
-          io.to(username).emit("newNotification", notification.dataValues);
+          io.to(username).emit("newNotification", notification);
         });
         
       });

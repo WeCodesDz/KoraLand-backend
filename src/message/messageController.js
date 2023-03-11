@@ -80,7 +80,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
     let sender = adminId===senderId ? 'admin' : 'parent';
     let subjectId = subject+''+Date.now();
     subjectId = subjectId.replace(/\s/g, '_');
-    console.log('--------------------------------------subjectId',subjectId)
+    
 
     const message = await Message.create({
         subjectId,
@@ -111,6 +111,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             const data = {
                 usernames,
                 notification:notification.dataValues
+                
             }
             if(nodeEventEmitter){
               nodeEventEmitter.emit('newNotification',data);
@@ -302,14 +303,40 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
 exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
 
     const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','senderId','createdAt'], 
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'id',  "body", "createdAt", "parentId", "adminId",'subject'], 
         order: [['createdAt', 'DESC']],
+        //include: [Parent]
     });
+    
+    const newSubjects =await Promise.all(subjects.map( async subject => {
+        //const c = {...subject.dataValues}
+        const newSubject=subject.dataValues
+        let parent
+        if (newSubject.parentId){
+            newSubject['parent'] =await subject.getParent({raw: true,attributes:["id",
+            "nomParent",
+            "prenomParent",
+            "username"]});
+            //parent =Object.getPrototypeOf(subject)
+        }
+        return newSubject
+    }))
+    /*for(let subject of subjects){
+        console.log('---------------------------------')
+        console.log(subject.getParent())
+        console.log('---------------------------------')
+        let parent
+        if (subject.parentId){
+            //parent =subject.getParent({raw: true});
+            //parent =Object.getPrototypeOf(subject)
+        }
+    }*/
 
     res.status(200).json({
         status: 'success',
         data: {
-            subjects
+            newSubjects,
+            //o:Object.getPrototypeOf(subjects[1])
         }
     });
 });
