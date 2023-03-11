@@ -120,7 +120,15 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             // usernames.forEach((admin)=>{
             //   io.to(admin).emit("newNotification", notification.dataValues);
             // });
-            await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+            const payload = { 
+                notification : {
+                   title : notification.title,
+                   body : notification.desc,
+                   content_available : "true",
+                   
+                }
+             }
+            await notificationAdminController.sendPushNotificationToAdmin(ids,payload);
           }
     }
     if(sender === 'admin'){
@@ -145,7 +153,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             if(nodeEventEmitter){
               nodeEventEmitter.emit('newNotification',data);
             }
-          await notificationParentController.sendPushNotificationToParent([parentId],notification.dataValues);
+          await notificationParentController.sendPushNotificationToParent([parentId],payload);
   
     }
     res.status(201).json({
@@ -264,7 +272,15 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             if(nodeEventEmitter){
               nodeEventEmitter.emit('newNotification',data);
             }
-          await notificationParentController.sendPushNotificationToParent([parentId],notification.dataValues);
+            const payload = { 
+                notification : {
+                   title : notification.title,
+                   body : notification.desc,
+                   content_available : "true",
+                   
+                }
+             }
+          await notificationParentController.sendPushNotificationToParent([parentId],payload);
   
     }
     res.status(201).json({
