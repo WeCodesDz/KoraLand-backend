@@ -44,10 +44,10 @@ exports.test = catchAsync(async (req, res, next) => {
     }
  }
   await Notf.sendPushNotificationToAdmin(
-    ["3a640c83-e89a-4a4b-8fea-e4f801b3492a"],
+    ["87fdbdea-ba8d-4445-89db-e00dc52c8d12"],
     payload
   );
-  await Notf.createNotificationAdmin(["3a640c83-e89a-4a4b-8fea-e4f801b3492a"],
+  await Notf.createNotificationAdmin(["87fdbdea-ba8d-4445-89db-e00dc52c8d12"],
   { 
     title: payload.notification.title,
     desc: payload.notification.body,
