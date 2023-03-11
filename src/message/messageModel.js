@@ -15,6 +15,10 @@ const Message = db.define('message', {
     subject:{
         type: Sequelize.STRING,
         allowNull: false,
+    }, 
+    senderId:{
+        type: Sequelize.Sequelize.UUID,
+        allowNull: false,
     },      
     body:{
         type: Sequelize.TEXT,

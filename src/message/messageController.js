@@ -86,6 +86,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
         subjectId,
         subject,
         body,
+        senderId,
     });
     if(sender === 'parent'){
         let parent;
@@ -198,6 +199,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
         subjectId,
         subject:messageExist.subject,
         body,
+        senderId
     });
     if(sender === 'parent'){
         let parent;
@@ -285,7 +287,7 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
     const {subjectId,parentId} = req.params;
 
     const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt'],
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt','senderId'],
         where:{
             parentId:parentId
         },
@@ -303,7 +305,7 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
 exports.getSubjectDistinctByAdmin = catchAsync(async(req,res,next)=>{
 
     const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'id',  "body", "createdAt", "parentId","adminId",'subject'], 
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'id',  "body", "createdAt", "parentId","adminId","senderId",'subject'], 
         order: [['createdAt', 'DESC']],
         //include: [Parent]
     });
