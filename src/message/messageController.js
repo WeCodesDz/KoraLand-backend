@@ -230,7 +230,13 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             if(nodeEventEmitter){
               nodeEventEmitter.emit('newNotification',data);
             }
-            await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+            const notifToSend = {
+                title: notification.title,
+                body: notification.body,
+                
+            }
+            // await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+            await notificationAdminController.sendPushNotificationToAdmin(ids,notifToSend);
           }
     }
     if(sender === 'admin'){
