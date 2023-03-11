@@ -156,6 +156,14 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
             if(nodeEventEmitter){
               nodeEventEmitter.emit('newNotification',data);
             }
+            const payload = { 
+                notification : {
+                   title : notification.title,
+                   body : notification.desc,
+                   content_available : "true",
+                   
+                }
+             }
           await notificationParentController.sendPushNotificationToParent([parentId],payload);
   
     }
