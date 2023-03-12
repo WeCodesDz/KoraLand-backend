@@ -325,14 +325,32 @@ exports.getMessagesBySubjectId = catchAsync(async (req, res, next) => {
 
 exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
     const {subjectId,parentId} = req.params;
-
-    const subjects = await Message.findAll({
-        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt','senderId'],
+    const distinctSubjects = await Message.findAll({
+        attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId']],
         where:{
             parentId:parentId
-        },
-        order: [['createdAt', 'DESC']],
+        }
+        // raw:true
     });
+    const subjects = await Promise.all(distinctSubjects.map(async (subject)=>{
+        return await Message.findOne({
+             attributes: ['id',"subjectId","body", "createdAt", "parentId","adminId","senderId",'subject'], 
+             order: [['createdAt', 'DESC']],
+             where:{
+                 subjectId:subject.subjectId
+             },
+             limit:1,
+             // raw:true
+         });
+     }))
+     
+    // const subjects = await Message.findAll({
+    //     attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt','senderId'],
+    //     where:{
+    //         parentId:parentId
+    //     },
+    //     order: [['createdAt', 'DESC']],
+    // });
 
     res.status(200).json({
         status: 'success',
