@@ -98,12 +98,13 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
         await parent.addMessages(message);
         const admins = await Administrateur.findAll({
             attributes:['username','id'],
-            raw:true
+            // raw:true
           })
+
           if(admins.length > 0) {
             const ids= admins.map((admin)=>admin.id);
             await Promise.all(admins.map(async (admin)=>{
-                await admin.addMessages(message);
+                await admin.addMessage(message);
             }));
             const usernames = admins.map((admin)=>admin.username);
            const notification= await notificationAdminController.createNotificationAdmin(ids,{
@@ -231,7 +232,7 @@ exports.getAllMessagesByRoom = catchAsync(async (req, res, next) => {
 
         const admins = await Administrateur.findAll({
             attributes:['username','id'],
-            raw:true
+            // raw:true
           })
           if(admins.length > 0) {
             const ids= admins.map((admin)=>admin.id);
