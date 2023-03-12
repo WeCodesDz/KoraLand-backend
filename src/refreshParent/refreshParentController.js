@@ -83,7 +83,7 @@ exports.handleParentRefreshToken = catchAsync(async (req, res, next) => {
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
   res.cookie('jwt',newRefreshToken,cookieOptions);
-  res.json({ role:'parent', accessToken });
+  res.json({ role:'parent', username:parent.username ,accessToken });
 
 
 });
