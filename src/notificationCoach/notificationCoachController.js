@@ -44,8 +44,8 @@ exports.createNotificationCoach = async (coachs, notif) => {
 exports.getMyNotifications = catchAsync(async (req, res, next) => {
     const { id } = req.user;
     const coach = await Coach.findByPk(id);
-
-    const notifications = await coach.getNotifications_coachs();
+    console.log(Object.getPrototypeOf(coach));
+    const notifications = await coach.getNotification_coaches();
     if (!notifications) {
         throw new appError('No notifications found', 404);
     }
