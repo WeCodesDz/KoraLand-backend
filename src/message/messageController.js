@@ -325,13 +325,14 @@ exports.getMessagesBySubjectId = catchAsync(async (req, res, next) => {
 
 exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
     const {subjectId,parentId} = req.params;
-    const distinctSubjects = await Message.findAll({
+    const parent = await Parent.findByPk(parentId);
+    const distinctSubjects = await parent.getMessages({
         attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId']],
         where:{
             parentId:parentId
         }
         // raw:true
-    });
+    })
     const subjects = await Promise.all(distinctSubjects.map(async (subject)=>{
         return await Message.findOne({
              attributes: ['id',"subjectId","body", "createdAt", "parentId","adminId","senderId",'subject'], 
@@ -344,6 +345,21 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
          });
      }))
      
+     const newSubjects =await Promise.all(subjects.map( async subject => {
+        //const c = {...subject.dataValues}
+        const newSubject=subject.dataValues
+        let parent
+        if (newSubject.adminId){
+            newSubject['admin'] =await subject.getParent({raw: true,
+            attributes:["id",
+            "nomAdmin",
+            "prenomAdmin",
+            "username"]
+        });
+            //parent =Object.getPrototypeOf(subject)
+        }
+        return newSubject
+    }))
     // const subjects = await Message.findAll({
     //     attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('subjectId')), 'subjectId'],'subject','createdAt','senderId'],
     //     where:{
@@ -355,7 +371,7 @@ exports.getSubjectDistinctByParent = catchAsync(async(req,res,next)=>{
     res.status(200).json({
         status: 'success',
         data: {
-            subjects
+            newSubjects,
         }
     });
 });
