@@ -44,7 +44,7 @@ exports.getMyNotifications = catchAsync(async (req, res, next) => {
     const { id } = req.user;
     const parent = await Parent.findByPk(id);
 
-    const notifications = await parent.getNotifications();
+    const notifications = await parent.getNotification_parents();
     if (!notifications) {
         throw new appError('No notifications found', 404);
     }
