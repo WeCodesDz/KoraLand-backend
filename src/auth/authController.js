@@ -142,7 +142,7 @@ exports.loginCoach = catchAsync(async (req, res, next) => {
 
   res.cookie('jwt', newRefreshToken, cookieOptions);
 
-  res.json({ role:'coach', accessToken });
+  res.json({ role:'coach', username:user.username ,accessToken });
 });  
 
 exports.loginParent = catchAsync(async (req, res, next) => {
@@ -202,7 +202,7 @@ exports.loginParent = catchAsync(async (req, res, next) => {
 
   res.cookie('jwt', newRefreshToken, cookieOptions);
 
-  res.json({ role:'parent', accessToken });
+  res.json({ role:'parent', username:user.username ,accessToken });
 });   
 
 exports.protect = catchAsync(async (req, res, next) => {
