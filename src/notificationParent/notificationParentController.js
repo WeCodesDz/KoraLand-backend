@@ -51,7 +51,7 @@ exports.getMyNotifications = catchAsync(async (req, res, next) => {
         
     res.status(200).json({
         status: 'success',
-        body: notifications,
+        data: notifications,
     });
 });
 
