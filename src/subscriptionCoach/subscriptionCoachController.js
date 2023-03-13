@@ -2,6 +2,8 @@ const catchAsync = require('../utils/catchAsync');
 const CoachSubscription = require('./subscriptionCoachModel');
 const Coach = require('../coach/coachModel');
 const AppError = require('../utils/appError');
+const Notf = require("../notificationCoach/notificationCoachController");
+
 
 exports.saveSubscription = catchAsync(async (req, res, next) => {
   if (!req.body.subscription || !req.body.username) {
@@ -24,8 +26,7 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
     token: req.body.subscription
   });
   
-
- await newSubscription.addCoach(coach);
+ await newSubscription.addSub(coach);
   res.status(201).json({
     status: 'success',
     data: {
@@ -33,6 +34,30 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.test = catchAsync(async (req, res, next) => {
+  const payload = { 
+    notification : {
+       title : "FCM IS COOL !",
+       body : "Notification has been recieved",
+       content_available : "true",
+       image:"https://i.ytimg.com/vi/iosNuIdQoy8/maxresdefault.jpg",
+       link: "https://www.google.com"
+    }
+ }
+  await Notf.sendPushNotificationToCoach(
+    ["a4da489f-f187-4c30-b984-0dcc7a5786fa"],
+    payload
+  );
+  await Notf.createNotificationCoach(["a4da489f-f187-4c30-b984-0dcc7a5786fa"],
+  { 
+    title: payload.notification.title,
+    desc: payload.notification.body,
+    type: "message",
+  });
+  res.json({ status: "success" });
+});
+
 
 exports.deleteSubscription = catchAsync(async (req, res, next) => {
   if (!req.body.subscription) {
