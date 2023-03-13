@@ -44,10 +44,10 @@ exports.test = catchAsync(async (req, res, next) => {
     }
  }
   await Notf.sendPushNotificationToCoach(
-    ["a4da489f-f187-4c30-b984-0dcc7a5786fa"],
+    ["e13bb688-1dc2-4bd5-ad78-40ab41e84063"],
     payload
   );
-  await Notf.createNotificationCoach(["a4da489f-f187-4c30-b984-0dcc7a5786fa"],
+  await Notf.createNotificationCoach(["e13bb688-1dc2-4bd5-ad78-40ab41e84063"],
   { 
     title: payload.notification.title,
     desc: payload.notification.body,
