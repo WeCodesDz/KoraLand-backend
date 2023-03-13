@@ -23,7 +23,7 @@ const NotificationCoach = db.define(
     type:{
      
         type: Sequelize.ENUM,
-        values: ['evaluation'],
+        values: ['evaluation','message'],
         allowNull: false,
         validate: {notNull: { args: true, msg: 'please provide a type!' },}
     

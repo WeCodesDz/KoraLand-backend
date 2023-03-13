@@ -40,9 +40,7 @@ exports.test = catchAsync(async (req, res, next) => {
     notification : {
        title : "FCM IS COOL !",
        body : "Notification has been recieved",
-       content_available : "true",
-       image:"https://i.ytimg.com/vi/iosNuIdQoy8/maxresdefault.jpg",
-       link: "https://www.google.com"
+       image:"https://i.ytimg.com/vi/iosNuIdQoy8/maxresdefault.jpg"
     }
  }
   await Notf.sendPushNotificationToCoach(
