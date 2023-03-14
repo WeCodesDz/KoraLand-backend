@@ -21,7 +21,6 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
           })
       )
     );
-    console.log(notification,'************************************')
     const subs = adminsArraySubs.flat();
     const payload = { 
       notification : {
