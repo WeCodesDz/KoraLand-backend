@@ -92,17 +92,17 @@ module.exports = {
           },
           raw:true
         });
-        const ids= admins.map((admin)=>admin.id);
+        // const ids= admins.map((admin)=>admin.id);
         const usernames = admins.map((admin)=>admin.username);
-        const notification = await notificationAdminController.createNotificationAdmin(ids,{
-          title:data.title,
-          desc:data.body,
-          type:data.type
-        });
+        // const notification = await notificationAdminController.createNotificationAdmin(ids,{
+        //   title:data.title,
+        //   desc:data.body,
+        //   type:data.type
+        // });
         usernames.forEach((username)=>{
           io.to(username).emit("newNotification", notification.dataValues);
         });
-        await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+        // await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
 
 
       });

@@ -4,6 +4,8 @@ const Evaluation = require("./evaluationModel");
 const Student = require("../student/studentModel");
 const historiqueEvaluation = require("../historiqueEvaluation/historiqueEvaluationModel");
 const HistoriqueStudent = require("../historiqueStudent/historiqueStudentModel");
+const notificationAdminController = require("../notificationAdmin/notificationAdminController");
+const Administrateur = require("../admin/adminModel");
 
 const filter = (queryParams) => {
   const tempQueryParams = { ...queryParams };
@@ -138,6 +140,23 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
       type: 'evaluation'
     })
   }
+  const admins = await Administrateur.findAll({
+    attributes:['username','id'],
+    where:{
+      adminLevel:'superadmin'
+    },
+    raw:true
+  });
+  const ids= admins.map((admin)=>admin.id);
+  const usernames = admins.map((admin)=>admin.username);
+  const notification = await notificationAdminController.createNotificationAdmin(ids,{
+    title:'Nouvel Evaluation',
+    desc:'Une nouvelle evaluation a été ajoutée',
+    type:'evaluation'
+  });
+
+  await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+
   //NotificationAdminController.createNotif
   //send notif to admin
   //req.app.get('NodeEventEmitter')?.emit('sendNotification',dataToEmit)
