@@ -40,10 +40,10 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
 
 exports.createNotificationAdmin = async (admins, notif) => {
 
-  const notification = await NotificationAdmin.create(notif);
-  await notification.setAdmins(admins);
-  
-  return notification;
+    const notification = await NotificationAdmin.create(notif);
+    await notification.setAdmins(admins);
+
+  return notif;
   //return something
 };
 
