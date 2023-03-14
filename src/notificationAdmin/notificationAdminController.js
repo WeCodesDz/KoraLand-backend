@@ -41,8 +41,9 @@ exports.sendPushNotificationToAdmin = async (admins, notification) => {
 exports.createNotificationAdmin = async (admins, notif) => {
   //we add validations after
   const notification = await NotificationAdmin.create(notif);
-  await notification.setAdmins(admins);
-
+  admins.forEach(async admin => { 
+    await notification.setAdmins(admin);
+  });
   return notification;
   //return something
 };
@@ -61,10 +62,14 @@ exports.getMyNotifications = catchAsync(async (req, res, next) => {
   if (!notifications) {
     throw new appError("No notifications found", 404);
   }
-
+  const nombre_notifications = notifications.length;
   res.status(200).json({
     status: "success",
-    data:{notifications} ,
+    data:{
+      nombre_notifications,
+      notifications,
+
+    } ,
   });
 });
 
