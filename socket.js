@@ -102,7 +102,7 @@ module.exports = {
         usernames.forEach((username)=>{
           io.to(username).emit("newNotification", notification.dataValues);
         });
-        await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
+        await notificationAdminController.sendPushNotificationToAdmin(ids,notification);
 
 
       });
