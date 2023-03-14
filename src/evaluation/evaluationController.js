@@ -133,13 +133,13 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
 
 
   const nodeEventEmitter = req.app.get('nodeEventEmitter');
-  if(nodeEventEmitter){
-    nodeEventEmitter.emit('send_new_evaluation',{
-      title: 'Nouvel Evaluation',
-      body: 'Une nouvelle evaluation a été ajoutée',
-      type: 'evaluation'
-    })
-  }
+  // if(nodeEventEmitter){
+  //   nodeEventEmitter.emit('send_new_evaluation',{
+  //     title: 'Nouvel Evaluation',
+  //     body: 'Une nouvelle evaluation a été ajoutée',
+  //     type: 'evaluation'
+  //   })
+  // }
   const admins = await Administrateur.findAll({
     attributes:['username','id'],
     where:{
