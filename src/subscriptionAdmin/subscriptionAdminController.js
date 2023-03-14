@@ -34,23 +34,23 @@ exports.saveSubscription = catchAsync(async (req, res, next) => {
 });
 
 exports.test = catchAsync(async (req, res, next) => {
-  const payload = { 
-    notification : {
+  
+    notification = {
        title : "FCM IS COOL !",
        body : "Notification has been recieved",
        content_available : "true",
        image:"https://i.ytimg.com/vi/iosNuIdQoy8/maxresdefault.jpg",
        link: "https://www.google.com"
     }
- }
+ 
   await Notf.sendPushNotificationToAdmin(
     ["53553fad-7bfc-4dfb-896f-cb52ff70a832"],
     payload
   );
   await Notf.createNotificationAdmin(["53553fad-7bfc-4dfb-896f-cb52ff70a832"],
   { 
-    title: payload.notification.title,
-    desc: payload.notification.body,
+    title: notification.title,
+    desc: notification.body,
     type: "message",
   });
   res.json({ status: "success" });
