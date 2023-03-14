@@ -45,7 +45,7 @@ exports.test = catchAsync(async (req, res, next) => {
  
   await Notf.sendPushNotificationToAdmin(
     ["53553fad-7bfc-4dfb-896f-cb52ff70a832"],
-    payload
+    notification
   );
   await Notf.createNotificationAdmin(["53553fad-7bfc-4dfb-896f-cb52ff70a832"],
   { 
