@@ -101,9 +101,12 @@ module.exports = {
         //   desc:data.body,
         //   type:data.type
         // });
+        let i = 0;
         usernames.forEach((username)=>{
+        i++;
           io.to(username).emit("newNotification", notification);
         });
+        console.log("------------------ nbr iteration",i)
         // await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
 
 
