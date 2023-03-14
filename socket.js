@@ -85,22 +85,17 @@ module.exports = {
 
 
       nodeEventEmitter.on("send_new_evaluation",async (data) => {
-        const admins = await Administrateur.findAll({
-          attributes:['username','id'],
-          where:{
-            adminLevel:'superadmin'
-          },
-          raw:true
-        });
+      
+        
         // const ids= admins.map((admin)=>admin.id);
-        const usernames = admins.map((admin)=>admin.username);
+        const {usernames,notification} = data;
         // const notification = await notificationAdminController.createNotificationAdmin(ids,{
         //   title:data.title,
         //   desc:data.body,
         //   type:data.type
         // });
         usernames.forEach((username)=>{
-          io.to(username).emit("newNotification", notification.dataValues);
+          io.to(username).emit("newNotification", notification);
         });
         // await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
 

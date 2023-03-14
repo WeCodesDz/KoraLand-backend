@@ -156,7 +156,12 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
   });
 
   await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
-
+  if(nodeEventEmitter){
+    nodeEventEmitter.emit('send_new_evaluation',{
+      notification:notification.dataValues,
+      usernames
+    })
+  }
   //NotificationAdminController.createNotif
   //send notif to admin
   //req.app.get('NodeEventEmitter')?.emit('sendNotification',dataToEmit)
