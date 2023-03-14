@@ -122,11 +122,11 @@ module.exports = {
             type:'evaluation'
         }
           // const notificationParent = await notificationParentController.createNotificationParent([data.parentId],notificationBodyParent);
-          const notificationCoach = await notificationCoachController.createNotificationCoach([data.coachId],notificationBodyCoach);
+          const notificationCoach = await notificationCoachController.createNotificationCoach(data.coachId,notificationBodyCoach);
           // io.to(data.parentUsername).emit("newNotification", notificationParent.dataValues);
           io.to(data.coachUsername).emit("newNotification", notificationCoach.dataValues);
           // await notificationParentController.sendPushNotificationToParent([data.parentId],notificationParent.dataValues);
-          await notificationCoachController.sendPushNotificationToCoach([data.coachId],notificationCoach.dataValues);
+          await notificationCoachController.sendPushNotificationToCoach(data.coachId,notificationCoach.dataValues);
       }
       if (data.etatEvaluation === 'blocked') {
         const notificationBodyCoach = {
