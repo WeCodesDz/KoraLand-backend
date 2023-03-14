@@ -44,7 +44,7 @@ exports.createNotificationAdmin = async (admins, notif) => {
     const notification = await NotificationAdmin.create(notif);
     await notification.setAdmins(admins);
 
-  return notif;
+  return notification;
   //return something
 };
 
