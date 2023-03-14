@@ -20,9 +20,17 @@ exports.sendPushNotificationToCoach = async (coachs, notification) => {
           })
       )
     );
+    const payload = { 
+      notification : {
+         title : notification.title,
+         body : notification.desc,
+         content_available : "true",
+         
+      }
+   }
     const subs = coachsArraySubs.flat();
     const tokens = subs.map((sub) => sub.token);
-    const notif = await sendFCMNotification(tokens, notification);
+    const notif = await sendFCMNotification(tokens, payload);
     return notif;
   
   } catch (err) {
