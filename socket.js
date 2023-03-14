@@ -92,22 +92,17 @@ module.exports = {
           },
           raw:true
         });
-        let notification;
         const ids= admins.map((admin)=>admin.id);
         const usernames = admins.map((admin)=>admin.username);
-        ids.forEach(async id => {
-          notification = await notificationAdminController.createNotificationAdmin(id,{
-            title:data.title,
-            desc:data.body,
-            type:data.type
-          });
-          await notificationAdminController.sendPushNotificationToAdmin(id,notification.dataValues);
+        const notification = await notificationAdminController.createNotificationAdmin(ids,{
+          title:data.title,
+          desc:data.body,
+          type:data.type
         });
-         
         usernames.forEach((username)=>{
           io.to(username).emit("newNotification", notification.dataValues);
         });
-        
+        await notificationAdminController.sendPushNotificationToAdmin(ids,notification.dataValues);
 
 
       });
