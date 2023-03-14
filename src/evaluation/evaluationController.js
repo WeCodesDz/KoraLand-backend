@@ -159,7 +159,6 @@ exports.createStudentEvaluation = catchAsync(async (req, res, next) => {
   if(nodeEventEmitter){
     nodeEventEmitter.emit('send_new_evaluation',{
       notification:notification.dataValues,
-      usernames
     })
   }
   //NotificationAdminController.createNotif
